@@ -3,12 +3,11 @@ package com.avnet.gears.codes.gimbal.store.async.response.processor.impl;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 
-import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryResponseBean;
+import com.avnet.gears.codes.gimbal.store.bean.HttpResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_RESPONSE_CODES;
 import com.avnet.gears.codes.gimbal.store.fragment.NavigationDrawerFragment;
@@ -44,7 +43,9 @@ public class CategoryListProcessor implements AsyncResponseProcessor {
 
     }
     @Override
-    public boolean doProcess(HTTP_RESPONSE_CODES responseCode, String responseString){
+    public boolean doProcess(HttpResponseBean httpResponseBean){
+        String responseString = httpResponseBean.getResponseString();
+        HTTP_RESPONSE_CODES responseCode = httpResponseBean.getResponseCode();
         // Log.d("PROCESS DEBUG", "" + responseCode);
         responseString = responseString.trim()
                 .replace(GimbalStoreConstants.START_COMMENT_STRING, "")

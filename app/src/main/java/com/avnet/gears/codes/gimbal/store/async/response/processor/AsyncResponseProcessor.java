@@ -1,7 +1,6 @@
 package com.avnet.gears.codes.gimbal.store.async.response.processor;
 
-import android.graphics.Bitmap;
-
+import com.avnet.gears.codes.gimbal.store.bean.HttpResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 
 /**
@@ -9,6 +8,6 @@ import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
  */
 public interface AsyncResponseProcessor {
 
-    public boolean doProcess(GimbalStoreConstants.HTTP_RESPONSE_CODES responseCode, String responseString);
+    public boolean doProcess(HttpResponseBean responseBean);
 
 }

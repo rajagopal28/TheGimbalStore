@@ -1,16 +1,16 @@
 package com.avnet.gears.codes.gimbal.store.fragment;
 
 
-import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,10 +24,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.avnet.gears.codes.gimbal.store.R;
-import com.avnet.gears.codes.gimbal.store.activity.HomeActivity;
-import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
-
-import java.util.List;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.

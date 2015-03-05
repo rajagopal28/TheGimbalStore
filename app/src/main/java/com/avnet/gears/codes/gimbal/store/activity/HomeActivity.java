@@ -1,14 +1,12 @@
 package com.avnet.gears.codes.gimbal.store.activity;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,13 +16,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.adapter.CategoryViewAdapter;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.CategoryListProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
-import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.StoreParameterKeys;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
+import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.StoreParameterKeys;
 import com.avnet.gears.codes.gimbal.store.fragment.NavigationDrawerFragment;
-import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
 import com.avnet.gears.codes.gimbal.store.handler.ImageResponseAsyncTask;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;

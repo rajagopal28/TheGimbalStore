@@ -5,9 +5,8 @@ import android.os.AsyncTask;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.client.HttpClient;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
-import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_RESPONSE_CODES;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
-
+import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_RESPONSE_CODES;
 
 import java.net.HttpURLConnection;
 import java.util.List;

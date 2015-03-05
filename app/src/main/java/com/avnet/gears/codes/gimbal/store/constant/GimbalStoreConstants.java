@@ -1,7 +1,5 @@
 package com.avnet.gears.codes.gimbal.store.constant;
 
-import java.util.List;
-
 /**
  * Created by 914889 on 2/25/15.
  */
@@ -59,14 +57,14 @@ public class GimbalStoreConstants {
         }
 
     }
-    public static enum HTTP_REQUEST_HEADER_PROPERTIES {
+    public static enum HTTP_HEADER_PROPERTIES {
         CONNECTION("Connection"),
         CONTENT_TYPE("Content-Type"),
         CONTENT_DISPOSITION("Content-Disposition"),
         CONTENT_TRANSFER_ENCODING("Content-Transfer-Encoding"),
         CONTENT_LENGTH("Content-length");
 
-        HTTP_REQUEST_HEADER_PROPERTIES(String value) {
+        HTTP_HEADER_PROPERTIES(String value) {
             this.value = value;
         }
         private String value;

@@ -8,14 +8,11 @@ import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_HEADER_VALUES;
-import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_REQUEST_HEADER_PROPERTIES;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -53,18 +50,18 @@ public class HttpClient {
         con.setDoInput(doInput);
         con.setDoOutput(doOutput);
         if(httpMethod == HTTP_METHODS.GET) {
-            con.setRequestProperty(HTTP_REQUEST_HEADER_PROPERTIES.CONTENT_LENGTH.getValue(), "0");
+            con.setRequestProperty(GimbalStoreConstants.HTTP_HEADER_PROPERTIES.CONTENT_LENGTH.getValue(), "0");
             con.setUseCaches(useCaches);
             con.setAllowUserInteraction(allowUserInteraction);
             con.setConnectTimeout(timeout);
             con.setReadTimeout(timeout);
         }
         if( setKeepAlive ) {
-            con.setRequestProperty(HTTP_REQUEST_HEADER_PROPERTIES.CONNECTION.getValue(),
+            con.setRequestProperty(GimbalStoreConstants.HTTP_HEADER_PROPERTIES.CONNECTION.getValue(),
                     HTTP_HEADER_VALUES.CONNECTION_KEEP_ALIVE.getValue());
         }
         if( isMultiPart ) {
-          con.setRequestProperty(HTTP_REQUEST_HEADER_PROPERTIES.CONTENT_TYPE.getValue(),
+          con.setRequestProperty(GimbalStoreConstants.HTTP_HEADER_PROPERTIES.CONTENT_TYPE.getValue(),
                   MessageFormat.format(HTTP_HEADER_VALUES.CONTENT_TYPE_MULTIPART.getValue(),
                           BOUNDARY)
                   );
@@ -122,7 +119,7 @@ public class HttpClient {
 
     public static void writeMultiPartFileData(OutputStream os, String paramName, String fileName, byte[] data) throws Exception {
         os.write( (DELIMITER + BOUNDARY + "\r\n").getBytes());
-        os.write( (HTTP_REQUEST_HEADER_PROPERTIES.CONTENT_DISPOSITION.getValue()
+        os.write( (GimbalStoreConstants.HTTP_HEADER_PROPERTIES.CONTENT_DISPOSITION.getValue()
                 + DELIMITER_COLAN + " "
                 + MessageFormat.format(HTTP_HEADER_VALUES.CONTENT_DISPOSITION_FORM_DATA.getValue(),
                                 paramName)
@@ -130,11 +127,11 @@ public class HttpClient {
                 + MessageFormat.format(HTTP_HEADER_VALUES.CONTENT_DISPOSITION_FILE_NAME.getValue(),
                     fileName)
                 + HEADER_DELIMITER_VALUE).getBytes());
-        os.write( (HTTP_REQUEST_HEADER_PROPERTIES.CONTENT_TYPE.getValue()
+        os.write( (GimbalStoreConstants.HTTP_HEADER_PROPERTIES.CONTENT_TYPE.getValue()
                 + DELIMITER_COLAN + " "
                 + HTTP_HEADER_VALUES.CONTENT_TYPE_OCTET.getValue()
                 + HEADER_DELIMITER_VALUE ).getBytes());
-        os.write( (HTTP_REQUEST_HEADER_PROPERTIES.CONTENT_TRANSFER_ENCODING.getValue()
+        os.write( (GimbalStoreConstants.HTTP_HEADER_PROPERTIES.CONTENT_TRANSFER_ENCODING.getValue()
                 + DELIMITER_COLAN + " "
                 + HTTP_HEADER_VALUES.CONTENT_TRANSFER_ENCODING_BINARY.getValue()
                 + HEADER_DELIMITER_VALUE ).getBytes());
@@ -177,13 +174,13 @@ public class HttpClient {
 
         for(String key : keySet) {
             os.write( (DELIMITER + BOUNDARY + HEADER_DELIMITER_VALUE).getBytes());
-            os.write((HTTP_REQUEST_HEADER_PROPERTIES.CONTENT_TYPE.getValue()
+            os.write((GimbalStoreConstants.HTTP_HEADER_PROPERTIES.CONTENT_TYPE.getValue()
                     + DELIMITER_COLAN + " "
                     + HTTP_HEADER_VALUES.CONTENT_TYPE_TEXT.getValue()
                     + HEADER_DELIMITER_VALUE).getBytes());
 
 
-            os.write(  (HTTP_REQUEST_HEADER_PROPERTIES.CONTENT_DISPOSITION.getValue()
+            os.write(  (GimbalStoreConstants.HTTP_HEADER_PROPERTIES.CONTENT_DISPOSITION.getValue()
                     + DELIMITER_COLAN + " "
                     + MessageFormat.format(HTTP_HEADER_VALUES.CONTENT_DISPOSITION_FORM_DATA.getValue(),
                             key)
