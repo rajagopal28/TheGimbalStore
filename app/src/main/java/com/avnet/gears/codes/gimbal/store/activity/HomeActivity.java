@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.adapter.CategoryViewAdapter;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.CategoryListProcessor;
+import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ImageDataProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.StoreParameterKeys;
@@ -195,7 +196,9 @@ public class HomeActivity extends Activity
             imageView = (ImageView) rootView.findViewById(R.id.image_view);
             if(selectedCategoryBean != null) {
                 if(selectedCategoryBean.getThumbnail() != null) {
-                    ImageResponseAsyncTask imageTask = new ImageResponseAsyncTask(ServerURLUtil.getAbsoluteUrlFor(getResources(), selectedCategoryBean.getThumbnail()), imageView, null);
+                    String imageURL = ServerURLUtil.getAbsoluteUrlFor(getResources(), selectedCategoryBean.getThumbnail());
+                    ImageDataProcessor imageDataProcessor = new ImageDataProcessor(getActivity(), imageView, null);
+                    ImageResponseAsyncTask imageTask = new ImageResponseAsyncTask(imageURL, imageDataProcessor);
                     imageTask.execute(new String[]{});
                 }
                 sectionLabelTextView.setText("Showing List of Items of " + selectedCategoryBean.getName());

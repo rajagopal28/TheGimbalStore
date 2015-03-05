@@ -74,12 +74,29 @@ public class GimbalStoreConstants {
         }
     }
 
+    public static enum SupportedImageFormats {
+        png(HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_PNG),
+        jpeg(HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_JPEG),
+        jpg(HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_JPEG),
+        gif(HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_GIF);
+        private HTTP_HEADER_VALUES responseType;
+        SupportedImageFormats(HTTP_HEADER_VALUES responseType) {
+            this.responseType = responseType;
+        }
+        public HTTP_HEADER_VALUES getResponseType() {
+            return this.responseType;
+        }
+    }
+
     public static enum HTTP_HEADER_VALUES {
         CONNECTION_KEEP_ALIVE("Keep-Alive"),
         CONTENT_TYPE_TEXT("text/plain"),
         CONTENT_DISPOSITION_FORM_DATA("form-data; name=\"{0}\""),
         CONTENT_DISPOSITION_FILE_NAME("file-name=\"{0}\""),
-        CONTENT_TYPE_OCTET(" application/octet-stream"),
+        CONTENT_TYPE_OCTET("application/octet-stream"),
+        CONTENT_TYPE_IMAGE_PNG("image/png"),
+        CONTENT_TYPE_IMAGE_JPEG("image/jpeg"),
+        CONTENT_TYPE_IMAGE_GIF("image/gif"),
         CONTENT_TYPE_MULTIPART("multipart/form-data; boundary={0}"),
         CONTENT_TRANSFER_ENCODING_BINARY("binary");
 

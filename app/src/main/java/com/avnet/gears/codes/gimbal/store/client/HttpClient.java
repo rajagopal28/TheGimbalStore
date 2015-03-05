@@ -4,8 +4,6 @@ package com.avnet.gears.codes.gimbal.store.client;
  * Created by 914889 on 2/24/15.
  */
 
-import android.util.Log;
-
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_HEADER_VALUES;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
@@ -69,6 +67,7 @@ public class HttpClient {
         con.connect();
         return con;
     }
+
     public static HttpURLConnection getHttPOSTConnection(String url) throws MalformedURLException, IOException {
         return getPlainHttConnection(url, HTTP_METHODS.POST, true,
                             true, false, false,
@@ -101,7 +100,7 @@ public class HttpClient {
 
     public static void writePlainParameters(OutputStream outputStream, Map<String,String> parametersMap) throws IOException {
         String outputParametersString = getStringParameters(parametersMap);
-        Log.d("HTTP DEBUG", outputParametersString);
+        // Log.d("HTTP DEBUG", outputParametersString);
         outputStream.write(outputParametersString.getBytes());
     }
     public static byte[] downloadBytesData(HttpURLConnection con) throws IOException{

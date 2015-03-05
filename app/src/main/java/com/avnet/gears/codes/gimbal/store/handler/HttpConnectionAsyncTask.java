@@ -3,6 +3,7 @@ package com.avnet.gears.codes.gimbal.store.handler;
 import android.os.AsyncTask;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
+import com.avnet.gears.codes.gimbal.store.bean.HttpResponseBean;
 import com.avnet.gears.codes.gimbal.store.client.HttpClient;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
@@ -41,7 +42,11 @@ public class HttpConnectionAsyncTask extends AsyncTask<String, List<String>, Obj
             this.responseCode = con.getResponseCode();
             // Log.d("DEBUG", "String response code = " + this.responseCode );
             // Log.d("DEBUG", "Response = " + responseString);
-            this.processor.doProcess(HTTP_RESPONSE_CODES.getCode(this.responseCode), this.responseString);
+            HttpResponseBean responseBean = new HttpResponseBean();
+            responseBean.setResponseString(this.responseString);
+            responseBean.setResponseType(GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_TEXT);
+            responseBean.setResponseCode(HTTP_RESPONSE_CODES.getCode(this.responseCode));
+            this.processor.doProcess(responseBean);
         } catch (Exception e) {
             e.printStackTrace();
         }
