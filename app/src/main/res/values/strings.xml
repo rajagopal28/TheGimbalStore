@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TheGimbalStore</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Adding configuration values that are used as a part of store service -->
+
+    <string name="SERVER_PROTOCOL">http://</string>
+    <string name="STORE_SERVICE_HOST">192.168.3.233</string>
+    <string name="STORE_SERVLET_CONTEXT_ROOT">/webapp/wcs/stores/servlet</string>
+    <string name="MOBILE_ACCESS_CONTROLLER_SERVLET">/F8app</string>
+    <string name="ACTIVE_STORE_ID">10151</string>
+    <string name="ACTIVE_STORE_LANG_ID">-1</string>
+    <!-- Adding configuration values that are used as a part of gimbal device service -->
+    <string name="GIMBAL_DEVICE_ENDPOINT_URL"></string>
+    <string name="title_activity_feed_list">FeedListActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+
+</resources>
