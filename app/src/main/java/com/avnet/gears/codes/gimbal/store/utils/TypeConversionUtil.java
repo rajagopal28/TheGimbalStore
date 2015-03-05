@@ -17,7 +17,7 @@ import java.util.List;
 public class TypeConversionUtil {
 
     public static String[] getCategoryTitleList(List<CategoryBean> categoryBeanList) {
-        List<String> categoryTitleList = new ArrayList<>();
+        List<String> categoryTitleList = new ArrayList<String>();
         if(categoryBeanList != null && !categoryBeanList.isEmpty()) {
             for(CategoryBean categoryBean : categoryBeanList){
                 categoryTitleList.add(categoryBean.getName());
