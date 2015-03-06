@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +56,8 @@ public class HomeActivity extends Activity
      */
     private CharSequence mTitle;
 
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,14 +65,14 @@ public class HomeActivity extends Activity
         // fetch the category list
         mCategoryList = new ArrayList<CategoryBean>();
         // instantiate spinner
-        ProgressDialog progress = NotificationUtil.showProgressDialog(this,
+        progressDialog = NotificationUtil.showProgressDialog(this,
                 GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
                 GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         // initialize bean to process value from async net call for category
         CategoryListProcessor cListProcessor = new CategoryListProcessor(mNavigationDrawerFragment,
-                mCategoryList, progress);
+                mCategoryList, progressDialog);
 
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
@@ -79,20 +82,27 @@ public class HomeActivity extends Activity
         mTitle = getTitle();
 
 
-        // Log.d("DEBUG", "Server URL = " + ServerURLUtil.getStoreServletServerURL(getResources()));
+        Log.d("DEBUG", "Server URL = " + ServerURLUtil.getStoreServletServerURL(getResources()));
         Map<String,String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
 
         paramsMap.put(StoreParameterKeys.identifier.toString(),
                 GimbalStoreConstants.StoreParameterValues.top.toString());
         paramsMap.put(StoreParameterKeys.type.toString(),
                 GimbalStoreConstants.StoreParameterValues.category.toString());
-        // Log.d("DEBUG", paramsMap.toString());
+        Log.d("DEBUG", paramsMap.toString());
 
         HttpConnectionAsyncTask handler = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
                 Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
                 paramsMap,
                 cListProcessor);
         handler.execute(new String[] {});
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(this.progressDialog != null)
+            progressDialog.dismiss();
     }
 
     @Override
@@ -182,27 +192,24 @@ public class HomeActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            // Log.d("DEBUG", "in PlaceHolderFragment.onCreateView()");
+            Log.d("DEBUG", "in PlaceHolderFragment.onCreateView()");
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
             sectionLabelTextView = (TextView)rootView.findViewById(R.id.section_label);
             allListItemsView = (ListView) rootView.findViewById(R.id.subcategories_list_view);
             // use the category Id obtained from HomeActivity to fetch and view list of subcategory items
             imageView = (ImageView) rootView.findViewById(R.id.image_view);
             if(selectedCategoryBean != null) {
-                if(selectedCategoryBean.getThumbnail() != null) {
-                    String imageURL = ServerURLUtil.getAbsoluteUrlFor(getResources(), selectedCategoryBean.getThumbnail());
-                    ImageDataProcessor imageDataProcessor = new ImageDataProcessor(getActivity(), imageView, null);
-                    ImageResponseAsyncTask imageTask = new ImageResponseAsyncTask(Arrays.asList(new String[]{imageURL}), imageDataProcessor);
-                    imageTask.execute(new String[]{});
-                }
+
                 sectionLabelTextView.setText( MessageFormat.format(GimbalStoreConstants.SUB_CATEGORY_VIEW_HEADING,
                         new Object[]{selectedCategoryBean.getName()}));
-                SubcategoryListProcessor scProcessor = new SubcategoryListProcessor(getActivity(), allListItemsView);Map<String,String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
-                // TODO change these param values and add new params
+                SubcategoryListProcessor scProcessor = new SubcategoryListProcessor(getActivity(), allListItemsView);
+                Map<String,String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
                 paramsMap.put(StoreParameterKeys.identifier.toString(),
                         GimbalStoreConstants.StoreParameterValues.top.toString());
                 paramsMap.put(StoreParameterKeys.type.toString(),
                         GimbalStoreConstants.StoreParameterValues.category.toString());
+                paramsMap.put(StoreParameterKeys.parentCategoryId.toString(),
+                        selectedCategoryBean.getUniqueId());
 
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
                         Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
@@ -216,7 +223,7 @@ public class HomeActivity extends Activity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            // Log.d("DEBUG", "in PlaceHolderFragment.onAttach()");
+            Log.d("DEBUG", "in PlaceHolderFragment.onAttach()");
             HomeActivity callingHomeActivity = (HomeActivity) activity;
             int selectedPosition = getArguments().getInt(ARG_SECTION_NUMBER);
             callingHomeActivity.onSectionAttached(
@@ -226,7 +233,7 @@ public class HomeActivity extends Activity
             if( mCategoryBeanList != null && !mCategoryBeanList.isEmpty())
                 selectedCategoryBean = mCategoryBeanList.get(selectedPosition);
 
-            // Log.d("DEBUG", "Holder selectedCategoryId=" + selectedCategoryId);
+            Log.d("DEBUG", "Holder selectedCategoryId=" + selectedCategoryBean);
         }
     }
 

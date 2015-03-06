@@ -1,6 +1,7 @@
 package com.avnet.gears.codes.gimbal.store.handler;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
@@ -31,13 +32,15 @@ public class ImageResponseAsyncTask extends AsyncTask<String, List<String>, Obje
             List<ResponseItemBean> responseItemBeans = new ArrayList<ResponseItemBean>();
             for(String url : this.urls) {
                 HttpURLConnection con = HttpClient.getHttpGetConnection(url, new HashMap<String, String>());
-                // Log.d("DEBUG", "in image process \n url="+ this.url );
+                Log.d("DEBUG", "in image process \n url=" + url);
                 GimbalStoreConstants.HTTP_HEADER_VALUES imageResponseType = TypeConversionUtil.getImageTypeFromExtension(url);
                 ResponseItemBean responseBean = new ResponseItemBean();
                 responseBean.setContentType(imageResponseType);
                 responseBean.setImageBmp(HttpClient.getBitmapFromStream(con.getInputStream()));
                 responseBean.setResponseCode(GimbalStoreConstants.HTTP_RESPONSE_CODES.getCode(con.getResponseCode()));
+
                 con.disconnect();
+                responseItemBeans.add(responseBean);
                 // Log.d("DEBUG", "" + responseBean.toString());
             }
             this.processor.doProcess(responseItemBeans);

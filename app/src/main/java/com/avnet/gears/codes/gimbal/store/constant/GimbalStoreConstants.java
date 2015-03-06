@@ -33,7 +33,8 @@ public class GimbalStoreConstants {
         storeId,
         type,
         identifier,
-        catalogId
+        catalogId,
+        parentCategoryId
     }
 
     public static enum StoreParameterValues {

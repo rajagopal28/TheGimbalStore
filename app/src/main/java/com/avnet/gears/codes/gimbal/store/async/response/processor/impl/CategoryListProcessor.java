@@ -41,11 +41,11 @@ public class CategoryListProcessor implements AsyncResponseProcessor {
     @Override
     public boolean doProcess(List<ResponseItemBean> responseItemBeansList){
             try {
-                if(responseItemBeansList.size() == 0) {
+                if(responseItemBeansList.size() == 1) {
                     ResponseItemBean httpResponseBean = responseItemBeansList.get(0);
                     String responseString = httpResponseBean.getResponseString();
                     HTTP_RESPONSE_CODES responseCode = httpResponseBean.getResponseCode();
-                    // Log.d("PROCESS DEBUG", "" + responseCode);
+                    Log.d("PROCESS DEBUG", "" + responseCode);
 
                     if(responseCode == HTTP_RESPONSE_CODES.OK ||
                             responseCode == HTTP_RESPONSE_CODES.CREATED ||
@@ -56,7 +56,7 @@ public class CategoryListProcessor implements AsyncResponseProcessor {
                         JsonReader reader = new JsonReader(new StringReader(responseString));
                         reader.setLenient(true);
                         CategoryResponseBean responseBean = gson.fromJson(reader, CategoryResponseBean.class);
-                        // Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
+                        Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
                         // Set up the drawer.
                         categoryBeanList.addAll(Arrays.asList(responseBean.getCatalogGroupView()));
                         navigationDrawerFragment.setmCategoryTitles(TypeConversionUtil.getCategoryTitleList(categoryBeanList));

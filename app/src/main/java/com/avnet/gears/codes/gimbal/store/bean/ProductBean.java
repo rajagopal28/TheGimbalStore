@@ -1,25 +1,14 @@
 package com.avnet.gears.codes.gimbal.store.bean;
 
-import java.util.Arrays;
-
 /**
- * Created by 914889 on 3/5/15.
+ * Created by 914889 on 3/6/15.
  */
-public class SubCategoryBean {
+public class ProductBean {
     private String shortdescription;
     private String name;
     private String partNumber;
     private String thumbnail;
     private String uniqueId;
-    private ProductBean[] topBrowsed;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getShortdescription() {
         return shortdescription;
@@ -29,12 +18,12 @@ public class SubCategoryBean {
         this.shortdescription = shortdescription;
     }
 
-    public ProductBean[] getTopBrowsed() {
-        return topBrowsed;
+    public String getName() {
+        return name;
     }
 
-    public void setTopBrowsed(ProductBean[] topBrowsed) {
-        this.topBrowsed = topBrowsed;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPartNumber() {
@@ -63,13 +52,12 @@ public class SubCategoryBean {
 
     @Override
     public String toString() {
-        return "SubCategoryBean{" +
+        return "ProductBean{" +
                 "shortdescription='" + shortdescription + '\'' +
                 ", name='" + name + '\'' +
                 ", partNumber='" + partNumber + '\'' +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", uniqueId='" + uniqueId + '\'' +
-                ", topBrowsed=" + Arrays.toString(topBrowsed) +
                 '}';
     }
 }

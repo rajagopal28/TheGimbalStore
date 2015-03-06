@@ -16,13 +16,14 @@ public class SubCategoryItemProcessor implements AsyncResponseProcessor {
     private TableRow itemsTableRow;
     private Activity parentActivity;
 
-    public SubCategoryItemProcessor(TableRow itemsTableRow, Activity parentActivity) {
+    public SubCategoryItemProcessor( Activity parentActivity, TableRow itemsTableRow) {
         this.itemsTableRow = itemsTableRow;
         this.parentActivity = parentActivity;
     }
 
     @Override
     public boolean doProcess(List<ResponseItemBean> responseItemBeanList) {
+
         return false;
     }
 }

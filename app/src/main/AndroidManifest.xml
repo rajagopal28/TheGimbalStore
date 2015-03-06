@@ -22,6 +22,10 @@
             android:name=".activity.FeedListActivity"
             android:label="@string/title_activity_feed_list" >
         </activity>
+        <activity
+            android:name=".activity.ProductsListActivity"
+            android:label="@string/title_activity_products_list" >
+        </activity>
     </application>
 
 </manifest>

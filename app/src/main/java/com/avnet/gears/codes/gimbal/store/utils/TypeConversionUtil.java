@@ -39,7 +39,7 @@ public class TypeConversionUtil {
         }
         return  returnValue;
     }
-    public static String[] getSubCategoryTitleList(List<SubCategoryBean> scBeanList) {
+    public static List<String> getSubCategoryTitleList(List<SubCategoryBean> scBeanList) {
 
         List<String> scTitles = new ArrayList<String>();
         if(scBeanList != null && !scBeanList.isEmpty()) {
@@ -48,7 +48,7 @@ public class TypeConversionUtil {
             }
         }
         // Log.d("DEBUG", categoryTitleList.toArray(new String[]{}).toString());
-        return scTitles.toArray(new String[]{});
+        return scTitles;
 
     }
 }

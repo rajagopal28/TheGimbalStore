@@ -1,6 +1,7 @@
 package com.avnet.gears.codes.gimbal.store.handler;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
@@ -36,8 +37,10 @@ public class HttpConnectionAsyncTask extends AsyncTask<String, List<String>, Obj
     @Override
     protected String doInBackground(String... params) {
         try {
+
             List<ResponseItemBean> responseItemBeans = new ArrayList<ResponseItemBean>();
             for(String url : this.urls){
+                Log.d("DEBUG", "HTTP processing URL" + url + " For HTTP METHOD=" + this.httpMethod);
                 HttpURLConnection con = null;
                 if(this.httpMethod == HTTP_METHODS.POST) {
                     con = HttpClient.getHttPOSTConnection(url);
@@ -48,13 +51,11 @@ public class HttpConnectionAsyncTask extends AsyncTask<String, List<String>, Obj
                 responseString = responseString.trim()
                         .replace(GimbalStoreConstants.START_COMMENT_STRING, "")
                         .replace(GimbalStoreConstants.END_COMMENT_STRING, "");
-                // Log.d("DEBUG", "String response code = " + this.responseCode );
-                // Log.d("DEBUG", "Response = " + responseString);
                 ResponseItemBean responseBean = new ResponseItemBean();
                 responseBean.setResponseString(responseString);
                 responseBean.setContentType(GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_TEXT);
                 responseBean.setResponseCode(HTTP_RESPONSE_CODES.getCode(con.getResponseCode()));
-
+                // Log.d("DEBUG", "Response = " + responseBean);
                 responseItemBeans.add(responseBean);
                 con.disconnect();
             }
