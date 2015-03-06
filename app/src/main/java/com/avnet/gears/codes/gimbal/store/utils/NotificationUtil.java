@@ -3,6 +3,7 @@ package com.avnet.gears.codes.gimbal.store.utils;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 
@@ -49,5 +50,24 @@ public class NotificationUtil {
 
         // send notification
         notificationManager.notify(0, n);
+    }
+
+
+        /*
+        Log.d("DEBUG NOTIFY", "Sending notification from Home Activity");
+        Intent targetIntent = new Intent(getApplicationContext(), FeedListActivity.class);
+        targetIntent.putExtra(INTENT_EXTRA_ATTR_KEY.SELECTED_NOTIFICATION_ID.toString(), "notify_id_111");
+        NotificationUtil.notify(this, targetIntent, "Home Notification", " Notification test from home activity",
+                R.drawable.ic_drawer,true, null);
+        Log.d("DEBUG NOTIFY", "End of notification sending from Home Activity");
+        */
+
+
+    public static ProgressDialog showProgressDialog(Context context, String titleText, String processingText) {
+        ProgressDialog progress = new ProgressDialog(context);
+        progress.setTitle(titleText);
+        progress.setMessage(processingText);
+        progress.show();
+        return progress;
     }
 }

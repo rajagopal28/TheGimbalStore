@@ -4,6 +4,9 @@ package com.avnet.gears.codes.gimbal.store.client;
  * Created by 914889 on 2/24/15.
  */
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_HEADER_VALUES;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
@@ -146,27 +149,26 @@ public class HttpClient {
     }
 
 
-    public static String getResponseString(HttpURLConnection con) throws Exception {
-        int responseCode = con.getResponseCode();
+    public static String getResponseAsString(InputStream is) throws IOException {
 
         StringBuffer buffer = new StringBuffer();
-        if(GimbalStoreConstants.HTTP_RESPONSE_CODES.getCode(responseCode) == GimbalStoreConstants.HTTP_RESPONSE_CODES.OK
-                || GimbalStoreConstants.HTTP_RESPONSE_CODES.getCode(responseCode) == GimbalStoreConstants.HTTP_RESPONSE_CODES.ACCEPTED) {
-            InputStream is = con.getInputStream();
-            int len = 0;
-
-
-            byte[] data1 = new byte[BYTE_ARRAY_LIMIT_1K];
-            while ( -1 != (len = is.read(data1)) )
-                buffer.append(new String(data1, 0, len));
-
-        }
-        con.disconnect();
+        int len = 0;
+        byte[] data1 = new byte[BYTE_ARRAY_LIMIT_1K];
+        while ( -1 != (len = is.read(data1)) )
+            buffer.append(new String(data1, 0, len));
 
         return buffer.toString();
     }
 
-
+    public static Bitmap getBitmapFromStream(InputStream inputStream) {
+        Bitmap bmp = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inMutable = true;
+        if(inputStream != null) {
+            bmp = BitmapFactory.decodeStream(inputStream);
+        }
+        return bmp;
+    }
 
     private static void writeMultiPartParamData(OutputStream os, Map<String,String> parametersMap) throws Exception {
         Set<String> keySet = parametersMap.keySet();

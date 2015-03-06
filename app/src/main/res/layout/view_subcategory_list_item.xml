@@ -9,7 +9,7 @@
         android:layout_height="wrap_content">
 
         <TableRow
-            android:id="@+id/tableRow1"
+            android:id="@+id/detailsTableRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp" >
@@ -30,42 +30,11 @@
 
         </TableRow>
         <TableRow
-            android:id="@+id/tableRow2"
+            android:id="@+id/itemsTableRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp" >
 
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton1"
-                android:layout_column="0"
-                android:src="@drawable/ic_drawer" />
-
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton2"
-                android:layout_column="1"
-                android:src="@drawable/ic_drawer" />
-
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton3"
-                android:layout_column="2"
-                android:src="@drawable/ic_drawer" />
-
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton4"
-                android:layout_column="3"
-                android:src="@drawable/ic_drawer" />
         </TableRow>
         </TableLayout>
 </LinearLayout>

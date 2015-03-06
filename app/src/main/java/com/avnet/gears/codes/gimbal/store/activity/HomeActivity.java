@@ -20,18 +20,24 @@ import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.adapter.CategoryViewAdapter;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.CategoryListProcessor;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ImageDataProcessor;
+import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.SubcategoryListProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
+import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.StoreParameterKeys;
 import com.avnet.gears.codes.gimbal.store.fragment.NavigationDrawerFragment;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
 import com.avnet.gears.codes.gimbal.store.handler.ImageResponseAsyncTask;
+import com.avnet.gears.codes.gimbal.store.utils.NotificationUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class HomeActivity extends Activity
@@ -58,16 +64,13 @@ public class HomeActivity extends Activity
         // fetch the category list
         mCategoryList = new ArrayList<CategoryBean>();
         // instantiate spinner
-        ProgressDialog progress = new ProgressDialog(this);
-        progress.setTitle("Loading");
-        progress.setMessage("Wait while loading...");
-        progress.show();
+        ProgressDialog progress = NotificationUtil.showProgressDialog(this,
+                GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
+                GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         // initialize bean to process value from async net call for category
-        CategoryListProcessor cListProcessor = new CategoryListProcessor(this,
-                mNavigationDrawerFragment,
-                (DrawerLayout)findViewById(R.id.drawer_layout),
+        CategoryListProcessor cListProcessor = new CategoryListProcessor(mNavigationDrawerFragment,
                 mCategoryList, progress);
 
         mNavigationDrawerFragment.setUp(
@@ -75,23 +78,16 @@ public class HomeActivity extends Activity
                 (DrawerLayout)findViewById(R.id.drawer_layout),
                 TypeConversionUtil.getCategoryTitleList(mCategoryList));
 
-        /*
-        Log.d("DEBUG NOTIFY", "Sending notification from Home Activity");
-        Intent targetIntent = new Intent(getApplicationContext(), FeedListActivity.class);
-        targetIntent.putExtra(INTENT_EXTRA_ATTR_KEY.SELECTED_NOTIFICATION_ID.toString(), "notify_id_111");
-        NotificationUtil.notify(this, targetIntent, "Home Notification", " Notification test from home activity",
-                R.drawable.ic_drawer,true, null);
-        Log.d("DEBUG NOTIFY", "End of notification sending from Home Activity");
-        */
-
         mTitle = getTitle();
 
 
         // Log.d("DEBUG", "Server URL = " + ServerURLUtil.getStoreServletServerURL(getResources()));
         Map<String,String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
-        paramsMap.put(StoreParameterKeys.catalogId.toString(), "10001");
-        paramsMap.put(StoreParameterKeys.identifier.toString(), "top");
-        paramsMap.put(StoreParameterKeys.type.toString(), "category");
+
+        paramsMap.put(StoreParameterKeys.identifier.toString(),
+                GimbalStoreConstants.StoreParameterValues.top.toString());
+        paramsMap.put(StoreParameterKeys.type.toString(),
+                GimbalStoreConstants.StoreParameterValues.category.toString());
         // Log.d("DEBUG", paramsMap.toString());
 
         HttpConnectionAsyncTask handler = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
@@ -201,12 +197,20 @@ public class HomeActivity extends Activity
                     ImageResponseAsyncTask imageTask = new ImageResponseAsyncTask(imageURL, imageDataProcessor);
                     imageTask.execute(new String[]{});
                 }
-                sectionLabelTextView.setText("Showing List of Items of " + selectedCategoryBean.getName());
+                sectionLabelTextView.setText( MessageFormat.format(GimbalStoreConstants.SUB_CATEGORY_VIEW_HEADING,
+                        new Object[]{selectedCategoryBean.getName()}));
+                SubcategoryListProcessor scProcessor = new SubcategoryListProcessor(getActivity(), allListItemsView);Map<String,String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+                // TODO change these param values and add new params
+                paramsMap.put(StoreParameterKeys.identifier.toString(),
+                        GimbalStoreConstants.StoreParameterValues.top.toString());
+                paramsMap.put(StoreParameterKeys.type.toString(),
+                        GimbalStoreConstants.StoreParameterValues.category.toString());
+                HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
+                        ServerURLUtil.getStoreServletServerURL(getResources()),
+                        paramsMap,scProcessor);
+                asyncTask.execute(new String[] {});
             }
-            String[] subCategoryItemsList = new String[] {"subcat1","subcat2","subcat3","subcat4","subcat5","subcat6","subcat7"};
-            CategoryViewAdapter productListAdapter = new CategoryViewAdapter(getActivity(), subCategoryItemsList);
-            allListItemsView.setAdapter(productListAdapter);
-            allListItemsView.refreshDrawableState();
+
             return rootView;
         }
 

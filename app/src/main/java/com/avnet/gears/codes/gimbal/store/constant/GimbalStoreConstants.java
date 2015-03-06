@@ -7,6 +7,16 @@ public class GimbalStoreConstants {
 
     public static String SUCCESS_STRING = "DONE";
 
+    public static String DEFAULT_SPINNER_TITLE = "Loading...";
+    public static String DEFAULT_SPINNER_INFO_TEXT = "Please wait for a while!!";
+
+    public static String SUB_CATEGORY_VIEW_HEADING = "Showing List of Items of {0}";
+
+    public static enum IMAGE_CONTAINER_TYPE {
+        IMAGE_VIEW,
+        IMAGE_BUTTON
+    }
+
     // inter activity interaction data key values
     public static enum INTENT_EXTRA_ATTR_KEY {
         SELECTED_CATEGORY_ID,
@@ -24,6 +34,11 @@ public class GimbalStoreConstants {
         type,
         identifier,
         catalogId
+    }
+
+    public static enum StoreParameterValues {
+        top,
+        category
     }
 
     public static enum HTTP_METHODS {

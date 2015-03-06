@@ -17,6 +17,7 @@
     <string name="STORE_SERVLET_CONTEXT_ROOT">/webapp/wcs/stores/servlet</string>
     <string name="MOBILE_ACCESS_CONTROLLER_SERVLET">/F8app</string>
     <string name="ACTIVE_STORE_ID">10151</string>
+    <string name="DEFAULT_CATALOG_ID">10001</string>
     <string name="ACTIVE_STORE_LANG_ID">-1</string>
     <!-- Adding configuration values that are used as a part of gimbal device service -->
     <string name="GIMBAL_DEVICE_ENDPOINT_URL"></string>

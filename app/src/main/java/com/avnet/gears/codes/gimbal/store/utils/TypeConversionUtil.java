@@ -2,9 +2,9 @@ package com.avnet.gears.codes.gimbal.store.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
+import com.avnet.gears.codes.gimbal.store.bean.SubCategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 
 import java.io.InputStream;
@@ -26,15 +26,7 @@ public class TypeConversionUtil {
         // Log.d("DEBUG", categoryTitleList.toArray(new String[]{}).toString());
         return categoryTitleList.toArray(new String[]{});
     }
-    public static Bitmap getBitmapFromStream(InputStream inputStream) {
-        Bitmap bmp = null;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-        if(inputStream != null) {
-            bmp = BitmapFactory.decodeStream(inputStream);
-        }
-        return bmp;
-    }
+
     public static GimbalStoreConstants.HTTP_HEADER_VALUES getImageTypeFromExtension(String imageUrl) {
         GimbalStoreConstants.HTTP_HEADER_VALUES returnValue = null;
         int indexOfDot = imageUrl.lastIndexOf(".");
@@ -46,5 +38,17 @@ public class TypeConversionUtil {
             }
         }
         return  returnValue;
+    }
+    public static String[] getSubCategoryTitleList(List<SubCategoryBean> scBeanList) {
+
+        List<String> scTitles = new ArrayList<String>();
+        if(scBeanList != null && !scBeanList.isEmpty()) {
+            for(SubCategoryBean bean : scBeanList){
+                scTitles.add(bean.getName());
+            }
+        }
+        // Log.d("DEBUG", categoryTitleList.toArray(new String[]{}).toString());
+        return scTitles.toArray(new String[]{});
+
     }
 }

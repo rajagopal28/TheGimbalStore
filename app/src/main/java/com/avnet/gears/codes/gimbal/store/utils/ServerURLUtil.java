@@ -38,6 +38,8 @@ public class ServerURLUtil {
                 String.valueOf(resource.getString(R.string.ACTIVE_STORE_LANG_ID)));
         paramsMap.put(GimbalStoreConstants.StoreParameterKeys.storeId.toString(),
                 String.valueOf(resource.getString(R.string.ACTIVE_STORE_ID)));
+        paramsMap.put(GimbalStoreConstants.StoreParameterKeys.catalogId.toString(),
+                String.valueOf(resource.getString(R.string.DEFAULT_CATALOG_ID)));
         return paramsMap;
     }
 }

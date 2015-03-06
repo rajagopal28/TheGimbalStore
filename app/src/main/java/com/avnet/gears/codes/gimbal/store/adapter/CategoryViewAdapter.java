@@ -5,9 +5,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.avnet.gears.codes.gimbal.store.R;
+import com.avnet.gears.codes.gimbal.store.bean.SubCategoryBean;
+import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
+
+import java.util.List;
 
 /**
  * Created by 914889 on 2/23/15.
@@ -15,12 +20,12 @@ import com.avnet.gears.codes.gimbal.store.R;
 public class CategoryViewAdapter extends ArrayAdapter<String> {
     private final Activity context;
 
-    private String[] labelList;
+    private List<SubCategoryBean> scBeansList;
 
     public CategoryViewAdapter(Activity context,
-                               String[] list) {
-        super(context, R.layout.view_subcategory_list_item, list);
-        labelList = list;
+                               List<SubCategoryBean> list, List<String> scTitles) {
+        super(context, R.layout.view_subcategory_list_item, scTitles);
+        scBeansList = list;
         this.context = context;
     }
     @Override
@@ -28,16 +33,11 @@ public class CategoryViewAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView= inflater.inflate(R.layout.view_subcategory_list_item, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.textView1);
-        ImageView[] imageViews = new ImageView[]{
-                (ImageView) rowView.findViewById(R.id.imageButton1),
-                (ImageView) rowView.findViewById(R.id.imageButton2),
-                (ImageView) rowView.findViewById(R.id.imageButton3),
-                (ImageView) rowView.findViewById(R.id.imageButton4)
-        };
-        txtTitle.setText(labelList[position]);
-        for(ImageView imageView : imageViews) {
-            imageView.setImageResource(R.drawable.ic_launcher);
-        }
+
+        txtTitle.setText(scBeansList.get(position).getName());
+
+        TableRow itemsRow = (TableRow) rowView.findViewById(R.id.itemsTableRow);
+
         return rowView;
     }
 }

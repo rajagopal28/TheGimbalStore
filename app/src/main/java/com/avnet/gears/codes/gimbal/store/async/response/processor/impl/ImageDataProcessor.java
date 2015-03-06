@@ -2,65 +2,64 @@ package com.avnet.gears.codes.gimbal.store.async.response.processor.impl;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.view.View;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
-import com.avnet.gears.codes.gimbal.store.bean.HttpResponseBean;
+import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
-import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
+
+import java.util.List;
 
 /**
  * Created by 914889 on 3/5/15.
  */
 public class ImageDataProcessor implements AsyncResponseProcessor {
 
-    private ImageView imageView;
-    private ImageButton imageButton;
+    private GimbalStoreConstants.IMAGE_CONTAINER_TYPE imageContainerType;
     private Activity parentActivity;
+    private View parentView;
 
-    public ImageDataProcessor(Activity parentActivity, ImageView imageView, ImageButton imageButton) {
-        this.imageView = imageView;
+    public ImageDataProcessor(Activity parentActivity, View parentView, GimbalStoreConstants.IMAGE_CONTAINER_TYPE imageContainerType) {
+
         this.parentActivity = parentActivity;
-        this.imageButton = imageButton;
+        this.imageContainerType = imageContainerType;
+        this.parentView = parentView;
     }
 
     @Override
-    public boolean doProcess(HttpResponseBean httpResponseBean) {
+    public boolean doProcess(List<ResponseItemBean> responseItemBeanList) {
 
-        GimbalStoreConstants.HTTP_RESPONSE_CODES responseCode = httpResponseBean.getResponseCode();
-        // Log.d("PROCESS DEBUG", "" + responseCode);
-        GimbalStoreConstants.HTTP_HEADER_VALUES responseType = httpResponseBean.getResponseType();
-        if( responseType == GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_GIF
-                || responseType == GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_JPEG
-                || responseType == GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_PNG
-                ) {
+        for(ResponseItemBean responseItemBean : responseItemBeanList) {
+            GimbalStoreConstants.HTTP_RESPONSE_CODES responseCode = responseItemBean.getResponseCode();
+            // Log.d("PROCESS DEBUG", "" + responseCode);
+            GimbalStoreConstants.HTTP_HEADER_VALUES responseType = responseItemBean.getContentType();
+
             if (responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.OK ||
                     responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.CREATED ||
                     responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.ACCEPTED) {
-                if (httpResponseBean.getResponseStream() != null) {
-                    final Bitmap bitmap = TypeConversionUtil.getBitmapFromStream(httpResponseBean.getResponseStream());
+                if( responseType == GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_GIF
+                        || responseType == GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_JPEG
+                        || responseType == GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_PNG
+                    ) {
+
+                    final Bitmap bitmap = responseItemBean.getImageBmp();
                     if(bitmap != null) {
                         parentActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                if(imageContainerType == GimbalStoreConstants.IMAGE_CONTAINER_TYPE.IMAGE_BUTTON) {
 
-                                if(imageView != null) {
-                                    // Log.d("DEBUG","placing image in view");
-                                    imageView.setImageBitmap(bitmap);
-                                } else if(imageButton != null) {
-                                    // Log.d("DEBUG","placing image in button");
-                                    imageButton.setImageBitmap(bitmap);
                                 }
+
                             }
                         });
-                    }
 
+
+                     }
                 }
-
-                return true;
             }
         }
-        return false;
+
+        return true;
     }
 }
