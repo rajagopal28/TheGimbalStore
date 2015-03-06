@@ -43,7 +43,7 @@ public class CategoryListProcessor implements AsyncResponseProcessor {
             try {
                 if(responseItemBeansList.size() == 0) {
                     ResponseItemBean httpResponseBean = responseItemBeansList.get(0);
-                    String responseString = HttpClient.getResponseAsString(httpResponseBean.getInputStream());
+                    String responseString = httpResponseBean.getResponseString();
                     HTTP_RESPONSE_CODES responseCode = httpResponseBean.getResponseCode();
                     // Log.d("PROCESS DEBUG", "" + responseCode);
 
@@ -61,12 +61,13 @@ public class CategoryListProcessor implements AsyncResponseProcessor {
                         categoryBeanList.addAll(Arrays.asList(responseBean.getCatalogGroupView()));
                         navigationDrawerFragment.setmCategoryTitles(TypeConversionUtil.getCategoryTitleList(categoryBeanList));
                         navigationDrawerFragment.refreshDrawerListView();
+                        // hide progress bar
                         progressDialog.dismiss();
                         return true;
                     }
-                        // hide progress bar
-                    }
-            } catch (IOException ex){
+
+                }
+            } catch (Exception ex){
                 Log.e("ERROR", ex.getMessage(), ex);
           }
         return false;

@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.avnet.gears.codes.gimbal.store.R;
-import com.avnet.gears.codes.gimbal.store.adapter.CategoryViewAdapter;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.CategoryListProcessor;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ImageDataProcessor;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.SubcategoryListProcessor;
@@ -34,10 +33,9 @@ import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class HomeActivity extends Activity
@@ -91,7 +89,7 @@ public class HomeActivity extends Activity
         // Log.d("DEBUG", paramsMap.toString());
 
         HttpConnectionAsyncTask handler = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
-                ServerURLUtil.getStoreServletServerURL(getResources()),
+                Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
                 paramsMap,
                 cListProcessor);
         handler.execute(new String[] {});
@@ -194,7 +192,7 @@ public class HomeActivity extends Activity
                 if(selectedCategoryBean.getThumbnail() != null) {
                     String imageURL = ServerURLUtil.getAbsoluteUrlFor(getResources(), selectedCategoryBean.getThumbnail());
                     ImageDataProcessor imageDataProcessor = new ImageDataProcessor(getActivity(), imageView, null);
-                    ImageResponseAsyncTask imageTask = new ImageResponseAsyncTask(imageURL, imageDataProcessor);
+                    ImageResponseAsyncTask imageTask = new ImageResponseAsyncTask(Arrays.asList(new String[]{imageURL}), imageDataProcessor);
                     imageTask.execute(new String[]{});
                 }
                 sectionLabelTextView.setText( MessageFormat.format(GimbalStoreConstants.SUB_CATEGORY_VIEW_HEADING,
@@ -205,8 +203,9 @@ public class HomeActivity extends Activity
                         GimbalStoreConstants.StoreParameterValues.top.toString());
                 paramsMap.put(StoreParameterKeys.type.toString(),
                         GimbalStoreConstants.StoreParameterValues.category.toString());
+
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
-                        ServerURLUtil.getStoreServletServerURL(getResources()),
+                        Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
                         paramsMap,scProcessor);
                 asyncTask.execute(new String[] {});
             }
