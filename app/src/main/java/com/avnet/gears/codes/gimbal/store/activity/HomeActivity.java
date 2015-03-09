@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.CategoryListProcessor;
-import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ImageDataProcessor;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.SubcategoryListProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
@@ -27,7 +26,6 @@ import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_MET
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.StoreParameterKeys;
 import com.avnet.gears.codes.gimbal.store.fragment.NavigationDrawerFragment;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
-import com.avnet.gears.codes.gimbal.store.handler.ImageResponseAsyncTask;
 import com.avnet.gears.codes.gimbal.store.utils.NotificationUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;

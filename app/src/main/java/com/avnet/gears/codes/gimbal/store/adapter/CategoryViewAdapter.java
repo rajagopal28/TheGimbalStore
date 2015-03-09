@@ -1,14 +1,12 @@
 package com.avnet.gears.codes.gimbal.store.adapter;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -16,12 +14,10 @@ import android.widget.TextView;
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.activity.ProductsListActivity;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ImageDataProcessor;
-import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.SubCategoryItemProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
 import com.avnet.gears.codes.gimbal.store.bean.SubCategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.ImageResponseAsyncTask;
-import com.avnet.gears.codes.gimbal.store.utils.NotificationUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 
 import java.util.ArrayList;
@@ -75,7 +71,7 @@ public class CategoryViewAdapter extends ArrayAdapter<String> {
             }
         }
         Log.d("DEBUG", "sending image urls" + imageUrls);
-        ImageDataProcessor imageDataProcessor = new ImageDataProcessor(context, itemsRow, true, imageViewsList);
+        ImageDataProcessor imageDataProcessor = new ImageDataProcessor(context, itemsRow, imageViewsList);
         ImageResponseAsyncTask imageResponseAsyncTask = new ImageResponseAsyncTask(imageUrls, imageDataProcessor);
         imageResponseAsyncTask.execute(new String[] {});
         Log.d("DEBUG", "processed images of sub cat" + selectedSubCategoryBean.getName());

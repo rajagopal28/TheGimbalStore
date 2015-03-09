@@ -28,5 +28,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_products_list">ProductsListActivity</string>
+    <string name="title_activity_product_details">ProductDetailsActivity</string>
 
 </resources>

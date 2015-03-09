@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 
-import java.io.InputStream;
-
 /**
  * Created by 914889 on 3/5/15.
  */

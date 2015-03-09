@@ -1,13 +1,10 @@
 package com.avnet.gears.codes.gimbal.store.utils;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
+import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
 import com.avnet.gears.codes.gimbal.store.bean.SubCategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +44,22 @@ public class TypeConversionUtil {
                 scTitles.add(bean.getName());
             }
         }
-        // Log.d("DEBUG", categoryTitleList.toArray(new String[]{}).toString());
+
         return scTitles;
+
+    }
+
+
+    public static List<String> getProductsTitleList(List<ProductBean> productBeanList) {
+
+        List<String> prdTitles = new ArrayList<String>();
+        if(productBeanList != null && !productBeanList.isEmpty()) {
+            for(ProductBean bean : productBeanList){
+                prdTitles.add(bean.getName());
+            }
+        }
+
+        return prdTitles;
 
     }
 }

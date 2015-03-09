@@ -5,10 +5,13 @@ import android.app.ProgressDialog;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.avnet.gears.codes.gimbal.store.adapter.ProductsViewAdapter;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
-import com.avnet.gears.codes.gimbal.store.bean.CategoryResponseBean;
+import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
+import com.avnet.gears.codes.gimbal.store.bean.ProductsResponseBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
+import com.avnet.gears.codes.gimbal.store.listener.ProductItemClickListener;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,10 +53,22 @@ public class ProductsListProcessor implements AsyncResponseProcessor {
 
                     JsonReader reader = new JsonReader(new StringReader(responseString));
                     reader.setLenient(true);
-                    CategoryResponseBean responseBean = gson.fromJson(reader, CategoryResponseBean.class);
+                    ProductsResponseBean responseBean = gson.fromJson(reader, ProductsResponseBean.class);
                     Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
+                    final List<ProductBean> productsList = Arrays.asList(responseBean.getCatalogGroupView());
                     // Set up the List View.
-                    // TODO insert logic here
+                    final ProductsViewAdapter productsViewAdapter = new ProductsViewAdapter(parentActivity, productsListView,
+                            Arrays.asList(responseBean.getCatalogGroupView()),
+                            TypeConversionUtil.getProductsTitleList(productsList));
+                    final ProductItemClickListener productItemClickListener = new ProductItemClickListener(parentActivity, productsList);
+                    parentActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            productsListView.setAdapter(productsViewAdapter);
+                            productsListView.setOnItemClickListener(productItemClickListener);
+                            productsListView.refreshDrawableState();
+                        }
+                    });
                     // hide progress bar
                     progressDialog.dismiss();
                     return true;

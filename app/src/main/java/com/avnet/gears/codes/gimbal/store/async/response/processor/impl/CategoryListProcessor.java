@@ -7,7 +7,6 @@ import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponse
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryResponseBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
-import com.avnet.gears.codes.gimbal.store.client.HttpClient;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_RESPONSE_CODES;
 import com.avnet.gears.codes.gimbal.store.fragment.NavigationDrawerFragment;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
@@ -15,7 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;

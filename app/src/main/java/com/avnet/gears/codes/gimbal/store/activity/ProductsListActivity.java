@@ -29,7 +29,7 @@ public class ProductsListActivity extends Activity {
             if(!"".equals(selectedSubCategoryId)){
                 // get products list from server
                 Log.d("DEBUG","obtained sub cat id =" + selectedSubCategoryId);
-                ListView productsListView = (ListView)findViewById(R.id.productsListView);
+                ListView productsListView = (ListView)findViewById(R.id.products_list_view);
                 ProgressDialog dialog = NotificationUtil.showProgressDialog(this,
                         GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
                         GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);

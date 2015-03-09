@@ -1,6 +1,7 @@
 package com.avnet.gears.codes.gimbal.store.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,15 +48,19 @@ public class ProductsViewAdapter  extends ArrayAdapter<String> {
         productTitle.setText(selectedProductBean.getName());
         TextView productPrice = (TextView) rowView.findViewById(R.id.product_price);
         productPrice.setText(selectedProductBean.getPartNumber());
+        TextView productRating = (TextView) rowView.findViewById(R.id.product_rating);
+        productRating.setText(selectedProductBean.getShortdescription());
         if(selectedProductBean.getThumbnail() != null) {
 
             String imageToLoad = ServerURLUtil.getAbsoluteUrlFor(context.getResources(),
                     selectedProductBean.getThumbnail());
+            Log.d("DEBUG","Loading image of product : " + selectedProductBean.getName());
             ImageDataProcessor imgProcessor = new ImageDataProcessor(context, null,
-                    false, Arrays.asList(new ImageView[]{thumbnail}));
+                     Arrays.asList(new ImageView[]{thumbnail}));
             ImageResponseAsyncTask asyncTask = new ImageResponseAsyncTask(Arrays.asList(new String[]{imageToLoad}), imgProcessor);
             asyncTask.execute(new String[]{});
         }
         return rowView;
     }
+
 }

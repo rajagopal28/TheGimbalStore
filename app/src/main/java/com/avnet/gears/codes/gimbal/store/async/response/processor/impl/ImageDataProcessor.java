@@ -2,9 +2,7 @@ package com.avnet.gears.codes.gimbal.store.async.response.processor.impl;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -12,7 +10,6 @@ import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponse
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,14 +20,13 @@ public class ImageDataProcessor implements AsyncResponseProcessor {
     private List<ImageView> imageViewList;
     private Activity parentActivity;
     private ViewGroup parentView;
-    private boolean setOnParentView;
 
 
-    public ImageDataProcessor(Activity parentActivity, ViewGroup parentView,
-                              boolean setOnParentView, List<ImageView> imageViewList) {
+    public ImageDataProcessor(Activity parentActivity,
+                              ViewGroup parentView,
+                              List<ImageView> imageViewList) {
 
         this.parentActivity = parentActivity;
-        this.setOnParentView = setOnParentView;
         this.parentView = parentView;
         this.imageViewList = imageViewList;
     }
@@ -60,7 +56,7 @@ public class ImageDataProcessor implements AsyncResponseProcessor {
             }
             index++;
         }
-        if(setOnParentView) {
+        if(parentView != null) {
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

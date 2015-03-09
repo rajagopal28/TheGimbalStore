@@ -26,6 +26,14 @@
             android:name=".activity.ProductsListActivity"
             android:label="@string/title_activity_products_list" >
         </activity>
+        <activity
+            android:name=".activity.ProductDetailsActivity"
+            android:label="@string/title_activity_product_details"
+            android:parentActivityName=".activity.ProductsListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.avnet.gears.codes.gimbal.store.activity.ProductsListActivity" />
+        </activity>
     </application>
 
 </manifest>
