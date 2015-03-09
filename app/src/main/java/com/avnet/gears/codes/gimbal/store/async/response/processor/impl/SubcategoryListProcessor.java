@@ -35,11 +35,10 @@ public class SubcategoryListProcessor implements AsyncResponseProcessor {
 
     @Override
     public boolean doProcess(List<ResponseItemBean> responseItemBeanList) {
-        if(responseItemBeanList.size() == 1) {
+        if (responseItemBeanList.size() == 1) {
             ResponseItemBean httpResponseBean = responseItemBeanList.get(0);
-
             HTTP_RESPONSE_CODES responseCode = httpResponseBean.getResponseCode();
-            if(responseCode == HTTP_RESPONSE_CODES.OK ||
+            if (responseCode == HTTP_RESPONSE_CODES.OK ||
                     responseCode == HTTP_RESPONSE_CODES.CREATED ||
                     responseCode == HTTP_RESPONSE_CODES.ACCEPTED) {
                 String responseString = httpResponseBean.getResponseString();

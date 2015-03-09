@@ -16,10 +16,32 @@ public class ProductDetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         String selectedProductId = "";
         Bundle intentBundle = getIntent().getExtras();
-        if(intentBundle != null) {
-            selectedProductId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString());
+        if (intentBundle != null) {
+            selectedProductId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(), "");
         }
         Log.d("DEBUG", "Displaying details of product : " + selectedProductId);
+        // Make async calls
+        /*if(!"".equals(selectedProductId)) {
+            ProgressDialog dialog = NotificationUtil.showProgressDialog(this,
+                    GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
+                    GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
+            ImageView productImage = (ImageView) findViewById(R.id.product_display_image);
+            TextView dummyTextView = (TextView) findViewById(R.id.product_title);
+            ProductItemProcessor productItemProcessor = new ProductItemProcessor(this, dialog,
+                            productImage, dummyTextView);
+            Map<String,String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+            paramsMap.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
+                    GimbalStoreConstants.StoreParameterValues.top.toString());
+            paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
+                    GimbalStoreConstants.StoreParameterValues.category.toString());
+            paramsMap.put(GimbalStoreConstants.StoreParameterKeys.productId.toString(),
+                    selectedProductId);
+
+            HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
+                    Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
+                    paramsMap,productItemProcessor);
+            asyncTask.execute(new String[] {});
+        }*/
         // get product details to display
         // TODO mock and display data Aravindan
         setContentView(R.layout.activity_product_details);
