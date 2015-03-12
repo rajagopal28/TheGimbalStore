@@ -12,7 +12,7 @@ import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ProductsListProcessor;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
-import com.avnet.gears.codes.gimbal.store.utils.NotificationUtil;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 
 import java.util.Arrays;
@@ -24,17 +24,17 @@ public class ProductsListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle intentBundle = getIntent().getExtras();
-        if(intentBundle != null ) {
+        if (intentBundle != null) {
             String selectedSubCategoryId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(), "");
-            if(!"".equals(selectedSubCategoryId)){
+            if (!"".equals(selectedSubCategoryId)) {
                 // get products list from server
-                Log.d("DEBUG","obtained sub cat id =" + selectedSubCategoryId);
-                ListView productsListView = (ListView)findViewById(R.id.products_list_view);
-                ProgressDialog dialog = NotificationUtil.showProgressDialog(this,
+                Log.d("DEBUG", "obtained sub cat id =" + selectedSubCategoryId);
+                ListView productsListView = (ListView) findViewById(R.id.products_list_view);
+                ProgressDialog dialog = AndroidUtil.showProgressDialog(this,
                         GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
                         GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
                 ProductsListProcessor productsListProcessor = new ProductsListProcessor(this, productsListView, dialog);
-                Map<String,String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+                Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
                         GimbalStoreConstants.StoreParameterValues.top.toString());
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
@@ -44,8 +44,8 @@ public class ProductsListActivity extends Activity {
 
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                         Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
-                        paramsMap,productsListProcessor);
-                asyncTask.execute(new String[] {});
+                        paramsMap, productsListProcessor);
+                asyncTask.execute(new String[]{});
 
             }
         }

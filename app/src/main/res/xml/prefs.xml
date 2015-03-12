@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Gimbal Store Preferences" />
+    <CheckBoxPreference
+        android:key="isDebug"
+        android:summary="Enable debugging the flow"
+        android:title="Use debug server" />
+    <SwitchPreference
+        android:key="logsVerbose"
+        android:summary="Show debug logs on LogCat"
+        android:title="Debug Logs" />
+</PreferenceScreen>

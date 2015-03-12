@@ -1,10 +1,13 @@
 package com.avnet.gears.codes.gimbal.store.activity;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -20,13 +23,15 @@ import android.widget.TextView;
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.CategoryListProcessor;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.SubcategoryListProcessor;
+import com.avnet.gears.codes.gimbal.store.authenticator.activity.StoreAuthenticatorActivity;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.StoreParameterKeys;
 import com.avnet.gears.codes.gimbal.store.fragment.NavigationDrawerFragment;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
-import com.avnet.gears.codes.gimbal.store.utils.NotificationUtil;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
+import com.avnet.gears.codes.gimbal.store.utils.GCMAccountUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
 
@@ -40,13 +45,12 @@ import java.util.Map;
 public class HomeActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    // list of categories to be shown on drawer fragment
+    protected List<CategoryBean> mCategoryList;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    // list of categories to be shown on drawer fragment
-    protected List<CategoryBean> mCategoryList;
     // section label
     private TextView sectionLabelView ;
     /**
@@ -55,19 +59,57 @@ public class HomeActivity extends Activity
     private CharSequence mTitle;
 
     private ProgressDialog progressDialog;
+    private AccountManager accountManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        // fetch the category list
-        mCategoryList = new ArrayList<CategoryBean>();
-        // instantiate spinner
-        progressDialog = NotificationUtil.showProgressDialog(this,
-                GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
-                GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
+
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+        accountManager = AccountManager.get(this);
+
+        boolean isFirstTimeOpen = false;//TODO uncomment //AndroidUtil.checkFirsTimeOpen(this);
+        String senderId = getResources().getString(R.string.GCM_SENDER_ID);
+        if (isFirstTimeOpen) {
+            // check for already added account through accounts
+            Account[] userAccounts = accountManager.getAccountsByType(GimbalStoreConstants.APP_ACCOUNT_TYPE_STRING);
+            if (userAccounts == null || userAccounts.length == 0) {
+                Intent intent = new Intent(this, StoreAuthenticatorActivity.class);
+                intent.putExtra(GimbalStoreConstants.AUTHENTICATION_INTENT_ARGS.ARG_ACCOUNT_TYPE.toString(),
+                        GimbalStoreConstants.APP_ACCOUNT_TYPE_STRING);
+                intent.putExtra(GimbalStoreConstants.AUTHENTICATION_INTENT_ARGS.AUTH_TOKEN_TYPE.toString(),
+                        GimbalStoreConstants.AUTH_TOKEN_TYPE.STORE_ACCESS_FULL.toString());// full as of now can change in later phase
+                intent.putExtra(GimbalStoreConstants.AUTHENTICATION_INTENT_ARGS.ARG_IS_NEW_ACCOUNT.toString(), true);
+                // check for GCM id, register if not found
+                GCMAccountUtil.checkAndRegisterDeviceTOGCM(this, senderId,
+                        intent, GimbalStoreConstants.ACTIVITY_REQUEST_SIGNUP);
+                return;
+            }
+        }
+        processCategoryListData();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GimbalStoreConstants.ACTIVITY_REQUEST_SIGNUP && resultCode == RESULT_OK) {
+            processCategoryListData();
+            // sign in success then list the category values
+        }
+    }
+
+    private void processCategoryListData() {
+        // fetch the category list
+        mCategoryList = new ArrayList<CategoryBean>();
+
+        // instantiate spinner
+        progressDialog = AndroidUtil.showProgressDialog(this,
+                GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
+                GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
         // initialize bean to process value from async net call for category
         CategoryListProcessor cListProcessor = new CategoryListProcessor(mNavigationDrawerFragment,
                 mCategoryList, progressDialog);
@@ -165,11 +207,15 @@ public class HomeActivity extends Activity
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        private static List<CategoryBean> mCategoryBeanList;
         private TextView sectionLabelTextView ;
         private ImageView imageView;
         private ListView allListItemsView;
         private CategoryBean selectedCategoryBean;
-        private static List<CategoryBean> mCategoryBeanList;
+
+        public PlaceholderFragment() {
+        }
+
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -182,9 +228,6 @@ public class HomeActivity extends Activity
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
-        }
-
-        public PlaceholderFragment() {
         }
 
         @Override

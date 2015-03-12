@@ -14,9 +14,34 @@ public class GimbalStoreConstants {
     public static String START_COMMENT_STRING = "/*";
     public static String END_COMMENT_STRING = "*/";
 
-    public static enum IMAGE_CONTAINER_TYPE {
-        IMAGE_VIEW,
-        IMAGE_BUTTON
+    public static String PREF_IS_FIRST_TIME_OPEN = "PREF_IS_FIRST_TIME_OPEN";
+
+    public static int ACTIVITY_REQUEST_SIGNUP = 11;
+
+    public static String APP_ACCOUNT_TYPE_STRING = "com.avnet.gimbal.store.mobile.user.account.type";
+
+    public static String DEFAULT_STORE_NOTIFICATION_TITLE = "You have a Store Notification!!!";
+
+    public static enum NOTIFICATION_TYPE {
+        NOTIFY_RECOMMENDATION("recommendation"),
+        NOTIFY_FEED("feed");
+        private String stringType;
+
+        NOTIFICATION_TYPE(String stringType) {
+            this.stringType = stringType;
+        }
+
+        public static NOTIFICATION_TYPE getNotificationType(String stringType) {
+            NOTIFICATION_TYPE returnType = NOTIFICATION_TYPE.NOTIFY_FEED;
+            for (NOTIFICATION_TYPE notificationType : NOTIFICATION_TYPE.values()) {
+                if (notificationType.stringType.equalsIgnoreCase(stringType)) {
+                    returnType = notificationType;
+                    break;
+                }
+            }
+            ;
+            return returnType;
+        }
     }
 
     // inter activity interaction data key values
@@ -26,9 +51,11 @@ public class GimbalStoreConstants {
         SELECTED_PRODUCT_ID,
         SELECTED_FEED_ID,
         SELECTED_NOTIFICATION_ID,
+        GIVEN_GCM_DEVICE_ID,
         SELECTED_REVIEW_ID;
     }
 
+    // network data param keys
     public static enum StoreParameterKeys {
         langId,
         storeId,
@@ -36,12 +63,20 @@ public class GimbalStoreConstants {
         identifier,
         catalogId,
         parentCategoryId,
+        logonId,
+        logonPassword,
+        gcmDeviceId,
+        securityToken,
         productId// TODO change
     }
 
+    // network data param keys
     public static enum StoreParameterValues {
         top,
-        category
+        category,
+        signup,
+        authentication,
+        signin
     }
 
     public static enum HTTP_METHODS {
@@ -131,6 +166,41 @@ public class GimbalStoreConstants {
         public String getValue() {
             return this.value;
         }
+    }
+
+    public static enum AUTHENTICATION_INTENT_ARGS {
+        ARG_USER_ACCOUNT_NAME,
+        ARG_ACCOUNT_TYPE,
+        ARG_USER_ACCOUNT_PASSWORD,
+        AUTH_TOKEN_TYPE,
+        ARG_IS_NEW_ACCOUNT,
+        ARG_KEY_ERROR_MSG,
+        ARG_USER_PASS
+    }
+
+    public static enum AUTH_TOKEN_TYPE {
+
+        STORE_ACCESS_FULL("Full Access to store features"),
+        STORE_ACCESS_LIMITED("Limited access to store features");
+
+        private String tokenLabel;
+
+        AUTH_TOKEN_TYPE(String tokenLabel) {
+            this.tokenLabel = tokenLabel;
+        }
+
+        public String getTokenLabel() {
+            return this.tokenLabel;
+        }
+    }
+
+    public static enum notificationDataKey {
+        notificationType,
+        notificationText,
+        notificationTime,
+        notificationSender,
+        collapse_key,
+        message
     }
 
 }

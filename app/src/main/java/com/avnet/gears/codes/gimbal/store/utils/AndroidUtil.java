@@ -6,23 +6,26 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.avnet.gears.codes.gimbal.store.bean.NotificationActionBean;
+import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 
 import java.util.List;
 
 /**
  * Created by 914889 on 2/27/15.
  */
-public class NotificationUtil {
+public class AndroidUtil {
 
     public static void notify(Context context, Intent targetIntent,
                               String contentText, String notificationTitle, int resourceIcon,
-                              boolean autoCancel, List<NotificationActionBean> actionsBeanList)  {
-    // prepare intent which is triggered if the
-    // notification is selected
+                              boolean autoCancel, List<NotificationActionBean> actionsBeanList) {
+        // prepare intent which is triggered if the
+        // notification is selected
 
-    PendingIntent pIntent = PendingIntent.getActivity(context, 0, targetIntent, 0);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, targetIntent, 0);
 
         // build notification
         // the addAction re-use the same intent to keep the example short
@@ -33,8 +36,8 @@ public class NotificationUtil {
                 .setContentIntent(pIntent)
                 .setAutoCancel(autoCancel);
         // dynamically add sub actions, if any
-        if(actionsBeanList != null) {
-            for(NotificationActionBean actionBean : actionsBeanList){
+        if (actionsBeanList != null) {
+            for (NotificationActionBean actionBean : actionsBeanList) {
                 builder.addAction(actionBean.getDrawableIcon(),
                         actionBean.getActionTitle(),
                         actionBean.getTargetActionPendingIntent());
@@ -42,7 +45,7 @@ public class NotificationUtil {
         }
 
         // build to notifications once we set all teh parameters
-        Notification n  = builder.build();
+        Notification n = builder.build();
 
         // create a notification manager from the calling context
         NotificationManager notificationManager =
@@ -69,5 +72,21 @@ public class NotificationUtil {
         progress.setMessage(processingText);
         progress.show();
         return progress;
+    }
+
+    public static boolean checkFirsTimeOpen(Context context) {
+        boolean isFirstTimeOpen = true;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        // if no value then first time
+        isFirstTimeOpen = sharedPreferences.getBoolean(GimbalStoreConstants.PREF_IS_FIRST_TIME_OPEN, true);
+        // update the preference if first time
+        if (isFirstTimeOpen)
+            sharedPreferences.edit().putBoolean(GimbalStoreConstants.PREF_IS_FIRST_TIME_OPEN, false);
+        return isFirstTimeOpen;
+    }
+
+    public static String getGCMDeviceId(Context context) {
+        return "";
+
     }
 }

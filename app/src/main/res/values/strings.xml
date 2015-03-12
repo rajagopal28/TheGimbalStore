@@ -13,6 +13,12 @@
     <string name="action_settings">Settings</string>
     <string name="show_more">Show More</string>
 
+    <string name="sign_in_label">SignIn to store with your credentials</string>
+    <string name="sign_in">SignIn</string>
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
+    <string name="store_authenticator_label">GimbalStore Authentication</string>
+
     <!-- Adding configuration values that are used as a part of store service -->
 
     <string name="SERVER_PROTOCOL">http://</string>
@@ -22,6 +28,8 @@
     <string name="ACTIVE_STORE_ID">10151</string>
     <string name="DEFAULT_CATALOG_ID">10001</string>
     <string name="ACTIVE_STORE_LANG_ID">-1</string>
+    <string name="GCM_SENDER_ID">667623029279</string>
+
     <!-- Adding configuration values that are used as a part of gimbal device service -->
     <string name="GIMBAL_DEVICE_ENDPOINT_URL"></string>
     <string name="title_activity_feed_list">FeedListActivity</string>
@@ -29,5 +37,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_products_list">ProductsListActivity</string>
     <string name="title_activity_product_details">ProductDetailsActivity</string>
+    <string name="title_activity_store_authenticator">StoreAuthenticatorActivity</string>
 
 </resources>
