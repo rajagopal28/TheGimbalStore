@@ -74,6 +74,7 @@ public class GimbalStoreConstants {
     public static enum StoreParameterValues {
         top,
         category,
+        product,
         signup,
         authentication,
         signin

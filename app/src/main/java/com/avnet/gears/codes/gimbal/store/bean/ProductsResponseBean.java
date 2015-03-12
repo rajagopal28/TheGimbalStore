@@ -12,7 +12,7 @@ public class ProductsResponseBean {
     private String[] type;
     private String[] storeId;
 
-    private ProductBean[] CatalogGroupView;
+    private ProductBean[] CatalogEntryView;
 
     public String[] getParentCategoryId() {
         return parentCategoryId;
@@ -54,12 +54,12 @@ public class ProductsResponseBean {
         this.storeId = storeId;
     }
 
-    public ProductBean[] getCatalogGroupView() {
-        return CatalogGroupView;
+    public ProductBean[] getCatalogEntryView() {
+        return CatalogEntryView;
     }
 
-    public void setCatalogGroupView(ProductBean[] catalogGroupView) {
-        CatalogGroupView = catalogGroupView;
+    public void setCatalogEntryView(ProductBean[] catalogEntryView) {
+        CatalogEntryView = catalogEntryView;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ProductsResponseBean {
                 ", langId=" + Arrays.toString(langId) +
                 ", type=" + Arrays.toString(type) +
                 ", storeId=" + Arrays.toString(storeId) +
-                ", CatalogGroupView=" + Arrays.toString(CatalogGroupView) +
+                ", CatalogGroupView=" + Arrays.toString(CatalogEntryView) +
                 '}';
     }
 }

@@ -46,12 +46,18 @@ public class ImageDataProcessor implements AsyncResponseProcessor {
                         || responseType == GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_JPEG
                         || responseType == GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_PNG
                     ) {
+                    final int tIndex = index;
                     Log.d("DEBUG", "retrieved image of type " + responseType);
                     final Bitmap bitmap = responseItemBean.getImageBmp();
-                    if(bitmap != null) {
-                        ImageView imageView = imageViewList.get(index);
-                        imageView.setImageBitmap(bitmap);
-                    }
+                    parentActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (bitmap != null) {
+                                ImageView imageView = imageViewList.get(tIndex);
+                                imageView.setImageBitmap(bitmap);
+                            }
+                        }
+                    });
                 }
             }
             index++;

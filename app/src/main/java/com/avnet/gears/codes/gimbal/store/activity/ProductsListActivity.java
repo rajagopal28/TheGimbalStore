@@ -39,7 +39,7 @@ public class ProductsListActivity extends Activity {
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
                         GimbalStoreConstants.StoreParameterValues.top.toString());
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
-                        GimbalStoreConstants.StoreParameterValues.category.toString());
+                        GimbalStoreConstants.StoreParameterValues.product.toString());
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.parentCategoryId.toString(),
                         selectedSubCategoryId);
 

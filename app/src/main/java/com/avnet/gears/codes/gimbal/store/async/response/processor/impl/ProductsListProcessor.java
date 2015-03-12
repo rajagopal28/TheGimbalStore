@@ -55,10 +55,10 @@ public class ProductsListProcessor implements AsyncResponseProcessor {
                     reader.setLenient(true);
                     ProductsResponseBean responseBean = gson.fromJson(reader, ProductsResponseBean.class);
                     Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
-                    final List<ProductBean> productsList = Arrays.asList(responseBean.getCatalogGroupView());
+                    final List<ProductBean> productsList = Arrays.asList(responseBean.getCatalogEntryView());
                     // Set up the List View.
                     final ProductsViewAdapter productsViewAdapter = new ProductsViewAdapter(parentActivity, productsListView,
-                            Arrays.asList(responseBean.getCatalogGroupView()),
+                            Arrays.asList(responseBean.getCatalogEntryView()),
                             TypeConversionUtil.getProductsTitleList(productsList));
                     final ProductItemClickListener productItemClickListener = new ProductItemClickListener(parentActivity, productsList);
                     parentActivity.runOnUiThread(new Runnable() {
