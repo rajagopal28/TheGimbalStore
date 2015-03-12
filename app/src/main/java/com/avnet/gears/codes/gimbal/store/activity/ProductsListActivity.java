@@ -24,6 +24,7 @@ public class ProductsListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle intentBundle = getIntent().getExtras();
+        setContentView(R.layout.activity_products_list);
         if (intentBundle != null) {
             String selectedSubCategoryId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(), "");
             if (!"".equals(selectedSubCategoryId)) {
@@ -49,7 +50,6 @@ public class ProductsListActivity extends Activity {
 
             }
         }
-        setContentView(R.layout.activity_products_list);
     }
 
 
