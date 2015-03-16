@@ -2,40 +2,41 @@ package com.avnet.gears.codes.gimbal.store.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.avnet.gears.codes.gimbal.store.R;
+import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.FeedItemListDataProcessor;
+import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.FeedItemProcessor;
+import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY;
+import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
+import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 
-import java.util.Locale;
+import java.util.Arrays;
+import java.util.Map;
 
 public class FeedListActivity extends Activity implements ActionBar.TabListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v13.app.FragmentStatePagerAdapter}.
-     */
-    SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+
+    private GimbalStoreConstants.FEED_ITEM_TYPE[] feedItemTypes = new GimbalStoreConstants.FEED_ITEM_TYPE[]{
+            GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_RECOMMENDATION,
+            GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_REVIEW,
+            GimbalStoreConstants.FEED_ITEM_TYPE.SUGGESTED_PRODUCTS
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +44,43 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
         setContentView(R.layout.activity_feed_list);
 
         Bundle bundle = getIntent().getExtras();
-        Log.d("DEBUG NOTIFY", "getting data from the notification "
-                + bundle.getString(INTENT_EXTRA_ATTR_KEY.SELECTED_NOTIFICATION_ID.toString()));
+
+        String feedItemId = bundle.getString(INTENT_EXTRA_ATTR_KEY.SELECTED_FEED_ID.toString());
+        String productId = bundle.getString(INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString());
+        String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(),
+                GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
+        Log.d("DEBUG NOTIFY", "getting data from the notification feedItemId ="
+                + feedItemId + " productId= " + productId);
+        if (feedItemId != null) {
+            ProgressDialog progressDialog = AndroidUtil.showProgressDialog(this,
+                    GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
+                    GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
+            Map<String, String> feedItemParams = ServerURLUtil.getBasicConfigParamsMap(getResources());
+            feedItemParams.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
+                    GimbalStoreConstants.StoreParameterValues.feedItem.toString());
+            feedItemParams.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
+                    GimbalStoreConstants.StoreParameterValues.top.toString());
+            feedItemParams.put(GimbalStoreConstants.StoreParameterKeys.uniqueId.toString(),
+                    feedItemId);
+            // TODO finalize
+
+            String serverURL = ServerURLUtil.getStoreServletServerURL(getResources());
+            Log.d("DEBUG", feedItemParams.toString());
+            FragmentManager fm = getFragmentManager();
+            FeedItemProcessor feedItemProcessor = new FeedItemProcessor(this, fm, progressDialog, productId);
+            HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(
+                    GimbalStoreConstants.HTTP_METHODS.GET,
+                    Arrays.asList(serverURL), Arrays.asList(feedItemParams),
+                    cookieString, feedItemProcessor);
+            asyncTask.execute(new String[]{});
+        }
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
-
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -69,23 +93,42 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
         });
 
         // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+        for (int i = 0; i < feedItemTypes.length; i++) {
             // Create a tab with text corresponding to the page title defined by
             // the adapter. Also specify this Activity object, which implements
             // the TabListener interface, as the callback (listener) for when
             // this tab is selected.
             actionBar.addTab(
                     actionBar.newTab()
-                            .setText(mSectionsPagerAdapter.getPageTitle(i))
+                            .setText(feedItemTypes[i].getItemTypeLabel())
                             .setTabListener(this));
         }
+        Log.d("DEBUG", "generating spinner");
+        ProgressDialog progressDialog = AndroidUtil.showProgressDialog(this,
+                GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
+                GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
+        String urlString = ServerURLUtil.getStoreServletServerURL(getResources());
+        Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+        paramsMap.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
+                GimbalStoreConstants.StoreParameterValues.top.toString());
+        paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
+                GimbalStoreConstants.StoreParameterValues.feedItem.toString());
+
+        FeedItemListDataProcessor feedItemListDataProcessor = new FeedItemListDataProcessor(this, mViewPager,
+                feedItemTypes, progressDialog);
+        HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
+                Arrays.asList(urlString),
+                Arrays.asList(paramsMap),
+                cookieString,
+                feedItemListDataProcessor);
+        asyncTask.execute(new String[]{});
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_feed_list, menu);
+        getMenuInflater().inflate(R.menu.menu_global, menu);
         return true;
     }
 
@@ -95,10 +138,14 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        boolean result = AndroidUtil.processSettingsAction(this, id);
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (!result) {
+            switch (id) {
+                case R.id.action_settings:
+                    return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -117,77 +164,6 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
-            }
-            return null;
-        }
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_feed_list, container, false);
-            return rootView;
-        }
     }
 
 }

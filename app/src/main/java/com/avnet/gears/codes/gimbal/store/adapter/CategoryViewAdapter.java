@@ -2,6 +2,7 @@ package com.avnet.gears.codes.gimbal.store.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,18 +38,19 @@ public class CategoryViewAdapter extends ArrayAdapter<String> {
         scBeansList = list;
         this.context = context;
     }
+
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         final SubCategoryBean selectedSubCategoryBean = scBeansList.get(position);
-        View rowView= inflater.inflate(R.layout.view_subcategory_list_item, null, true);
+        View rowView = inflater.inflate(R.layout.view_subcategory_list_item, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.sub_category_name);
         txtTitle.setText(selectedSubCategoryBean.getName());
         TextView seeAllLink = (TextView) rowView.findViewById(R.id.see_all_text);
         seeAllLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("DEBUG","Clicking see all>>" + selectedSubCategoryBean.getUniqueId() + " >> " + selectedSubCategoryBean.getName());
+                Log.d("DEBUG", "Clicking see all>>" + selectedSubCategoryBean.getUniqueId() + " >> " + selectedSubCategoryBean.getName());
                 Intent intent = new Intent(context, ProductsListActivity.class);
                 intent.putExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
                         selectedSubCategoryBean.getUniqueId());
@@ -60,10 +62,10 @@ public class CategoryViewAdapter extends ArrayAdapter<String> {
         ProductBean[] topBrowsedProducts = selectedSubCategoryBean.getTopBrowsed();
         List<String> imageUrls = new ArrayList<String>();
         List<ImageView> imageViewsList = new ArrayList<ImageView>();
-        Log.d("DEBUG","total items in scat = " + topBrowsedProducts.length);
-        for(ProductBean productBean : topBrowsedProducts) {
-            Log.d("DEBUG", "product item = "+ productBean);
-            if(productBean.getThumbnail() != null) {
+        Log.d("DEBUG", "total items in scat = " + topBrowsedProducts.length);
+        for (ProductBean productBean : topBrowsedProducts) {
+            Log.d("DEBUG", "product item = " + productBean);
+            if (productBean.getThumbnail() != null) {
                 ImageView imageView = new ImageView(context);
                 String absoluteImageUrl = ServerURLUtil.getAbsoluteUrlFor(context.getResources(), productBean.getThumbnail());
                 imageUrls.add(absoluteImageUrl);
@@ -72,8 +74,12 @@ public class CategoryViewAdapter extends ArrayAdapter<String> {
         }
         Log.d("DEBUG", "sending image urls" + imageUrls);
         ImageDataProcessor imageDataProcessor = new ImageDataProcessor(context, itemsRow, imageViewsList);
-        ImageResponseAsyncTask imageResponseAsyncTask = new ImageResponseAsyncTask(imageUrls, imageDataProcessor);
-        imageResponseAsyncTask.execute(new String[] {});
+        String cookieString = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).
+                getString(GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY, null);
+
+        ImageResponseAsyncTask imageResponseAsyncTask = new ImageResponseAsyncTask(imageUrls,
+                imageDataProcessor, cookieString);
+        imageResponseAsyncTask.execute(new String[]{});
         Log.d("DEBUG", "processed images of sub cat" + selectedSubCategoryBean.getName());
         return rowView;
     }

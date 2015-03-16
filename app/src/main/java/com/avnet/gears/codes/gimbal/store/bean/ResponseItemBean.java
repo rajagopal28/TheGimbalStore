@@ -11,6 +11,7 @@ public class ResponseItemBean {
     private GimbalStoreConstants.HTTP_HEADER_VALUES contentType;
     private String responseString;
     private Bitmap imageBmp;
+    private String cookieValue;
     private GimbalStoreConstants.HTTP_RESPONSE_CODES responseCode;
 
     public GimbalStoreConstants.HTTP_HEADER_VALUES getContentType() {
@@ -19,6 +20,14 @@ public class ResponseItemBean {
 
     public void setContentType(GimbalStoreConstants.HTTP_HEADER_VALUES contentType) {
         this.contentType = contentType;
+    }
+
+    public String getCookieValue() {
+        return cookieValue;
+    }
+
+    public void setCookieValue(String cookieValue) {
+        this.cookieValue = cookieValue;
     }
 
     public String getResponseString() {
@@ -51,6 +60,7 @@ public class ResponseItemBean {
                 "contentType=" + contentType +
                 ", responseString='" + responseString + '\'' +
                 ", imageBmp=" + imageBmp +
+                ", cookieValue='" + cookieValue + '\'' +
                 ", responseCode=" + responseCode +
                 '}';
     }

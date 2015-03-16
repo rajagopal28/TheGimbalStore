@@ -8,6 +8,7 @@ import android.util.Log;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
@@ -37,7 +38,12 @@ public class GCMDeviceIdProcessor implements AsyncResponseProcessor {
         try {
             String deviceId = googleCloudMessaging.register(this.senderId);
             Bundle targetBundle = this.targetIntent.getExtras();
+            Log.d("DEBUG", "deviceId = " + deviceId + "senderId= " + senderId);
+            // save the device id in preference
+            AndroidUtil.savePreferenceValue(callerActivity.getApplicationContext(),
+                    GimbalStoreConstants.PREF_GCM_DEVICE_ID, deviceId);
             targetBundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.GIVEN_GCM_DEVICE_ID.toString(), deviceId);
+            this.targetIntent.putExtras(targetBundle);
             this.callerActivity.startActivityForResult(this.targetIntent, this.requestCode);
             return true;
         } catch (IOException ioe) {

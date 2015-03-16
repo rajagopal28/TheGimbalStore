@@ -5,42 +5,61 @@ package com.avnet.gears.codes.gimbal.store.constant;
  */
 public class GimbalStoreConstants {
 
+    public static final String DELIMITER_COLAN = ":";
+    public static final String DELIMITER_COMMA = ",";
+    public static final String DELIMITER_QUESTION = "?";
+    public static final String DELIMITER_SEMICOLAN = ";";
+    public static final String DELIMITER_AMPERSAND = "&";
+    public static final String DELIMITER_EQUAL = "=";
     public static String SUCCESS_STRING = "DONE";
-
     public static String DEFAULT_SPINNER_TITLE = "Loading...";
     public static String DEFAULT_SPINNER_INFO_TEXT = "Please wait for a while!!";
-
+    public static String SYNC_CONTACTS_SPINNER_TITLE = "Syncing Contacts..";
+    public static String SYNC_CONTACTS_SPINNER_INFO_TEXT = "Please wait!! This may take a while!!!";
+    public static int CONTACTS_UPLOAD_CHUNK_LIMIT = 25;
+    public static String TAG_SHOW_FEED_ITEM = "FeedItemDialogFragment";
     public static String SUB_CATEGORY_VIEW_HEADING = "Showing List of Items of {0}";
     public static String START_COMMENT_STRING = "/*";
     public static String END_COMMENT_STRING = "*/";
-
     public static String PREF_IS_FIRST_TIME_OPEN = "PREF_IS_FIRST_TIME_OPEN";
-
     public static int ACTIVITY_REQUEST_SIGNUP = 11;
-
+    public static int ACTIVITY_RESULT_LOGIN_SUCCESS = 22;
     public static String APP_ACCOUNT_TYPE_STRING = "com.avnet.gimbal.store.mobile.user.account.type";
-
     public static String DEFAULT_STORE_NOTIFICATION_TITLE = "You have a Store Notification!!!";
+    public static String COOKIES_RESPONSE_HEADER = "Set-Cookie";
+    public static String COOKIES_REQUEST_HEADER = "Cookie";
+    public static String PREF_GCM_DEVICE_ID = "PREF_GCM_DEVICE_ID";
+    public static String PREF_SESSION_COOKIE_PARAM_KEY = "PREF_SESSION_COOKIE_PARAM_KEY";
+
+
+    public static enum RECOMMENDATION_TYPE {
+        TYPE_CATEGORY,
+        TYPE_PRODUCT,
+        TYPE_REVIEW_CATEGORY,
+        TYPE_REVIEW_PRODUCT
+    }
 
     public static enum NOTIFICATION_TYPE {
-        NOTIFY_RECOMMENDATION("recommendation"),
-        NOTIFY_FEED("feed");
-        private String stringType;
+        ASK_FRIEND,
+        ASK_FRIEND_REVIEW,
+        FRIEND_REVIEW,
+        FRIEND_RECOMMENDATION,
+        PRODUCT_PROMOTION
+    }
 
-        NOTIFICATION_TYPE(String stringType) {
-            this.stringType = stringType;
+    public static enum FEED_ITEM_TYPE {
+        FRIEND_RECOMMENDATION("Recommended By Friends"),
+        FRIEND_REVIEW("Reviewed By Friends"),
+        SUGGESTED_PRODUCTS("Products You may like");
+
+        private String itemTypeLabel;
+
+        FEED_ITEM_TYPE(String label) {
+            this.itemTypeLabel = label;
         }
 
-        public static NOTIFICATION_TYPE getNotificationType(String stringType) {
-            NOTIFICATION_TYPE returnType = NOTIFICATION_TYPE.NOTIFY_FEED;
-            for (NOTIFICATION_TYPE notificationType : NOTIFICATION_TYPE.values()) {
-                if (notificationType.stringType.equalsIgnoreCase(stringType)) {
-                    returnType = notificationType;
-                    break;
-                }
-            }
-            ;
-            return returnType;
+        public String getItemTypeLabel() {
+            return this.itemTypeLabel;
         }
     }
 
@@ -52,6 +71,8 @@ public class GimbalStoreConstants {
         SELECTED_FEED_ID,
         SELECTED_NOTIFICATION_ID,
         GIVEN_GCM_DEVICE_ID,
+        SELECTED_RECOMMENDATION_ID,
+        FEED_ITEM_TEXT,
         SELECTED_REVIEW_ID;
     }
 
@@ -67,7 +88,9 @@ public class GimbalStoreConstants {
         logonPassword,
         gcmDeviceId,
         securityToken,
-        productId// TODO change
+        recommendationId,
+        contactValues,
+        uniqueId// TODO change
     }
 
     // network data param keys
@@ -75,6 +98,8 @@ public class GimbalStoreConstants {
         top,
         category,
         product,
+        feedItem,
+        notificationItem,
         signup,
         authentication,
         signin
@@ -198,10 +223,38 @@ public class GimbalStoreConstants {
     public static enum notificationDataKey {
         notificationType,
         notificationText,
+        notificationId,
         notificationTime,
         notificationSender,
+        recommendationId,
+        feedItemId,
+        productId,
         collapse_key,
         message
+    }
+
+    public static enum PHONE_NUMBER_TYPE {
+        WORK(3),
+        MOBILE(2),
+        OTHER(7),
+        HOME(1);
+
+        private int numberType;
+
+        PHONE_NUMBER_TYPE(int numType) {
+            this.numberType = numType;
+        }
+
+        public static PHONE_NUMBER_TYPE getNumberType(int phoneType) {
+            PHONE_NUMBER_TYPE returnType = OTHER;
+            for (PHONE_NUMBER_TYPE type : PHONE_NUMBER_TYPE.values()) {
+                if (type.numberType == phoneType) {
+                    returnType = type;
+                    break;
+                }
+            }
+            return returnType;
+        }
     }
 
 }

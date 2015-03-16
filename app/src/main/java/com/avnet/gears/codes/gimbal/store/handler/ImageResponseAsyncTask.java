@@ -20,18 +20,21 @@ import java.util.List;
 public class ImageResponseAsyncTask extends AsyncTask<String, List<String>, Object> {
     private List<String> urls;
     private AsyncResponseProcessor processor;
+    private String cookieString;
 
-    public ImageResponseAsyncTask(List<String> url, AsyncResponseProcessor processor) {
+    public ImageResponseAsyncTask(List<String> url, AsyncResponseProcessor processor, String cookieString) {
         this.urls = url;
         this.processor = processor;
+        this.cookieString = cookieString;
     }
 
     @Override
     protected Object doInBackground(String... params) {
         try {
             List<ResponseItemBean> responseItemBeans = new ArrayList<ResponseItemBean>();
-            for(String url : this.urls) {
-                HttpURLConnection con = HttpClient.getHttpGetConnection(url, new HashMap<String, String>());
+            for (String url : this.urls) {
+                HttpURLConnection con = HttpClient.getHttpGetConnection(url, cookieString,
+                        new HashMap<String, String>());
                 Log.d("DEBUG", "in image process \n url=" + url);
                 GimbalStoreConstants.HTTP_HEADER_VALUES imageResponseType = TypeConversionUtil.getImageTypeFromExtension(url);
                 ResponseItemBean responseBean = new ResponseItemBean();

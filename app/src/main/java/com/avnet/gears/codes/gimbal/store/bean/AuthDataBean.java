@@ -1,85 +1,85 @@
 package com.avnet.gears.codes.gimbal.store.bean;
 
-import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
+import java.util.Arrays;
 
 /**
  * Created by 914889 on 3/11/15.
  */
-public class AuthDataBean {
-    private String username;
-    private String password;
-    private String authToken;
-    private String accountType;
-    private GimbalStoreConstants.AUTH_TOKEN_TYPE authTokenType;
-    private boolean isValidUser;
-    private boolean isAuthenticated;
+public class AuthDataBean extends BaseServerResponseBean {
+    private String[] logonId;
+    private String[] logonPassword;
+    private String reLogonURL;
+    private String securityToken;
+    private String URL;
+    private String[] gcmDeviceId;
+    private CookieBean[] Cookies;
 
-    public String getUsername() {
-        return username;
+    public String[] getLogonId() {
+        return logonId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLogonId(String[] logonId) {
+        this.logonId = logonId;
     }
 
-    public String getPassword() {
-        return password;
+    public String[] getLogonPassword() {
+        return logonPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setLogonPassword(String[] logonPassword) {
+        this.logonPassword = logonPassword;
     }
 
-    public String getAuthToken() {
-        return authToken;
+    public String getReLogonURL() {
+        return reLogonURL;
     }
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+    public void setReLogonURL(String reLogonURL) {
+        this.reLogonURL = reLogonURL;
     }
 
-    public String getAccountType() {
-        return accountType;
+    public String getSecurityToken() {
+        return securityToken;
     }
 
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
+    public void setSecurityToken(String securityToken) {
+        this.securityToken = securityToken;
     }
 
-    public boolean isValidUser() {
-        return isValidUser;
+    public String getURL() {
+        return URL;
     }
 
-    public void setValidUser(boolean isValidUser) {
-        this.isValidUser = isValidUser;
+    public void setURL(String URL) {
+        this.URL = URL;
     }
 
-    public boolean isAuthenticated() {
-        return isAuthenticated;
+    public String[] getGcmDeviceId() {
+        return gcmDeviceId;
     }
 
-    public void setAuthenticated(boolean isAuthenticated) {
-        this.isAuthenticated = isAuthenticated;
+    public void setGcmDeviceId(String[] gcmDeviceId) {
+        this.gcmDeviceId = gcmDeviceId;
     }
 
-    public GimbalStoreConstants.AUTH_TOKEN_TYPE getAuthTokenType() {
-        return authTokenType;
+    public CookieBean[] getCookies() {
+        return Cookies;
     }
 
-    public void setAuthTokenType(GimbalStoreConstants.AUTH_TOKEN_TYPE authTokenType) {
-        this.authTokenType = authTokenType;
+    public void setCookies(CookieBean[] cookies) {
+        Cookies = cookies;
     }
 
     @Override
     public String toString() {
-        return "AuthDataBean{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", authToken='" + authToken + '\'' +
-                ", accountType='" + accountType + '\'' +
-                ", authTokenType='" + authTokenType + '\'' +
-                ", isValidUser=" + isValidUser +
-                ", isAuthenticated=" + isAuthenticated +
+        return super.toString() + "AuthDataBean{" +
+                "logonId=" + Arrays.toString(logonId) +
+                ", logonPassword=" + Arrays.toString(logonPassword) +
+                ", reLogonURL='" + reLogonURL + '\'' +
+                ", securityToken='" + securityToken + '\'' +
+                ", URL='" + URL + '\'' +
+                ", gcmDeviceId=" + Arrays.toString(gcmDeviceId) +
+                ", Cookies=" + Arrays.toString(Cookies) +
                 '}';
     }
 }

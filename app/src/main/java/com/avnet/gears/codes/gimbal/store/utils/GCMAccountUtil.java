@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.GCMDeviceIdProcessor;
+import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.GenericAsyncTask;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -44,12 +46,23 @@ public class GCMAccountUtil {
     public static void checkAndRegisterDeviceTOGCM(Activity callerActivity, String senderId,
                                                    Intent intent, int requestCode) {
         if (checkPlayServices(callerActivity)) {
-            // create some processor and pass this intent with request code
-            GCMDeviceIdProcessor gcmDeviceIdProcessor = new GCMDeviceIdProcessor(callerActivity, senderId,
-                    requestCode, intent);
-            // create an async task
-            GenericAsyncTask asyncTask = new GenericAsyncTask(gcmDeviceIdProcessor);
-            asyncTask.execute();
+            String gcmDeviceId = "";
+            gcmDeviceId = AndroidUtil.getPreferenceString(callerActivity.getApplicationContext(),
+                    GimbalStoreConstants.PREF_GCM_DEVICE_ID);
+            if (!gcmDeviceId.isEmpty()) {
+                Bundle targetBundle = intent.getExtras();
+                Log.d("DEBUG", "deviceId = " + gcmDeviceId + "senderId= " + senderId);
+                targetBundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.GIVEN_GCM_DEVICE_ID.toString(), gcmDeviceId);
+                intent.putExtras(targetBundle);
+                callerActivity.startActivityForResult(intent, requestCode);
+            } else {
+                // create some processor and pass this intent with request code
+                GCMDeviceIdProcessor gcmDeviceIdProcessor = new GCMDeviceIdProcessor(callerActivity, senderId,
+                        requestCode, intent);
+                // create an async task
+                GenericAsyncTask asyncTask = new GenericAsyncTask(gcmDeviceIdProcessor);
+                asyncTask.execute();
+            }
         } else {
             Log.d("DEBUG", "checking Device Id from GCM");
         }

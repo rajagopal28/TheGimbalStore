@@ -8,15 +8,20 @@ import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.activity.FeedListActivity;
-import com.avnet.gears.codes.gimbal.store.activity.HomeActivity;
+import com.avnet.gears.codes.gimbal.store.activity.NotificationsListActivity;
+import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.RecommendationDataProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationActionBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
+import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
 import com.avnet.gears.codes.gimbal.store.receiver.StoreGcmBroadcastReceiver;
 import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
+import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -26,8 +31,6 @@ import java.util.List;
  * helper methods.
  */
 public class StoreGcmServiceIntent extends IntentService {
-
-    public static final int NOTIFICATION_ID = 1;
 
     public StoreGcmServiceIntent() {
         super(StoreGcmServiceIntent.class.getName());
@@ -87,22 +90,38 @@ public class StoreGcmServiceIntent extends IntentService {
         String msg = extra.getString(GimbalStoreConstants.notificationDataKey.message.toString());
 
         String notificationTypeString = extra.getString(GimbalStoreConstants.notificationDataKey.notificationType.toString());
-        GimbalStoreConstants.NOTIFICATION_TYPE notificationType = GimbalStoreConstants.NOTIFICATION_TYPE.getNotificationType(notificationTypeString);
+        GimbalStoreConstants.NOTIFICATION_TYPE notificationType = GimbalStoreConstants.NOTIFICATION_TYPE.valueOf(notificationTypeString);
 
 
         Intent targetIntent;
+        Bundle bundle = new Bundle();
         switch (notificationType) {
-            case NOTIFY_FEED:
+            case ASK_FRIEND:
+            case ASK_FRIEND_REVIEW:
+                String recommendationId = extra.getString(GimbalStoreConstants.notificationDataKey.recommendationId.toString());
+                RecommendationDataProcessor recommendationDataProcessor = new RecommendationDataProcessor(getApplicationContext(), msg);
+                Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+                paramsMap.put(GimbalStoreConstants.StoreParameterKeys.recommendationId.toString(),
+                        recommendationId);
+                String targetURL = ServerURLUtil.getStoreServletServerURL(getResources());
+                HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
+                        Arrays.asList(targetURL),
+                        Arrays.asList(paramsMap), null,
+                        recommendationDataProcessor);
+                return;// Notification is sent in the processor class
+            case FRIEND_RECOMMENDATION:
+            case FRIEND_REVIEW:
                 targetIntent = new Intent(this, FeedListActivity.class);
-                break;
-            case NOTIFY_RECOMMENDATION:
-                targetIntent = new Intent(this, HomeActivity.class);
+                String feedItemId = extra.getString(GimbalStoreConstants.notificationDataKey.feedItemId.toString());
+                String productId = extra.getString(GimbalStoreConstants.notificationDataKey.productId.toString());
+                bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_FEED_ID.toString(), feedItemId);
+                bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(), productId);
+                targetIntent.putExtras(bundle);
                 break;
             default:
-                targetIntent = new Intent(this, HomeActivity.class);
+                targetIntent = new Intent(this, NotificationsListActivity.class);
         }
         List<NotificationActionBean> notificationActionBeans = new ArrayList<NotificationActionBean>();
-
         AndroidUtil.notify(this, targetIntent,
                 msg, GimbalStoreConstants.DEFAULT_STORE_NOTIFICATION_TITLE,
                 R.drawable.ic_store, true,

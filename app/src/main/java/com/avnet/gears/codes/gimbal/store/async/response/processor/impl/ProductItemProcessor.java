@@ -11,6 +11,7 @@ import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.ImageResponseAsyncTask;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -59,19 +60,26 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                 reader.setLenient(true);
                 final ProductBean productBean = gson.fromJson(responseString, ProductBean.class);
                 Log.d("DEBUG", "Displaying Product Details.." + productBean.toString());
-                parentActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        textView.setText("Product detail : " + productBean.toString());
-                        // TODO add custom logic to display various details like price and reviews
-                    }
-                });
+                if (textView != null) {
+                    parentActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            textView.setText("Product detail : " + productBean.toString());
+                            // TODO add custom logic to display various details like price and reviews
+                        }
+                    });
+                }
+
                 String imageUrl = ServerURLUtil.getAbsoluteUrlFor(parentActivity.getResources(),
                         productBean.getThumbnail());
+                String cookieString = AndroidUtil.getPreferenceString(parentActivity.getApplicationContext(),
+                        GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
                 ImageDataProcessor imageViewProcessor = new ImageDataProcessor(parentActivity, null, Arrays.asList(productImageView));
-                ImageResponseAsyncTask imageResponseAsyncTask = new ImageResponseAsyncTask(Arrays.asList(new String[]{imageUrl}), imageViewProcessor);
+                ImageResponseAsyncTask imageResponseAsyncTask = new ImageResponseAsyncTask(Arrays.asList(new String[]{imageUrl}), imageViewProcessor, cookieString);
                 imageResponseAsyncTask.execute(new String[]{});
-                progressDialog.dismiss();
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
                 return true;
             }
         }

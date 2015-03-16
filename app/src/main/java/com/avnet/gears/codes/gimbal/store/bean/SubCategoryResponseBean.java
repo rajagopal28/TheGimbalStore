@@ -5,12 +5,8 @@ import java.util.Arrays;
 /**
  * Created by 914889 on 3/6/15.
  */
-public class SubCategoryResponseBean {
+public class SubCategoryResponseBean extends BaseServerResponseBean {
     private String[] parentCategoryId;
-    private String[] catalogId;
-    private String[]langId;
-    private String[] type;
-    private String[] storeId;
 
     private SubCategoryBean[] CatalogGroupView;
 

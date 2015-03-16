@@ -1,0 +1,24 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.avnet.gears.codes.gimbal.store.fragment.FeedItemDialogFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ImageView
+        android:id="@+id/product_display_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="right|top"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/feed_item_text"
+        android:layout_width="284dp"
+        android:layout_height="41dp"
+        android:layout_gravity="left|top"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/hello_blank_fragment" />
+</FrameLayout>

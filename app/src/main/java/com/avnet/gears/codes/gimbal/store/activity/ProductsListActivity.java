@@ -3,6 +3,7 @@ package com.avnet.gears.codes.gimbal.store.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,8 @@ public class ProductsListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle intentBundle = getIntent().getExtras();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_products_list);
         if (intentBundle != null) {
             String selectedSubCategoryId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(), "");
@@ -42,10 +45,13 @@ public class ProductsListActivity extends Activity {
                         GimbalStoreConstants.StoreParameterValues.product.toString());
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.parentCategoryId.toString(),
                         selectedSubCategoryId);
+                String cookieString = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY, null);
+
 
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                         Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
-                        paramsMap, productsListProcessor);
+                        Arrays.asList(paramsMap), cookieString,
+                        productsListProcessor);
                 asyncTask.execute(new String[]{});
 
             }
@@ -56,7 +62,7 @@ public class ProductsListActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_products_list, menu);
+        getMenuInflater().inflate(R.menu.menu_global, menu);
         return true;
     }
 
@@ -68,10 +74,21 @@ public class ProductsListActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        boolean result = AndroidUtil.processSettingsAction(this, id);
+
+        //noinspection SimplifiableIfStatement
+        if (!result) {
+            switch (id) {
+                case R.id.action_settings:
+                    return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

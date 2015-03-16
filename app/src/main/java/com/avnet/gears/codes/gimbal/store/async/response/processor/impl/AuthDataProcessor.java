@@ -52,23 +52,24 @@ public class AuthDataProcessor implements AsyncResponseProcessor {
                 AuthDataBean responseBean = gson.fromJson(responseString, AuthDataBean.class);
                 Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
                 Bundle data = dataIntent.getExtras();
-                data.putString(AccountManager.KEY_ACCOUNT_NAME, responseBean.getUsername());
-                data.putString(AccountManager.KEY_AUTHTOKEN, responseBean.getAuthToken());
+                Log.d("DEBUG", "authResponse = " + responseString);
+                data.putString(AccountManager.KEY_ACCOUNT_NAME, responseBean.getLogonId()[0]);
+                data.putString(AccountManager.KEY_AUTHTOKEN, responseBean.getSecurityToken());
                 data.putString(GimbalStoreConstants.AUTHENTICATION_INTENT_ARGS.ARG_USER_PASS.toString(),
-                        responseBean.getPassword());
+                        responseBean.getLogonPassword()[0]);
                 dataIntent.putExtras(data);
-                Account userAccount = new Account(responseBean.getUsername(), responseBean.getAccountType());
+                Account userAccount = new Account(responseBean.getLogonId()[0], GimbalStoreConstants.APP_ACCOUNT_TYPE_STRING);
                 // Creating the account on the device and setting the auth token we got
                 // (Not setting the auth token will cause another call to the server to authenticate the user)
                 boolean isNewAccount = dataIntent.getBooleanExtra(GimbalStoreConstants.AUTHENTICATION_INTENT_ARGS.ARG_IS_NEW_ACCOUNT.toString(), false);
                 if (isNewAccount) {
                     // if new account then create account here
-                    accountManager.addAccountExplicitly(userAccount, responseBean.getPassword(), null);
-                    accountManager.setAuthToken(userAccount, responseBean.getAuthTokenType().toString(),
-                            responseBean.getAuthToken());
+                    accountManager.addAccountExplicitly(userAccount, responseBean.getLogonPassword()[0], null);
+                    accountManager.setAuthToken(userAccount, GimbalStoreConstants.AUTH_TOKEN_TYPE.STORE_ACCESS_FULL.toString(),
+                            responseBean.getSecurityToken());
                 } else {
                     // else update the password for existing account
-                    accountManager.setPassword(userAccount, responseBean.getPassword());
+                    accountManager.setPassword(userAccount, responseBean.getLogonPassword()[0]);
                 }
                 parentActivity.setAccountAuthenticatorResult(dataIntent.getExtras());
                 parentActivity.setResult(Activity.RESULT_OK, dataIntent);

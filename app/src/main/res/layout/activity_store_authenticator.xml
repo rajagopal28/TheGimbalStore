@@ -40,7 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/textView1"
         android:layout_marginStart="38dp"
-        android:layout_toEndOf="@+id/textView1" />
+        android:layout_toEndOf="@+id/textView1"
+        android:text="testuser2" />
 
     <EditText
         android:id="@+id/password_text"
@@ -49,7 +50,8 @@
         android:layout_alignStart="@+id/user_name_text"
         android:layout_alignTop="@+id/textView2"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:text="passw0rd1" />
 
     <Button
         android:id="@+id/sign_in_button"

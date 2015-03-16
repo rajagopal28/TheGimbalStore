@@ -21,9 +21,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.avnet.gears.codes.gimbal.store.R;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -106,6 +106,7 @@ public class NavigationDrawerFragment extends Fragment {
         refreshDrawerListView();
         return mDrawerListView;
     }
+
     public void refreshDrawerListView() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -122,6 +123,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
     }
+
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
@@ -139,8 +141,8 @@ public class NavigationDrawerFragment extends Fragment {
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-            mCategoryTitles = categoryTitles;
-            refreshDrawerListView();
+        mCategoryTitles = categoryTitles;
+        refreshDrawerListView();
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -204,7 +206,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
-        Log.d("DEBUG", "mCurrentSelectedPosition="+mCurrentSelectedPosition);
+        Log.d("DEBUG", "mCurrentSelectedPosition=" + mCurrentSelectedPosition);
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
         }
@@ -250,7 +252,7 @@ public class NavigationDrawerFragment extends Fragment {
         // If the drawer is open, show the global app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.global, menu);
+            inflater.inflate(R.menu.menu_global, menu);
             showGlobalContextActionBar();
         }
         super.onCreateOptionsMenu(menu, inflater);
@@ -261,10 +263,11 @@ public class NavigationDrawerFragment extends Fragment {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
+        int id = item.getItemId();
 
-        if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
-            return true;
+        //noinspection SimplifiableIfStatement
+        if (!AndroidUtil.processSettingsAction(this.getActivity(), id)) {
+            // do some custom action processing
         }
 
         return super.onOptionsItemSelected(item);
@@ -285,6 +288,10 @@ public class NavigationDrawerFragment extends Fragment {
         return getActivity().getActionBar();
     }
 
+    public void setmCategoryTitles(String[] categoryTitles) {
+        this.mCategoryTitles = categoryTitles;
+    }
+
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
@@ -296,8 +303,5 @@ public class NavigationDrawerFragment extends Fragment {
          */
         void onNavigationDrawerItemSelected(int position);
 
-    }
-    public void setmCategoryTitles(String[] categoryTitles) {
-        this.mCategoryTitles = categoryTitles;
     }
 }

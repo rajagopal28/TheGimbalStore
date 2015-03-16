@@ -1,6 +1,7 @@
 package com.avnet.gears.codes.gimbal.store.async.response.processor.impl;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -27,10 +28,12 @@ public class SubcategoryListProcessor implements AsyncResponseProcessor {
 
     private Activity parentActivity;
     private ListView subCategoryListView;
+    private ProgressDialog progressDialog;
 
-    public SubcategoryListProcessor(Activity parentActivity, ListView listView) {
+    public SubcategoryListProcessor(Activity parentActivity, ListView listView, ProgressDialog progressDialog) {
         this.parentActivity = parentActivity;
         this.subCategoryListView = listView;
+        this.progressDialog = progressDialog;
     }
 
     @Override
@@ -64,6 +67,7 @@ public class SubcategoryListProcessor implements AsyncResponseProcessor {
                         subCategoryListView.refreshDrawableState();
                     }
                 });
+                progressDialog.dismiss();
                 return true;
             }
         }

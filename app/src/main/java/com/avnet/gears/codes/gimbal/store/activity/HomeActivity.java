@@ -2,13 +2,16 @@ package com.avnet.gears.codes.gimbal.store.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerFuture;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,13 +19,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.CategoryListProcessor;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.SubcategoryListProcessor;
+import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.UserLoginProcessor;
 import com.avnet.gears.codes.gimbal.store.authenticator.activity.StoreAuthenticatorActivity;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
@@ -52,7 +55,7 @@ public class HomeActivity extends Activity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     // section label
-    private TextView sectionLabelView ;
+    private TextView sectionLabelView;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -70,14 +73,15 @@ public class HomeActivity extends Activity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        accountManager = AccountManager.get(this);
+        accountManager = AccountManager.get(getApplicationContext());
 
-        boolean isFirstTimeOpen = false;//TODO uncomment //AndroidUtil.checkFirsTimeOpen(this);
+        boolean isFirstTimeOpen = AndroidUtil.checkFirsTimeOpen(getApplicationContext());
         String senderId = getResources().getString(R.string.GCM_SENDER_ID);
+        // check for already added account through accounts
+        Account[] userAccounts = accountManager.getAccountsByType(GimbalStoreConstants.APP_ACCOUNT_TYPE_STRING);
         if (isFirstTimeOpen) {
-            // check for already added account through accounts
-            Account[] userAccounts = accountManager.getAccountsByType(GimbalStoreConstants.APP_ACCOUNT_TYPE_STRING);
             if (userAccounts == null || userAccounts.length == 0) {
+                Log.d("DEBUG", "got no user accounts");
                 Intent intent = new Intent(this, StoreAuthenticatorActivity.class);
                 intent.putExtra(GimbalStoreConstants.AUTHENTICATION_INTENT_ARGS.ARG_ACCOUNT_TYPE.toString(),
                         GimbalStoreConstants.APP_ACCOUNT_TYPE_STRING);
@@ -89,6 +93,36 @@ public class HomeActivity extends Activity
                         intent, GimbalStoreConstants.ACTIVITY_REQUEST_SIGNUP);
                 return;
             }
+        } else {
+            try {
+                // check for auth token
+                if (userAccounts != null && userAccounts.length > 0) {
+                    Log.d("DEBUG", "got one user account");
+                    AccountManagerFuture<Bundle> accountManagerFuture = accountManager.getAuthToken(userAccounts[0],
+                            GimbalStoreConstants.AUTH_TOKEN_TYPE.STORE_ACCESS_FULL.toString(),
+                            null, this, null, null);
+                    Bundle authTokenBundle = accountManagerFuture.getResult();
+                    String authToken = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN).toString();
+                    Log.d("DEBUG", "authToken = " + authToken);
+                    // do something to establish session
+                    Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+                    paramsMap.put(StoreParameterKeys.securityToken.toString(),
+                            authToken);
+                    paramsMap.put(StoreParameterKeys.identifier.toString(),
+                            GimbalStoreConstants.StoreParameterValues.signin.toString());
+                    paramsMap.put(StoreParameterKeys.type.toString(),
+                            GimbalStoreConstants.StoreParameterValues.authentication.toString());
+                    UserLoginProcessor loginProcessor = new UserLoginProcessor(this, new Intent());
+                    HttpConnectionAsyncTask handler = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
+                            Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
+                            Arrays.asList(paramsMap), null,
+                            loginProcessor);
+                    handler.execute(new String[]{});
+                }
+            } catch (Exception ex) {
+                Log.e("ERROR", ex.getMessage(), ex);
+            }
+
         }
         processCategoryListData();
     }
@@ -99,6 +133,8 @@ public class HomeActivity extends Activity
         if (requestCode == GimbalStoreConstants.ACTIVITY_REQUEST_SIGNUP && resultCode == RESULT_OK) {
             processCategoryListData();
             // sign in success then list the category values
+        } else if (resultCode == GimbalStoreConstants.ACTIVITY_RESULT_LOGIN_SUCCESS) {
+            processCategoryListData();
         }
     }
 
@@ -116,32 +152,51 @@ public class HomeActivity extends Activity
 
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout)findViewById(R.id.drawer_layout),
+                (DrawerLayout) findViewById(R.id.drawer_layout),
                 TypeConversionUtil.getCategoryTitleList(mCategoryList));
 
         mTitle = getTitle();
 
 
         Log.d("DEBUG", "Server URL = " + ServerURLUtil.getStoreServletServerURL(getResources()));
-        Map<String,String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+        Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
 
         paramsMap.put(StoreParameterKeys.identifier.toString(),
                 GimbalStoreConstants.StoreParameterValues.top.toString());
         paramsMap.put(StoreParameterKeys.type.toString(),
                 GimbalStoreConstants.StoreParameterValues.category.toString());
+        String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(),
+                GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
         Log.d("DEBUG", paramsMap.toString());
 
         HttpConnectionAsyncTask handler = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
                 Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
-                paramsMap,
+                Arrays.asList(paramsMap), cookieString,
                 cListProcessor);
-        handler.execute(new String[] {});
+        handler.execute(new String[]{});
+    }
+
+    @Override
+    public void onUserInteraction() {
+        Log.d("DEBUG", " HomeActivity.onUserInteraction()");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("DEBUG", " HomeActivity.onResume()");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("DEBUG", " HomeActivity.onStop()");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(this.progressDialog != null)
+        if (this.progressDialog != null)
             progressDialog.dismiss();
     }
 
@@ -155,7 +210,7 @@ public class HomeActivity extends Activity
     }
 
     public void onSectionAttached(int number) {
-        if(mCategoryList != null && !mCategoryList.isEmpty()) {
+        if (mCategoryList != null && !mCategoryList.isEmpty()) {
             mTitle = mCategoryList.get(number).getName();
         } else {
             mTitle = "Home";
@@ -176,7 +231,7 @@ public class HomeActivity extends Activity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.menu_home, menu);
+            getMenuInflater().inflate(R.menu.menu_global, menu);
             restoreActionBar();
             return true;
         }
@@ -191,11 +246,21 @@ public class HomeActivity extends Activity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (!AndroidUtil.processSettingsAction(this, id)) {
+            // do some custom action processing
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        // clear session cookie preference
+        // TODO call Async task to logout user
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        pref.edit().remove(GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
+        pref.edit().commit();
+        super.onDestroy();
     }
 
     /**
@@ -208,8 +273,7 @@ public class HomeActivity extends Activity
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
         private static List<CategoryBean> mCategoryBeanList;
-        private TextView sectionLabelTextView ;
-        private ImageView imageView;
+        private TextView sectionLabelTextView;
         private ListView allListItemsView;
         private CategoryBean selectedCategoryBean;
 
@@ -235,16 +299,17 @@ public class HomeActivity extends Activity
                                  Bundle savedInstanceState) {
             Log.d("DEBUG", "in PlaceHolderFragment.onCreateView()");
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-            sectionLabelTextView = (TextView)rootView.findViewById(R.id.section_label);
+            sectionLabelTextView = (TextView) rootView.findViewById(R.id.section_label);
             allListItemsView = (ListView) rootView.findViewById(R.id.subcategories_list_view);
             // use the category Id obtained from HomeActivity to fetch and view list of subcategory items
-            imageView = (ImageView) rootView.findViewById(R.id.image_view);
-            if(selectedCategoryBean != null) {
-
-                sectionLabelTextView.setText( MessageFormat.format(GimbalStoreConstants.SUB_CATEGORY_VIEW_HEADING,
+            if (selectedCategoryBean != null) {
+                ProgressDialog dialog = AndroidUtil.showProgressDialog(getActivity(),
+                        GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
+                        GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
+                sectionLabelTextView.setText(MessageFormat.format(GimbalStoreConstants.SUB_CATEGORY_VIEW_HEADING,
                         new Object[]{selectedCategoryBean.getName()}));
-                SubcategoryListProcessor scProcessor = new SubcategoryListProcessor(getActivity(), allListItemsView);
-                Map<String,String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+                SubcategoryListProcessor scProcessor = new SubcategoryListProcessor(getActivity(), allListItemsView, dialog);
+                Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
                 paramsMap.put(StoreParameterKeys.identifier.toString(),
                         GimbalStoreConstants.StoreParameterValues.top.toString());
                 paramsMap.put(StoreParameterKeys.type.toString(),
@@ -252,10 +317,13 @@ public class HomeActivity extends Activity
                 paramsMap.put(StoreParameterKeys.parentCategoryId.toString(),
                         selectedCategoryBean.getUniqueId());
 
+                String cookieString = AndroidUtil.getPreferenceString(getActivity().getApplicationContext(),
+                        GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
                         Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
-                        paramsMap,scProcessor);
-                asyncTask.execute(new String[] {});
+                        Arrays.asList(paramsMap), cookieString,
+                        scProcessor);
+                asyncTask.execute(new String[]{});
             }
 
             return rootView;
@@ -271,11 +339,10 @@ public class HomeActivity extends Activity
                     selectedPosition);
             // fetch the selected category id from HomeActivity
 
-            if( mCategoryBeanList != null && !mCategoryBeanList.isEmpty())
+            if (mCategoryBeanList != null && !mCategoryBeanList.isEmpty())
                 selectedCategoryBean = mCategoryBeanList.get(selectedPosition);
 
             Log.d("DEBUG", "Holder selectedCategoryId=" + selectedCategoryBean);
         }
     }
-
 }

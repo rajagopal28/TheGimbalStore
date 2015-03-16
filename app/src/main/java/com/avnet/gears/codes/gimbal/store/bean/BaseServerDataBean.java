@@ -1,21 +1,17 @@
 package com.avnet.gears.codes.gimbal.store.bean;
 
-import java.util.Arrays;
+import java.io.Serializable;
 
 /**
- * Created by 914889 on 3/5/15.
+ * Created by 914889 on 3/13/15.
  */
-public class SubCategoryBean extends BaseServerDataBean {
-    private ProductBean[] topBrowsed;
-    private String partNumber;
+public class BaseServerDataBean implements Serializable {
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    protected String shortdescription;
+    protected String identifier;
+    protected String name;
+    protected String thumbnail;
+    protected String uniqueId;
 
     public String getShortdescription() {
         return shortdescription;
@@ -25,20 +21,20 @@ public class SubCategoryBean extends BaseServerDataBean {
         this.shortdescription = shortdescription;
     }
 
-    public ProductBean[] getTopBrowsed() {
-        return topBrowsed;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setTopBrowsed(ProductBean[] topBrowsed) {
-        this.topBrowsed = topBrowsed;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
-    public String getPartNumber() {
-        return partNumber;
+    public String getName() {
+        return name;
     }
 
-    public void setPartNumber(String partNumber) {
-        this.partNumber = partNumber;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getThumbnail() {
@@ -59,13 +55,12 @@ public class SubCategoryBean extends BaseServerDataBean {
 
     @Override
     public String toString() {
-        return "SubCategoryBean{" +
+        return "BaseServerDataBean{" +
                 "shortdescription='" + shortdescription + '\'' +
+                ", identifier='" + identifier + '\'' +
                 ", name='" + name + '\'' +
-                ", partNumber='" + partNumber + '\'' +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", uniqueId='" + uniqueId + '\'' +
-                ", topBrowsed=" + Arrays.toString(topBrowsed) +
                 '}';
     }
 }
