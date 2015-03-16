@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.avnet.gears.codes.gimbal.store.R;
@@ -32,16 +34,32 @@ public class ProductDetailsActivity extends Activity {
         if (intentBundle != null) {
             selectedProductId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(), "");
         }
+        TextView productTitleView = (TextView) findViewById(R.id.product_title);
+        TextView productDescriptionView = (TextView) findViewById(R.id.product_description);
+        TextView productPriceView = (TextView) findViewById(R.id.product_price);
+        TextView productRatingView = (TextView) findViewById(R.id.product_rating);
+        TextView productReviewTitleView = (TextView) findViewById(R.id.product_review_details);
+
+        Button buyButton = (Button) findViewById(R.id.buy_now_button);
+        Button askButton = (Button) findViewById(R.id.ask_friend_button);
+        Button recommendButton = (Button) findViewById(R.id.recommend_button);
+        Button postReviewButton = (Button) findViewById(R.id.post_review_button);
+        // TODO link buttons
+
+        ListView reviewsListView = (ListView) findViewById(R.id.product_reviews_list_view);
+        ImageView productImageView = (ImageView) findViewById(R.id.product_display_image);
+
         Log.d("DEBUG", "Displaying details of product : " + selectedProductId);
         // Make async calls
         if (!"".equals(selectedProductId)) {
             ProgressDialog dialog = AndroidUtil.showProgressDialog(this,
                     GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
                     GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
-            ImageView productImage = (ImageView) findViewById(R.id.product_display_image);
-            TextView dummyTextView = (TextView) findViewById(R.id.product_title);
             ProductItemProcessor productItemProcessor = new ProductItemProcessor(this, dialog,
-                    productImage, dummyTextView);
+                    productImageView, reviewsListView,
+                    productTitleView, productDescriptionView,
+                    productPriceView, productRatingView,
+                    productReviewTitleView);
             Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
             paramsMap.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
                     GimbalStoreConstants.StoreParameterValues.top.toString());
@@ -56,6 +74,8 @@ public class ProductDetailsActivity extends Activity {
                     Arrays.asList(paramsMap), cookieString,
                     productItemProcessor);
             asyncTask.execute(new String[]{});
+
+
         }
         // get product details to display
         // TODO mock and display data Aravindan

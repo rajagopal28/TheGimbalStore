@@ -8,7 +8,10 @@ import java.util.Arrays;
 public class ProductBean extends BaseServerDataBean {
 
     private String partNumber;
-    private String reviews;
+    private String price;
+    private String rating;
+
+    private ReviewBean[] reviews;
     private String[] attribute;
 
     public String getPartNumber() {
@@ -19,11 +22,11 @@ public class ProductBean extends BaseServerDataBean {
         this.partNumber = partNumber;
     }
 
-    public String getReviews() {
+    public ReviewBean[] getReviews() {
         return reviews;
     }
 
-    public void setReviews(String reviews) {
+    public void setReviews(ReviewBean[] reviews) {
         this.reviews = reviews;
     }
 
@@ -35,11 +38,28 @@ public class ProductBean extends BaseServerDataBean {
         this.attribute = attribute;
     }
 
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
-        return super.toString() + "ProductBean{" +
+        return super.toString() +
+                "ProductBean{" +
                 "partNumber='" + partNumber + '\'' +
-                ", reviews='" + reviews + '\'' +
+                ", reviews='" + Arrays.toString(reviews) + '\'' +
                 ", attribute=" + Arrays.toString(attribute) +
                 '}';
     }

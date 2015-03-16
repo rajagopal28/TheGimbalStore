@@ -17,6 +17,12 @@
     <string name="action_settings">Settings</string>
     <string name="show_more">Show More</string>
 
+    <string name="recommend_friend_label">Recommend</string>
+    <string name="buy_now_label">Add to cart</string>
+    <string name="ask_friend_label">Ask</string>
+    <string name="post_review_label">Post Review</string>
+
+
     <string name="feed_item_fragment_title">Product Notification</string>
     <string name="friends_list_fragment_title">Your Commerce Network!</string>
 

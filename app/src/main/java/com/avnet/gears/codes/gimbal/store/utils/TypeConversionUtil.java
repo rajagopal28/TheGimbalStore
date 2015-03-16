@@ -6,6 +6,7 @@ import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.bean.FeedItemBean;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationDataBean;
 import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
+import com.avnet.gears.codes.gimbal.store.bean.ReviewBean;
 import com.avnet.gears.codes.gimbal.store.bean.SubCategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 
@@ -83,6 +84,14 @@ public class TypeConversionUtil {
             notificationTitles.add(notificationDataBean.getNotificationText());
         }
         return notificationTitles;
+    }
+
+    public static List<String> getReviewTextAsStrings(List<ReviewBean> reviewsList) {
+        List<String> reviewTexts = new ArrayList<String>();
+        for (ReviewBean review : reviewsList) {
+            reviewTexts.add(review.getShortdescription());
+        }
+        return reviewTexts;
     }
 
 }

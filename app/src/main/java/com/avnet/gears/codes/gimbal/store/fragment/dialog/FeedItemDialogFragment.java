@@ -59,7 +59,9 @@ public class FeedItemDialogFragment extends DialogFragment {
             String cookieString = AndroidUtil.getPreferenceString(getActivity().getApplicationContext(),
                     GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
             ProductItemProcessor productItemProcessor = new ProductItemProcessor(getActivity(), null,
-                    imageView, null);
+                    imageView, null, null,
+                    null, null,
+                    null, null);
             HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                     Arrays.asList(serverURL),
                     Arrays.asList(paramsMap), cookieString,
