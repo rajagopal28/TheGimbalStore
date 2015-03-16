@@ -6,9 +6,9 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="match_parent">
+        android:layout_height="250dp">
 
-        <LinearLayout
+    <LinearLayout
             android:id="@+id/friend_list_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
