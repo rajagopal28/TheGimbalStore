@@ -8,8 +8,8 @@ import android.widget.ListView;
 import com.avnet.gears.codes.gimbal.store.adapter.ProductsViewAdapter;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
-import com.avnet.gears.codes.gimbal.store.bean.ProductsResponseBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
+import com.avnet.gears.codes.gimbal.store.bean.response.ProductsResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.listener.ProductItemClickListener;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
@@ -39,13 +39,13 @@ public class ProductsListProcessor implements AsyncResponseProcessor {
     @Override
     public boolean doProcess(List<ResponseItemBean> responseItemBeansList) {
         try {
-            if(responseItemBeansList.size() == 1) {
+            if (responseItemBeansList.size() == 1) {
                 ResponseItemBean httpResponseBean = responseItemBeansList.get(0);
                 String responseString = httpResponseBean.getResponseString();
                 GimbalStoreConstants.HTTP_RESPONSE_CODES responseCode = httpResponseBean.getResponseCode();
                 Log.d("PROCESS DEBUG", "" + responseCode);
 
-                if(responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.OK ||
+                if (responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.OK ||
                         responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.CREATED ||
                         responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.ACCEPTED) {
                     // creating the gson parser with html escaping disabled
@@ -75,9 +75,9 @@ public class ProductsListProcessor implements AsyncResponseProcessor {
                 }
 
             }
-        } catch (Exception ex){
+        } catch (Exception ex) {
             Log.e("ERROR", ex.getMessage(), ex);
         }
-        return  false;
+        return false;
     }
 }

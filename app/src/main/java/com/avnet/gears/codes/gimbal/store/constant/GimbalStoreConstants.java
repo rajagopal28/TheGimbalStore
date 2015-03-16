@@ -18,12 +18,14 @@ public class GimbalStoreConstants {
     public static String SYNC_CONTACTS_SPINNER_INFO_TEXT = "Please wait!! This may take a while!!!";
     public static int CONTACTS_UPLOAD_CHUNK_LIMIT = 25;
     public static String TAG_SHOW_FEED_ITEM = "FeedItemDialogFragment";
+    public static String TAG_SHOW_FRIENDS_LIST = "FriendsListDialogFragment";
     public static String SUB_CATEGORY_VIEW_HEADING = "Showing List of Items of {0}";
     public static String START_COMMENT_STRING = "/*";
     public static String END_COMMENT_STRING = "*/";
     public static String PREF_IS_FIRST_TIME_OPEN = "PREF_IS_FIRST_TIME_OPEN";
     public static int ACTIVITY_REQUEST_SIGNUP = 11;
     public static int ACTIVITY_RESULT_LOGIN_SUCCESS = 22;
+    public static int ACTIVITY_RESULT_FRIENDS_SELECTED = 33;
     public static String APP_ACCOUNT_TYPE_STRING = "com.avnet.gimbal.store.mobile.user.account.type";
     public static String DEFAULT_STORE_NOTIFICATION_TITLE = "You have a Store Notification!!!";
     public static String COOKIES_RESPONSE_HEADER = "Set-Cookie";
@@ -73,7 +75,8 @@ public class GimbalStoreConstants {
         GIVEN_GCM_DEVICE_ID,
         SELECTED_RECOMMENDATION_ID,
         FEED_ITEM_TEXT,
-        SELECTED_REVIEW_ID;
+        SELECTED_REVIEW_ID,
+        SELECTED_FRIEND_LIST_RESPONSE;
     }
 
     // network data param keys

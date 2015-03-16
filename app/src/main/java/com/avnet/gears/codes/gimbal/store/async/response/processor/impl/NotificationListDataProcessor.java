@@ -10,8 +10,8 @@ import android.widget.ListView;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationDataBean;
-import com.avnet.gears.codes.gimbal.store.bean.NotificationItemResponseBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
+import com.avnet.gears.codes.gimbal.store.bean.response.NotificationItemResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;

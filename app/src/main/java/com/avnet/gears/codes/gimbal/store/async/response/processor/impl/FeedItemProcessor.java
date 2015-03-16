@@ -6,10 +6,10 @@ import android.app.ProgressDialog;
 import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
-import com.avnet.gears.codes.gimbal.store.bean.FeedItemResponseBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
+import com.avnet.gears.codes.gimbal.store.bean.response.FeedItemResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
-import com.avnet.gears.codes.gimbal.store.fragment.FeedItemDialogFragment;
+import com.avnet.gears.codes.gimbal.store.fragment.dialog.FeedItemDialogFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;

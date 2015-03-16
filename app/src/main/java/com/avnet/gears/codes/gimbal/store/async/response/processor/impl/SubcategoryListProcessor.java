@@ -9,7 +9,7 @@ import com.avnet.gears.codes.gimbal.store.adapter.CategoryViewAdapter;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.bean.SubCategoryBean;
-import com.avnet.gears.codes.gimbal.store.bean.SubCategoryResponseBean;
+import com.avnet.gears.codes.gimbal.store.bean.response.SubCategoryResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_RESPONSE_CODES;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;

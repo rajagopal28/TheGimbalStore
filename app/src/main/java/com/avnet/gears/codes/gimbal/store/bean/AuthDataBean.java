@@ -1,5 +1,7 @@
 package com.avnet.gears.codes.gimbal.store.bean;
 
+import com.avnet.gears.codes.gimbal.store.bean.response.BaseServerResponseBean;
+
 import java.util.Arrays;
 
 /**

@@ -1,9 +1,8 @@
-package com.avnet.gears.codes.gimbal.store.fragment;
+package com.avnet.gears.codes.gimbal.store.fragment.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,14 +21,7 @@ import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 import java.util.Arrays;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * <p/>
- * to handle interaction events.
- * Use the {@link FeedItemDialogFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class FeedItemDialogFragment extends DialogFragment {
 
     public static FeedItemDialogFragment newInstance(String feedItemText, String productId) {

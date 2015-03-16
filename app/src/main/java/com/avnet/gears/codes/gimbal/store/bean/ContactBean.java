@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class ContactBean {
     private String contactName;
-    private List<PhoneNumberType> phoneNumbersList;
+    private List<PhoneNumberBean> phoneNumbersList;
 
     public String getContactName() {
         return contactName;
@@ -17,11 +17,11 @@ public class ContactBean {
         this.contactName = contactName;
     }
 
-    public List<PhoneNumberType> getPhoneNumbersList() {
+    public List<PhoneNumberBean> getPhoneNumbersList() {
         return phoneNumbersList;
     }
 
-    public void setPhoneNumbersList(List<PhoneNumberType> phoneNumbersList) {
+    public void setPhoneNumbersList(List<PhoneNumberBean> phoneNumbersList) {
         this.phoneNumbersList = phoneNumbersList;
     }
 

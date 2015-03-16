@@ -1,4 +1,6 @@
-package com.avnet.gears.codes.gimbal.store.bean;
+package com.avnet.gears.codes.gimbal.store.bean.response;
+
+import com.avnet.gears.codes.gimbal.store.bean.NotificationDataBean;
 
 import java.util.Arrays;
 

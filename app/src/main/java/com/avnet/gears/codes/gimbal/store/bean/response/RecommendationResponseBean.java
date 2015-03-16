@@ -1,4 +1,4 @@
-package com.avnet.gears.codes.gimbal.store.bean;
+package com.avnet.gears.codes.gimbal.store.bean.response;
 
 /**
  * Created by 914889 on 3/15/15.

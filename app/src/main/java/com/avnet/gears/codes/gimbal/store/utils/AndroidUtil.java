@@ -20,7 +20,7 @@ import android.widget.ListView;
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.bean.ContactBean;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationActionBean;
-import com.avnet.gears.codes.gimbal.store.bean.PhoneNumberType;
+import com.avnet.gears.codes.gimbal.store.bean.PhoneNumberBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 
 import java.util.ArrayList;
@@ -120,9 +120,9 @@ public class AndroidUtil {
             if (Integer.parseInt(c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                 Cursor pCur = callerActivity.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id},
                         null);
-                List<PhoneNumberType> phoneNumbers = new ArrayList<PhoneNumberType>();
+                List<PhoneNumberBean> phoneNumbers = new ArrayList<PhoneNumberBean>();
                 while (pCur.moveToNext()) {
-                    PhoneNumberType phoneNumber = new PhoneNumberType();
+                    PhoneNumberBean phoneNumber = new PhoneNumberBean();
                     // TODO parse the number and remove () and -
                     phoneNumber.setPhoneNumber(pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
                     phoneNumber.setPhoneNumberType(GimbalStoreConstants.PHONE_NUMBER_TYPE.getNumberType(pCur.getInt(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))));
@@ -149,9 +149,9 @@ public class AndroidUtil {
                 List<String> allContactsFormatString = new ArrayList<String>();
                 for (ContactBean contact : contacts) {
                     String contactName = contact.getContactName();
-                    List<PhoneNumberType> phoneNumberList = contact.getPhoneNumbersList();
+                    List<PhoneNumberBean> phoneNumberList = contact.getPhoneNumbersList();
                     if (phoneNumberList != null) {
-                        for (PhoneNumberType phoneNumber : phoneNumberList) {
+                        for (PhoneNumberBean phoneNumber : phoneNumberList) {
                             String contactParam = contactName
                                     + GimbalStoreConstants.DELIMITER_COLAN
                                     + phoneNumber.getPhoneNumber();

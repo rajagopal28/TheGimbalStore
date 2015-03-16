@@ -1,11 +1,12 @@
-package com.avnet.gears.codes.gimbal.store.bean;
+package com.avnet.gears.codes.gimbal.store.bean.response;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by 914889 on 3/13/15.
  */
-public class BaseServerResponseBean {
+public class BaseServerResponseBean implements Serializable {
     protected String[] storeId;
     protected String[] type;
     protected String[] identifier;
