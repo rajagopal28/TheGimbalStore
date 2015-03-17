@@ -29,14 +29,16 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class FriendsListDialogFragment extends DialogFragment {
-    private static int TAG_CHECKBOX_IDENTIFIER_INT = 23453;
     private List<String> selectedFriendsId = new ArrayList<String>();
 
-    public static FriendsListDialogFragment newInstance(FriendListResponseBean responseBean) {
+    public static FriendsListDialogFragment newInstance(FriendListResponseBean responseBean,
+                                                        GimbalStoreConstants.NOTIFICATION_TYPE notificationType) {
         Bundle args = new Bundle();
         args.putSerializable(
                 GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_FRIEND_LIST_RESPONSE.toString(),
                 responseBean);
+        args.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_NETWORK_RESPONSE_TYPE.toString(),
+                notificationType.toString());
         FriendsListDialogFragment fragment = new FriendsListDialogFragment();
         fragment.setArguments(args);
 
@@ -51,20 +53,20 @@ public class FriendsListDialogFragment extends DialogFragment {
         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.friend_list_layout);
         FriendListResponseBean responseBean = (FriendListResponseBean) getArguments().
                 getSerializable(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_FRIEND_LIST_RESPONSE.toString());
+        final String notificationType = getArguments().getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_NETWORK_RESPONSE_TYPE.toString());
         final FriendListSelectListener friendListSelectListener = (FriendListSelectListener) getActivity();
-        // TODO caution here
         if (responseBean != null) {
-            FriendDataBean[] friendsList = responseBean.getCatalogEntryView();
+            FriendDataBean[] friendsList = responseBean.getContacts();
             if (friendsList != null && friendsList.length > 0) {
                 for (FriendDataBean friend : friendsList) {
-                    if (friend.getFriendUserId() != null) {
+                    if (friend.getUserId() != null) {
                         CheckBox ch = new CheckBox(getActivity());
 
-                        ch.setText(friend.getFriendContactName()
+                        ch.setText(friend.getName()
                                 + "["
-                                + friend.getFriendPhoneNumber()
+                                + friend.getPhoneNumber()
                                 + "]");
-                        ch.setHint(friend.getFriendUserId());
+                        ch.setHint(friend.getUserId());
                         ch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -101,7 +103,7 @@ public class FriendsListDialogFragment extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // do send selected response to the parent activity
-                                friendListSelectListener.onFinishedSelectDialog(selectedFriendsId);
+                                friendListSelectListener.onFinishedSelectDialog(selectedFriendsId, GimbalStoreConstants.NOTIFICATION_TYPE.valueOf(notificationType));
                                 dialog.dismiss();
                             }
                         })
@@ -109,7 +111,7 @@ public class FriendsListDialogFragment extends DialogFragment {
     }
 
     public interface FriendListSelectListener {
-        public void onFinishedSelectDialog(List<String> friendIdList);
+        public void onFinishedSelectDialog(List<String> friendIdList, GimbalStoreConstants.NOTIFICATION_TYPE postProcessingType);
     }
 
 }

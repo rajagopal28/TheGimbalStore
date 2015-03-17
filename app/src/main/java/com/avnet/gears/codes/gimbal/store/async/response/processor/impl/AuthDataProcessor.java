@@ -53,6 +53,9 @@ public class AuthDataProcessor implements AsyncResponseProcessor {
                 Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
                 Bundle data = dataIntent.getExtras();
                 Log.d("DEBUG", "authResponse = " + responseString);
+                if (data == null) {
+                    data = new Bundle();
+                }
                 data.putString(AccountManager.KEY_ACCOUNT_NAME, responseBean.getLogonId()[0]);
                 data.putString(AccountManager.KEY_AUTHTOKEN, responseBean.getSecurityToken());
                 data.putString(GimbalStoreConstants.AUTHENTICATION_INTENT_ARGS.ARG_USER_PASS.toString(),
@@ -61,16 +64,32 @@ public class AuthDataProcessor implements AsyncResponseProcessor {
                 Account userAccount = new Account(responseBean.getLogonId()[0], GimbalStoreConstants.APP_ACCOUNT_TYPE_STRING);
                 // Creating the account on the device and setting the auth token we got
                 // (Not setting the auth token will cause another call to the server to authenticate the user)
-                boolean isNewAccount = dataIntent.getBooleanExtra(GimbalStoreConstants.AUTHENTICATION_INTENT_ARGS.ARG_IS_NEW_ACCOUNT.toString(), false);
+                // boolean isNewAccount = dataIntent.getBooleanExtra(GimbalStoreConstants.AUTHENTICATION_INTENT_ARGS.ARG_IS_NEW_ACCOUNT.toString(), false);
+                AccountManager accountManager = AccountManager.get(parentActivity.getApplicationContext());
+                Account[] accounts = accountManager.getAccountsByType(GimbalStoreConstants.APP_ACCOUNT_TYPE_STRING);
+                boolean isNewAccount = true;
+                if (accounts != null && accounts.length > 0) {
+                    for (Account account : accounts) {
+                        if (account.name == responseBean.getLogonId()[0]) {
+                            isNewAccount = false;
+                            break;
+                        }
+                    }
+                }
                 if (isNewAccount) {
                     // if new account then create account here
                     accountManager.addAccountExplicitly(userAccount, responseBean.getLogonPassword()[0], null);
                     accountManager.setAuthToken(userAccount, GimbalStoreConstants.AUTH_TOKEN_TYPE.STORE_ACCESS_FULL.toString(),
                             responseBean.getSecurityToken());
+                    Log.d("DEBUG", "New Account added");
                 } else {
                     // else update the password for existing account
                     accountManager.setPassword(userAccount, responseBean.getLogonPassword()[0]);
+                    accountManager.setAuthToken(userAccount, GimbalStoreConstants.AUTH_TOKEN_TYPE.STORE_ACCESS_FULL.toString(),
+                            responseBean.getSecurityToken());
+                    Log.d("DEBUG", " logon password updated");
                 }
+
                 parentActivity.setAccountAuthenticatorResult(dataIntent.getExtras());
                 parentActivity.setResult(Activity.RESULT_OK, dataIntent);
 

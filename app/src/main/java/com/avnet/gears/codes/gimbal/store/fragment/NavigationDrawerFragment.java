@@ -264,9 +264,11 @@ public class NavigationDrawerFragment extends Fragment {
             return true;
         }
         int id = item.getItemId();
-
+        if (id == android.R.id.home) {
+            // do nothing
+        }
         //noinspection SimplifiableIfStatement
-        if (!AndroidUtil.processSettingsAction(this.getActivity(), id)) {
+        else if (!AndroidUtil.processSettingsAction(this.getActivity(), id)) {
             // do some custom action processing
         }
 

@@ -1,16 +1,14 @@
 package com.avnet.gears.codes.gimbal.store.async.response.processor.impl;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
-import com.avnet.gears.codes.gimbal.store.bean.FriendDataBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
-import com.avnet.gears.codes.gimbal.store.bean.response.FriendListResponseBean;
+import com.avnet.gears.codes.gimbal.store.bean.response.PostReviewResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
-import com.avnet.gears.codes.gimbal.store.fragment.dialog.FriendsListDialogFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
@@ -19,20 +17,19 @@ import java.io.StringReader;
 import java.util.List;
 
 /**
- * Created by 914889 on 3/16/15.
+ * Created by 914889 on 3/17/15.
  */
-public class FriendsListDataProcessor implements AsyncResponseProcessor {
+public class PostReviewsProcessor implements AsyncResponseProcessor {
     private Activity callingActivity;
     private ProgressDialog progressDialog;
-    private GimbalStoreConstants.NOTIFICATION_TYPE friendListPostResponseType;
-    private FragmentManager fragmentManager;
+    private String productId;
+    private Intent intent;
 
-    public FriendsListDataProcessor(Activity callingActivity, ProgressDialog progressDialog,
-                                    GimbalStoreConstants.NOTIFICATION_TYPE notificationType, FragmentManager fm) {
+    public PostReviewsProcessor(Activity callingActivity, ProgressDialog progressDialog, String uniqueId, Intent returnIntent) {
         this.callingActivity = callingActivity;
         this.progressDialog = progressDialog;
-        this.friendListPostResponseType = notificationType;
-        this.fragmentManager = fm;
+        this.productId = uniqueId;
+        this.intent = returnIntent;
     }
 
     @Override
@@ -52,14 +49,13 @@ public class FriendsListDataProcessor implements AsyncResponseProcessor {
                 JsonReader reader = new JsonReader(new StringReader(responseString));
                 reader.setLenient(true);
                 Log.d("DEBUG", "responseString = " + responseString);
-                FriendListResponseBean responseBean = gson.fromJson(reader, FriendListResponseBean.class);
+                PostReviewResponseBean responseBean = gson.fromJson(reader, PostReviewResponseBean.class);
                 Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
-                FriendDataBean[] friendDataBeans = responseBean.getContacts();
-                if (friendDataBeans != null && friendDataBeans.length > 0) {
-                    Log.d("DEBUG", "friendDataBeans.length = " + friendDataBeans.length);
-                    FriendsListDialogFragment dialogFragment = FriendsListDialogFragment.newInstance(responseBean, friendListPostResponseType);
-                    dialogFragment.show(fragmentManager, GimbalStoreConstants.TAG_SHOW_FRIENDS_LIST);
+                if (responseBean.getReviewResponse().getErrors().length == 0) {
+                    Log.d("DEBUG", "Error submitting Review");
+                    return false;
                 }
+                Log.d("DEBUG", "Review submitted successfully!!");
             }
             progressDialog.dismiss();
             return true;

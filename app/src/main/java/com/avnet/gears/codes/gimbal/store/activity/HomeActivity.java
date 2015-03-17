@@ -2,7 +2,6 @@ package com.avnet.gears.codes.gimbal.store.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerFuture;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -23,15 +22,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.avnet.gears.codes.gimbal.store.R;
+import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.AuthTokenReceiverProcessor;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.CategoryListProcessor;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.SubcategoryListProcessor;
-import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.UserLoginProcessor;
 import com.avnet.gears.codes.gimbal.store.authenticator.activity.StoreAuthenticatorActivity;
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.StoreParameterKeys;
 import com.avnet.gears.codes.gimbal.store.fragment.NavigationDrawerFragment;
+import com.avnet.gears.codes.gimbal.store.handler.GenericAsyncTask;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
 import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.avnet.gears.codes.gimbal.store.utils.GCMAccountUtil;
@@ -93,36 +93,20 @@ public class HomeActivity extends Activity
                         intent, GimbalStoreConstants.ACTIVITY_REQUEST_SIGNUP);
                 return;
             }
-        } else {
-            try {
-                // check for auth token
-                if (userAccounts != null && userAccounts.length > 0) {
-                    Log.d("DEBUG", "got one user account");
-                    AccountManagerFuture<Bundle> accountManagerFuture = accountManager.getAuthToken(userAccounts[0],
-                            GimbalStoreConstants.AUTH_TOKEN_TYPE.STORE_ACCESS_FULL.toString(),
-                            null, this, null, null);
-                    Bundle authTokenBundle = accountManagerFuture.getResult();
-                    String authToken = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN).toString();
-                    Log.d("DEBUG", "authToken = " + authToken);
-                    // do something to establish session
-                    Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
-                    paramsMap.put(StoreParameterKeys.securityToken.toString(),
-                            authToken);
-                    paramsMap.put(StoreParameterKeys.identifier.toString(),
-                            GimbalStoreConstants.StoreParameterValues.signin.toString());
-                    paramsMap.put(StoreParameterKeys.type.toString(),
-                            GimbalStoreConstants.StoreParameterValues.authentication.toString());
-                    UserLoginProcessor loginProcessor = new UserLoginProcessor(this, new Intent());
-                    HttpConnectionAsyncTask handler = new HttpConnectionAsyncTask(HTTP_METHODS.GET,
-                            Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
-                            Arrays.asList(paramsMap), null,
-                            loginProcessor);
-                    handler.execute(new String[]{});
-                }
-            } catch (Exception ex) {
-                Log.e("ERROR", ex.getMessage(), ex);
+            Log.d("DEBUG", " not inside new account if");
+        }
+        // now login after signup
+        // check for auth token
+        if (userAccounts != null && userAccounts.length > 0) {
+            String cookieString = AndroidUtil.getPreferenceString(this, GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
+            if (cookieString == null) {
+                Log.d("DEBUG", "got one user account");
+                AuthTokenReceiverProcessor authTokenReceiverProcessor = new AuthTokenReceiverProcessor(this, accountManager, userAccounts[0]);
+                GenericAsyncTask asyncTask = new GenericAsyncTask(authTokenReceiverProcessor);
+                asyncTask.execute();
+                return;
             }
-
+            Log.d("DEBUG", "cookieString = " + cookieString);
         }
         processCategoryListData();
     }
@@ -131,10 +115,12 @@ public class HomeActivity extends Activity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GimbalStoreConstants.ACTIVITY_REQUEST_SIGNUP && resultCode == RESULT_OK) {
+            Log.d("DEBUG", "signup success");
             processCategoryListData();
             // sign in success then list the category values
         } else if (resultCode == GimbalStoreConstants.ACTIVITY_RESULT_LOGIN_SUCCESS) {
             processCategoryListData();
+            Log.d("DEBUG", "login success");
         }
     }
 
@@ -244,9 +230,10 @@ public class HomeActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (!AndroidUtil.processSettingsAction(this, id)) {
+        if (id == android.R.id.home) {
+
+        } else if (!AndroidUtil.processSettingsAction(this, id)) {
             // do some custom action processing
         }
 

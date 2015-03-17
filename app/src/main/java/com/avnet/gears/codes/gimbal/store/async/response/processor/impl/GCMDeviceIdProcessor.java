@@ -18,7 +18,7 @@ import java.util.List;
  * Created by 914889 on 3/12/15.
  */
 public class GCMDeviceIdProcessor implements AsyncResponseProcessor {
-    private Activity callerActivity;
+    private Activity callingActivity;
     private int requestCode;
     private Intent targetIntent;
     private String senderId;
@@ -26,7 +26,7 @@ public class GCMDeviceIdProcessor implements AsyncResponseProcessor {
 
     public GCMDeviceIdProcessor(Activity callerActivity, String senderId,
                                 int requestCode, Intent targetIntent) {
-        this.callerActivity = callerActivity;
+        this.callingActivity = callerActivity;
         this.requestCode = requestCode;
         this.targetIntent = targetIntent;
         this.senderId = senderId;
@@ -40,11 +40,11 @@ public class GCMDeviceIdProcessor implements AsyncResponseProcessor {
             Bundle targetBundle = this.targetIntent.getExtras();
             Log.d("DEBUG", "deviceId = " + deviceId + "senderId= " + senderId);
             // save the device id in preference
-            AndroidUtil.savePreferenceValue(callerActivity.getApplicationContext(),
+            AndroidUtil.savePreferenceValue(callingActivity.getApplicationContext(),
                     GimbalStoreConstants.PREF_GCM_DEVICE_ID, deviceId);
             targetBundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.GIVEN_GCM_DEVICE_ID.toString(), deviceId);
             this.targetIntent.putExtras(targetBundle);
-            this.callerActivity.startActivityForResult(this.targetIntent, this.requestCode);
+            this.callingActivity.startActivityForResult(this.targetIntent, this.requestCode);
             return true;
         } catch (IOException ioe) {
             Log.e("ERROR", ioe.getMessage(), ioe);

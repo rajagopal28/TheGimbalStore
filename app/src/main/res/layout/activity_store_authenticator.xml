@@ -41,7 +41,7 @@
         android:layout_alignTop="@+id/textView1"
         android:layout_marginStart="38dp"
         android:layout_toEndOf="@+id/textView1"
-        android:text="testuser2" />
+        android:text="rajagopal" />
 
     <EditText
         android:id="@+id/password_text"
@@ -51,7 +51,7 @@
         android:layout_alignTop="@+id/textView2"
         android:ems="10"
         android:inputType="textPassword"
-        android:text="passw0rd1" />
+        android:text="passw0rd" />
 
     <Button
         android:id="@+id/sign_in_button"

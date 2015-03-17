@@ -3,7 +3,6 @@ package com.avnet.gears.codes.gimbal.store.async.response.processor.impl;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ContactsSyncDataBean;
@@ -49,13 +48,11 @@ public class ContactsSyncProcessor implements AsyncResponseProcessor {
                     JsonReader reader = new JsonReader(new StringReader(responseString));
                     reader.setLenient(true);
                     final ContactsSyncDataBean contactsSyncDataBean = gson.fromJson(responseString, ContactsSyncDataBean.class);
-                    Log.d("DEBUG", "Displaying Contact sync Details.." + contactsSyncDataBean.toString());
-                    totalSyncedContacts += contactsSyncDataBean.getNumberOfSyncedContacts();
+                    Log.d("DEBUG", "Displaying Contact sync Details.." + contactsSyncDataBean);
+                    //totalSyncedContacts += contactsSyncDataBean.getNumberOfSyncedContacts();
 
                 }
             }
-            Toast.makeText(callerActivity.getApplicationContext(),
-                    "Total Commerce contacts = " + totalSyncedContacts, Toast.LENGTH_LONG).show();
             if (dialog != null) {
                 dialog.dismiss();
             }

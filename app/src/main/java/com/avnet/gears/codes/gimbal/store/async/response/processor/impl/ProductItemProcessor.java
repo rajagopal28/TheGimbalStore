@@ -12,6 +12,7 @@ import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponse
 import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.bean.ReviewBean;
+import com.avnet.gears.codes.gimbal.store.bean.response.ProductsResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.ImageResponseAsyncTask;
 import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
@@ -77,7 +78,8 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                 Gson gson = new GsonBuilder().disableHtmlEscaping().create();
                 JsonReader reader = new JsonReader(new StringReader(responseString));
                 reader.setLenient(true);
-                final ProductBean productBean = gson.fromJson(responseString, ProductBean.class);
+                ProductsResponseBean productRespBean = gson.fromJson(responseString, ProductsResponseBean.class);
+                final ProductBean productBean = productRespBean.getCatalogEntryView()[0];
                 Log.d("DEBUG", "Displaying Product Details.." + productBean.toString());
 
                 parentActivity.runOnUiThread(new Runnable() {
@@ -95,29 +97,39 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                         if (ratingView != null) {
                             ratingView.setText(productBean.getRating());
                         }
-                        ReviewBean[] reviews = productBean.getReviews();
-                        if (reviews != null && reviews.length > 0) {
+                        ReviewBean reviews = productBean.getReviews();
+                        if (reviews != null) {
                             if (reviewsListView != null) {
-                                reviewTitleView.setText("This product got " + reviews.length + " user reviews");
+                                if (reviews.getTotalResults() != null) {
+                                    reviewTitleView.setText("This product got " + reviews.getTotalResults() + " user reviews");
+                                } else {
+                                    reviewTitleView.setText("No reviews for this product yet! Be first to review!");
+                                }
+
                             }
-                            List<String> reviewString = TypeConversionUtil.getReviewTextAsStrings(Arrays.asList(reviews));
-                            ArrayAdapter<String> reviewsAdapter = new ArrayAdapter<String>(parentActivity,
-                                    android.R.layout.simple_list_item_1,
-                                    reviewString);
-                            reviewsListView.setAdapter(reviewsAdapter);
-                            reviewsListView.refreshDrawableState();
+                            if (reviews.getResults() != null) {
+                                List<String> reviewString = TypeConversionUtil.getReviewTextAsStrings(Arrays.asList(reviews.getResults()));
+                                ArrayAdapter<String> reviewsAdapter = new ArrayAdapter<String>(parentActivity,
+                                        android.R.layout.simple_list_item_1,
+                                        reviewString);
+                                reviewsListView.setAdapter(reviewsAdapter);
+                                reviewsListView.refreshDrawableState();
+                                AndroidUtil.setDynamicHeight(reviewsListView);
+                            }
+
+
                         }
                     }
                 });
-
-
-                String imageUrl = ServerURLUtil.getAbsoluteUrlFor(parentActivity.getResources(),
-                        productBean.getThumbnail());
-                String cookieString = AndroidUtil.getPreferenceString(parentActivity.getApplicationContext(),
-                        GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
-                ImageDataProcessor imageViewProcessor = new ImageDataProcessor(parentActivity, null, Arrays.asList(productImageView));
-                ImageResponseAsyncTask imageResponseAsyncTask = new ImageResponseAsyncTask(Arrays.asList(new String[]{imageUrl}), imageViewProcessor, cookieString);
-                imageResponseAsyncTask.execute(new String[]{});
+                if (productBean.getThumbnail() != null) {
+                    String imageUrl = ServerURLUtil.getAbsoluteUrlFor(parentActivity.getResources(),
+                            productBean.getThumbnail());
+                    String cookieString = AndroidUtil.getPreferenceString(parentActivity.getApplicationContext(),
+                            GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
+                    ImageDataProcessor imageViewProcessor = new ImageDataProcessor(parentActivity, null, Arrays.asList(productImageView));
+                    ImageResponseAsyncTask imageResponseAsyncTask = new ImageResponseAsyncTask(Arrays.asList(new String[]{imageUrl}), imageViewProcessor, cookieString);
+                    imageResponseAsyncTask.execute(new String[]{});
+                }
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                 }

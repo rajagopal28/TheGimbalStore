@@ -15,12 +15,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Set;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class HttpClient {
 
@@ -42,13 +55,25 @@ public class HttpClient {
     private static HttpURLConnection getPlainHttConnection(String url, HTTP_METHODS httpMethod,
                                                            String cookieString, boolean doInput,
                                                            boolean doOutput, boolean isMultiPart, boolean setKeepAlive,
-                                                           boolean useCaches, boolean allowUserInteraction, int timeout) throws MalformedURLException, IOException {
-        HttpURLConnection con = (HttpURLConnection) (new URL(url)).openConnection();
+                                                           boolean useCaches, boolean allowUserInteraction, int timeout)
+            throws IOException, KeyStoreException,
+            NoSuchAlgorithmException, KeyManagementException {
+        HttpURLConnection con = null;
+        URL urlCon = new URL(url);
+        if (url.startsWith(GimbalStoreConstants.SECURE_URL_PROTOCOL_PREFIX)) {
+            HttpsURLConnection urlConnection =
+                    (HttpsURLConnection) urlCon.openConnection();
+            urlConnection.setHostnameVerifier(DO_NOT_VERIFY);
+            urlConnection.setSSLSocketFactory(trustAllHosts().getSocketFactory());
+            con = urlConnection;
+        } else {
+            con = (HttpURLConnection) urlCon.openConnection();
+        }
         con.setRequestMethod(httpMethod.toString());
         con.setDoInput(doInput);
         con.setDoOutput(doOutput);
-        con.setRequestProperty("User-Agent",
-                "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+        con.setRequestProperty(GimbalStoreConstants.HTTP_HEADER_PROPERTIES.USER_AGENT.getValue(),
+                HTTP_HEADER_VALUES.USER_AGENT_FIRE_FOX_MAC.getValue());
 
         if (cookieString != null && !cookieString.isEmpty()) {
             con.setRequestProperty(GimbalStoreConstants.COOKIES_REQUEST_HEADER, cookieString);
@@ -74,14 +99,16 @@ public class HttpClient {
         return con;
     }
 
-    public static HttpURLConnection getHttPOSTConnection(String url, String cookieString) throws MalformedURLException, IOException {
+    public static HttpURLConnection getHttPOSTConnection(String url, String cookieString) throws IOException, KeyStoreException,
+            NoSuchAlgorithmException, KeyManagementException, IOException {
         return getPlainHttConnection(url, HTTP_METHODS.POST,
                 cookieString, true,
                 true, false, false,
                 false, false, MAX_READ_TIMEOUT);
     }
 
-    public static HttpURLConnection getHttpGetConnection(String url, String cookieString, Map<String, String> paramsMap) throws MalformedURLException, IOException {
+    public static HttpURLConnection getHttpGetConnection(String url, String cookieString, Map<String, String> paramsMap) throws IOException, KeyStoreException,
+            NoSuchAlgorithmException, KeyManagementException, IOException {
         url += GimbalStoreConstants.DELIMITER_QUESTION + getStringParameters(paramsMap);
         return getPlainHttConnection(url, HTTP_METHODS.GET,
                 cookieString, true,
@@ -89,21 +116,22 @@ public class HttpClient {
                 true, true, MAX_READ_TIMEOUT);
     }
 
-    public static HttpURLConnection getMultiPartHttpPOSTConnection(String url) throws MalformedURLException, IOException {
+    public static HttpURLConnection getMultiPartHttpPOSTConnection(String url, String cookieString) throws IOException, KeyStoreException,
+            NoSuchAlgorithmException, KeyManagementException, IOException, UnsupportedEncodingException {
         return getPlainHttConnection(url, HTTP_METHODS.POST,
-                null, true,
+                cookieString, true,
                 true, true, true,
                 false, false, MAX_READ_TIMEOUT);
     }
 
-    private static String getStringParameters(Map<String, String> parametersMap) {
+    private static String getStringParameters(Map<String, String> parametersMap) throws UnsupportedEncodingException {
         Set<String> keySet = parametersMap.keySet();
         String outputParametersString = "";
         for (String key : keySet) {
             if (!outputParametersString.isEmpty()) {
                 outputParametersString += GimbalStoreConstants.DELIMITER_AMPERSAND;
             }
-            outputParametersString += key + GimbalStoreConstants.DELIMITER_EQUAL + parametersMap.get(key);
+            outputParametersString += key + GimbalStoreConstants.DELIMITER_EQUAL + URLEncoder.encode(parametersMap.get(key), GimbalStoreConstants.ENCODING_UTF_8);
         }
         return outputParametersString;
     }
@@ -178,7 +206,7 @@ public class HttpClient {
         return bmp;
     }
 
-    private static void writeMultiPartParamData(OutputStream os, Map<String, String> parametersMap) throws Exception {
+    public static void writeMultiPartParamData(OutputStream os, Map<String, String> parametersMap) throws Exception {
         Set<String> keySet = parametersMap.keySet();
 
         for (String key : keySet) {
@@ -201,4 +229,39 @@ public class HttpClient {
         }
 
     }
+
+    // always verify the host - dont check for certificate
+    final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    };
+
+
+    /**
+     * Trust every server - dont check for any certificate
+     */
+    private static SSLContext trustAllHosts() throws KeyStoreException, NoSuchAlgorithmException,
+            KeyManagementException {
+        // Create a trust manager that does not validate certificate chains
+        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return new java.security.cert.X509Certificate[]{};
+            }
+
+            public void checkClientTrusted(X509Certificate[] chain,
+                                           String authType) throws CertificateException {
+            }
+
+            public void checkServerTrusted(X509Certificate[] chain,
+                                           String authType) throws CertificateException {
+            }
+        }};
+
+        // Install the all-trusting trust manager
+        SSLContext sc = SSLContext.getInstance("TLS");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        return sc;
+    }
+
 }

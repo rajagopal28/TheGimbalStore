@@ -34,7 +34,7 @@
 
     <!-- Adding configuration values that are used as a part of store service -->
 
-    <string name="SERVER_PROTOCOL">http://</string>
+    <string name="SERVER_PROTOCOL">https://</string>
     <string name="STORE_SERVICE_HOST">192.168.3.233</string>
     <string name="STORE_SERVLET_CONTEXT_ROOT">/webapp/wcs/stores/servlet</string>
     <string name="MOBILE_ACCESS_CONTROLLER_SERVLET">/F8app</string>

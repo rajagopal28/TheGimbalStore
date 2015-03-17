@@ -18,10 +18,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.avnet.gears.codes.gimbal.store.R;
+import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ContactsSyncProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ContactBean;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationActionBean;
 import com.avnet.gears.codes.gimbal.store.bean.PhoneNumberBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
+import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,8 +96,10 @@ public class AndroidUtil {
         isFirstTimeOpen = sharedPreferences.getBoolean(GimbalStoreConstants.PREF_IS_FIRST_TIME_OPEN, true);
         // update the preference if first time
         if (isFirstTimeOpen) {
-            sharedPreferences.edit().putBoolean(GimbalStoreConstants.PREF_IS_FIRST_TIME_OPEN, false);
-            sharedPreferences.edit().commit();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(GimbalStoreConstants.PREF_IS_FIRST_TIME_OPEN, false);
+            editor.commit();
+            Log.d("DEBUG", "PREF_IS_FIRST_TIME_OPEN = " + sharedPreferences.getBoolean(GimbalStoreConstants.PREF_IS_FIRST_TIME_OPEN, true));
         }
         return isFirstTimeOpen;
     }
@@ -123,8 +127,13 @@ public class AndroidUtil {
                 List<PhoneNumberBean> phoneNumbers = new ArrayList<PhoneNumberBean>();
                 while (pCur.moveToNext()) {
                     PhoneNumberBean phoneNumber = new PhoneNumberBean();
-                    // TODO parse the number and remove () and -
-                    phoneNumber.setPhoneNumber(pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+
+                    String phoneNumberString = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    phoneNumberString = phoneNumberString.replace(GimbalStoreConstants.DELIMITER_OPEN_PARENTHESIS, "").
+                            replace(GimbalStoreConstants.DELIMITER_CLOSE_PARENTHESIS, "").
+                            replace(GimbalStoreConstants.DELIMITER_HYPHEN, "").
+                            replace(GimbalStoreConstants.DELIMITER_SPACE, "");
+                    phoneNumber.setPhoneNumber(phoneNumberString);
                     phoneNumber.setPhoneNumberType(GimbalStoreConstants.PHONE_NUMBER_TYPE.getNumberType(pCur.getInt(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))));
                     phoneNumbers.add(phoneNumber);
                 }
@@ -133,6 +142,7 @@ public class AndroidUtil {
             }
             c.moveToNext();
         }
+        c.close();
         return contactBeanList;
     }
 
@@ -178,9 +188,12 @@ public class AndroidUtil {
                     if (subIndex == GimbalStoreConstants.CONTACTS_UPLOAD_CHUNK_LIMIT - 1 ||
                             subIndex == allContactsFormatString.size() - 1) {
                         Map<String, String> contactParam = ServerURLUtil.getBasicConfigParamsMap(parentActivity.getResources());
-                        contactParam.put(GimbalStoreConstants.StoreParameterKeys.contactValues.toString(),
+                        contactParam.put(GimbalStoreConstants.StoreParameterKeys.friends.toString(),
                                 contactValues);
+                        contactParam.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
+                                GimbalStoreConstants.StoreParameterValues.createNetwork.toString());
                         urlsList.add(new String(urlString));
+                        Log.d("DEBUG", "contactParam=" + contactParam);
                         paramsMapList.add(contactParam);
                         subIndex = 0;
                         contactValues = "";
@@ -188,12 +201,12 @@ public class AndroidUtil {
                     subIndex++;
                 }
                 Log.d("DEBUG", "List of contact params Maps = " + paramsMapList);
-                /*ContactsSyncProcessor contactsProcessor = new ContactsSyncProcessor(parentActivity, progressDialog);
+                ContactsSyncProcessor contactsProcessor = new ContactsSyncProcessor(parentActivity, progressDialog);
 
-                HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.POST,
+                HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                         urlsList, paramsMapList,
                         cookieString, contactsProcessor);
-                asyncTask.execute(new String[]{});*/
+                asyncTask.execute(new String[]{});
                 progressDialog.dismiss();
                 returnFlag = true;
                 break;
@@ -219,8 +232,15 @@ public class AndroidUtil {
 
     public static void savePreferenceValue(Context context, String preferenceKey, String preferenceValue) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.edit().putString(preferenceKey, preferenceValue);
-        preferences.edit().commit();
+        SharedPreferences.Editor editor = preferences.edit();
+        if (preferenceValue == null) {
+            // remove the preference
+            editor.remove(preferenceKey);
+        } else {
+            // else update it
+            editor.putString(preferenceKey, preferenceValue);
+        }
+        editor.commit();
     }
 
     public static String getPreferenceString(Context context, String preferenceKey) {

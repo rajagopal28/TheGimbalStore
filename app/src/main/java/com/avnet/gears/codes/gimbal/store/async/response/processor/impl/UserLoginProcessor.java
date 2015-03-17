@@ -2,6 +2,7 @@ package com.avnet.gears.codes.gimbal.store.async.response.processor.impl;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
@@ -30,6 +31,7 @@ public class UserLoginProcessor implements AsyncResponseProcessor {
             // get shared preference and set session cookie
             AndroidUtil.savePreferenceValue(parentActivity.getApplicationContext(),
                     GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY, cookie);
+            Log.d("DEBUG", "Loged in with response = " + httpResponseBean);
 
             parentActivity.setResult(GimbalStoreConstants.ACTIVITY_RESULT_LOGIN_SUCCESS, passedIntent);
             return true;

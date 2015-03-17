@@ -11,7 +11,8 @@ public class ProductBean extends BaseServerDataBean {
     private String price;
     private String rating;
 
-    private ReviewBean[] reviews;
+
+    private ReviewBean reviews;
     private String[] attribute;
 
     public String getPartNumber() {
@@ -22,11 +23,11 @@ public class ProductBean extends BaseServerDataBean {
         this.partNumber = partNumber;
     }
 
-    public ReviewBean[] getReviews() {
+    public ReviewBean getReviews() {
         return reviews;
     }
 
-    public void setReviews(ReviewBean[] reviews) {
+    public void setReviews(ReviewBean reviews) {
         this.reviews = reviews;
     }
 
@@ -54,12 +55,16 @@ public class ProductBean extends BaseServerDataBean {
         this.price = price;
     }
 
+    public void setUniqueId(String[] uniqueId) {
+        this.uniqueId = uniqueId[0];
+    }
+
     @Override
     public String toString() {
         return super.toString() +
                 "ProductBean{" +
                 "partNumber='" + partNumber + '\'' +
-                ", reviews='" + Arrays.toString(reviews) + '\'' +
+                ", reviews='" + reviews + '\'' +
                 ", attribute=" + Arrays.toString(attribute) +
                 '}';
     }

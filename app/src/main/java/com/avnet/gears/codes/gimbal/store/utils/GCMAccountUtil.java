@@ -49,7 +49,7 @@ public class GCMAccountUtil {
             String gcmDeviceId = "";
             gcmDeviceId = AndroidUtil.getPreferenceString(callerActivity.getApplicationContext(),
                     GimbalStoreConstants.PREF_GCM_DEVICE_ID);
-            if (!gcmDeviceId.isEmpty()) {
+            if (gcmDeviceId != null && !gcmDeviceId.isEmpty()) {
                 Bundle targetBundle = intent.getExtras();
                 Log.d("DEBUG", "deviceId = " + gcmDeviceId + "senderId= " + senderId);
                 targetBundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.GIVEN_GCM_DEVICE_ID.toString(), gcmDeviceId);

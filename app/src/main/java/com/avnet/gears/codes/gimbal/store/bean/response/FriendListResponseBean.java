@@ -8,21 +8,21 @@ import java.util.Arrays;
  * Created by 914889 on 3/16/15.
  */
 public class FriendListResponseBean extends BaseServerResponseBean {
-    private FriendDataBean[] CatalogEntryView;
+    private FriendDataBean[] Contacts;
 
-    public FriendDataBean[] getCatalogEntryView() {
-        return CatalogEntryView;
+    public FriendDataBean[] getContacts() {
+        return Contacts;
     }
 
-    public void setCatalogEntryView(FriendDataBean[] catalogEntryView) {
-        CatalogEntryView = catalogEntryView;
+    public void setContacts(FriendDataBean[] contacts) {
+        Contacts = contacts;
     }
 
     @Override
     public String toString() {
         return super.toString() +
                 "FriendListResponseBean{" +
-                "CatalogEntryView=" + Arrays.toString(CatalogEntryView) +
+                "CatalogEntryView=" + Arrays.toString(Contacts) +
                 '}';
     }
 }

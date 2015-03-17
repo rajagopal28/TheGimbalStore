@@ -11,25 +11,45 @@ public class GimbalStoreConstants {
     public static final String DELIMITER_SEMICOLAN = ";";
     public static final String DELIMITER_AMPERSAND = "&";
     public static final String DELIMITER_EQUAL = "=";
+
+    public static final String DELIMITER_OPEN_PARENTHESIS = "(";
+    public static final String DELIMITER_CLOSE_PARENTHESIS = ")";
+    public static final String DELIMITER_SPACE = " ";
+    public static final String DELIMITER_HYPHEN = "-";
+
+
+    public static String ENCODING_UTF_8 = "UTF-8";
+
     public static String SUCCESS_STRING = "DONE";
+
+    public static String SECURE_URL_PROTOCOL_PREFIX = "https";
+
     public static String DEFAULT_SPINNER_TITLE = "Loading...";
     public static String DEFAULT_SPINNER_INFO_TEXT = "Please wait for a while!!";
+
     public static String SYNC_CONTACTS_SPINNER_TITLE = "Syncing Contacts..";
     public static String SYNC_CONTACTS_SPINNER_INFO_TEXT = "Please wait!! This may take a while!!!";
+
     public static int CONTACTS_UPLOAD_CHUNK_LIMIT = 25;
+
     public static String TAG_SHOW_FEED_ITEM = "FeedItemDialogFragment";
     public static String TAG_SHOW_FRIENDS_LIST = "FriendsListDialogFragment";
+
     public static String SUB_CATEGORY_VIEW_HEADING = "Showing List of Items of {0}";
+
     public static String START_COMMENT_STRING = "/*";
     public static String END_COMMENT_STRING = "*/";
+
     public static String PREF_IS_FIRST_TIME_OPEN = "PREF_IS_FIRST_TIME_OPEN";
     public static int ACTIVITY_REQUEST_SIGNUP = 11;
     public static int ACTIVITY_RESULT_LOGIN_SUCCESS = 22;
-    public static int ACTIVITY_RESULT_FRIENDS_SELECTED = 33;
+
     public static String APP_ACCOUNT_TYPE_STRING = "com.avnet.gimbal.store.mobile.user.account.type";
     public static String DEFAULT_STORE_NOTIFICATION_TITLE = "You have a Store Notification!!!";
+
     public static String COOKIES_RESPONSE_HEADER = "Set-Cookie";
     public static String COOKIES_REQUEST_HEADER = "Cookie";
+
     public static String PREF_GCM_DEVICE_ID = "PREF_GCM_DEVICE_ID";
     public static String PREF_SESSION_COOKIE_PARAM_KEY = "PREF_SESSION_COOKIE_PARAM_KEY";
 
@@ -76,7 +96,8 @@ public class GimbalStoreConstants {
         SELECTED_RECOMMENDATION_ID,
         FEED_ITEM_TEXT,
         SELECTED_REVIEW_ID,
-        SELECTED_FRIEND_LIST_RESPONSE;
+        SELECTED_FRIEND_LIST_RESPONSE,
+        SELECTED_NETWORK_RESPONSE_TYPE;
     }
 
     // network data param keys
@@ -92,8 +113,11 @@ public class GimbalStoreConstants {
         gcmDeviceId,
         securityToken,
         recommendationId,
-        contactValues,
-        uniqueId// TODO change
+        friends,
+        productId,
+        reviewText,
+        rating,
+        uniqueId
     }
 
     // network data param keys
@@ -105,7 +129,10 @@ public class GimbalStoreConstants {
         notificationItem,
         signup,
         authentication,
-        signin
+        signin,
+        postReview,
+        createNetwork,
+        fetchContacts
     }
 
     public static enum HTTP_METHODS {
@@ -145,6 +172,7 @@ public class GimbalStoreConstants {
     public static enum HTTP_HEADER_PROPERTIES {
         CONNECTION("Connection"),
         CONTENT_TYPE("Content-Type"),
+        USER_AGENT("User-Agent"),
         CONTENT_DISPOSITION("Content-Disposition"),
         CONTENT_TRANSFER_ENCODING("Content-Transfer-Encoding"),
         CONTENT_LENGTH("Content-length");
@@ -185,6 +213,7 @@ public class GimbalStoreConstants {
         CONTENT_TYPE_IMAGE_JPEG("image/jpeg"),
         CONTENT_TYPE_IMAGE_GIF("image/gif"),
         CONTENT_TYPE_MULTIPART("multipart/form-data; boundary={0}"),
+        USER_AGENT_FIRE_FOX_MAC("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2"),
         CONTENT_TRANSFER_ENCODING_BINARY("binary");
         private String value;
 

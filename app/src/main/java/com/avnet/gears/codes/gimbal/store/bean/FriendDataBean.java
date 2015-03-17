@@ -4,51 +4,43 @@ package com.avnet.gears.codes.gimbal.store.bean;
  * Created by 914889 on 3/16/15.
  */
 public class FriendDataBean extends BaseServerDataBean {
-    private String userId;
-    private String friendUserId;
-    private String friendContactName;
-    private String friendPhoneNumber;
+    private String UserId;
+    private String Name;
+    private String PhoneNumber;
 
     public String getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
-    public String getFriendUserId() {
-        return friendUserId;
+    @Override
+    public String getName() {
+        return Name;
     }
 
-    public void setFriendUserId(String friendUserId) {
-        this.friendUserId = friendUserId;
+    @Override
+    public void setName(String name) {
+        Name = name;
     }
 
-    public String getFriendContactName() {
-        return friendContactName;
+    public String getPhoneNumber() {
+        return PhoneNumber;
     }
 
-    public void setFriendContactName(String friendContactName) {
-        this.friendContactName = friendContactName;
-    }
-
-    public String getFriendPhoneNumber() {
-        return friendPhoneNumber;
-    }
-
-    public void setFriendPhoneNumber(String friendPhoneNumber) {
-        this.friendPhoneNumber = friendPhoneNumber;
+    public void setPhoneNumber(String phoneNumber) {
+        PhoneNumber = phoneNumber;
     }
 
     @Override
     public String toString() {
         return super.toString() +
                 "FriendDataBean{" +
-                "userId='" + userId + '\'' +
-                ", friendUserId='" + friendUserId + '\'' +
-                ", friendContactName='" + friendContactName + '\'' +
-                ", friendPhoneNumber='" + friendPhoneNumber + '\'' +
+                "userId='" + UserId + '\'' +
+                ", friendContactName='" + Name + '\'' +
+                ", friendPhoneNumber='" + PhoneNumber + '\'' +
                 '}';
     }
 }

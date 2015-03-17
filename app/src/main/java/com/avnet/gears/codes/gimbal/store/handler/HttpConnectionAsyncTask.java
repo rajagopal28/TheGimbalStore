@@ -11,6 +11,7 @@ import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_METHODS;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_RESPONSE_CODES;
 
+import java.io.OutputStream;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
@@ -50,7 +51,13 @@ public class HttpConnectionAsyncTask extends AsyncTask<String, List<String>, Obj
                 Log.d("DEBUG", "HTTP processing URL" + url + " For HTTP METHOD=" + this.httpMethod);
                 HttpURLConnection con = null;
                 if (this.httpMethod == HTTP_METHODS.POST) {
-                    con = HttpClient.getHttPOSTConnection(url, cookieString);
+                    con = HttpClient.getMultiPartHttpPOSTConnection(url, cookieString);
+                    if (parametersMapList != null && parametersMapList.get(index) != null) {
+                        OutputStream os = con.getOutputStream();
+                        HttpClient.writeMultiPartParamData(os, parametersMapList.get(index));
+                        HttpClient.finishMultipart(os);
+                        os.flush();
+                    }
                 } else {
                     con = HttpClient.getHttpGetConnection(url, cookieString, parametersMapList.get(index));
                 }
@@ -79,8 +86,8 @@ public class HttpConnectionAsyncTask extends AsyncTask<String, List<String>, Obj
                 // Log.d("DEBUG", "Response = " + responseBean);
                 responseItemBeans.add(responseBean);
                 con.disconnect();
+                index++;
             }
-            index++;
             this.processor.doProcess(responseItemBeans);
         } catch (Exception e) {
             e.printStackTrace();
