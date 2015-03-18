@@ -23,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
 import java.io.StringReader;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -94,20 +95,28 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                         if (priceView != null) {
                             priceView.setText(productBean.getPrice());
                         }
-                        if (ratingView != null) {
-                            ratingView.setText(productBean.getRating());
-                        }
+
                         ReviewBean reviews = productBean.getReviews();
                         if (reviews != null) {
                             if (reviewsListView != null) {
+
                                 if (reviews.getTotalResults() != null && "0".equals(reviews.getTotalResults())) {
-                                    reviewTitleView.setText("This product got " + reviews.getTotalResults() + " user reviews");
+                                    reviewTitleView.setText(MessageFormat.format(GimbalStoreConstants.MESSAGE_PRODUCT_GOT_REVIEWS,
+                                            new Object[]{reviews.getTotalResults()}));
                                 } else {
-                                    reviewTitleView.setText("No reviews for this product yet! Be the first to review!");
+                                    reviewTitleView.setText(GimbalStoreConstants.MESSAGE_NO_REVIEWS);
                                 }
 
                             }
                             if (reviews.getResults() != null) {
+                                if (ratingView != null) {
+                                    Log.d("DEBUG", "Rating overall = " + reviews.getIncludes());
+                                    if (reviews.getIncludes() != null &&
+                                            reviews.getIncludes().getReviewStatistics() != null &&
+                                            reviews.getIncludes().getReviewStatistics().getAverageOverallRating() != null) {
+                                        ratingView.setText(GimbalStoreConstants.LABEL_OVERALL_RATING + reviews.getIncludes().getReviewStatistics().getAverageOverallRating());
+                                    }
+                                }
                                 List<String> reviewString = TypeConversionUtil.getReviewTextAsStrings(Arrays.asList(reviews.getResults()));
                                 ArrayAdapter<String> reviewsAdapter = new ArrayAdapter<String>(parentActivity,
                                         android.R.layout.simple_list_item_1,

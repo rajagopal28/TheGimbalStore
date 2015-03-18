@@ -46,14 +46,14 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
         TextView productTitleView = (TextView) findViewById(R.id.product_title);
         TextView productDescriptionView = (TextView) findViewById(R.id.product_description);
         TextView productPriceView = (TextView) findViewById(R.id.product_price);
-        TextView productRatingView = (TextView) findViewById(R.id.product_rating);
+        TextView productRatingView = (TextView) findViewById(R.id.product_avg_rating);
         TextView productReviewTitleView = (TextView) findViewById(R.id.product_review_details);
+
         final ProgressDialog progressDialog = AndroidUtil.showProgressDialog(this,
                 GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
                 GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
         progressDialog.dismiss();
 
-        RatingBar ratingBar = (RatingBar) findViewById(R.id.product_rating_bar);
 
         Button askReviewButton = (Button) findViewById(R.id.buy_now_button);
         Button askButton = (Button) findViewById(R.id.ask_friend_button);
@@ -65,7 +65,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
         data.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
                 selectedProductId);
         intent.putExtras(data);
-        final String ratingValue = "" + ratingBar.getRating();
+
         final Activity mActivity = this;
         askReviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +132,9 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
             public void onClick(View v) {
                 progressDialog.show();
 
+                RatingBar ratingBar = (RatingBar) findViewById(R.id.product_rating_bar);
+                String ratingValue = String.valueOf((int) ratingBar.getRating());
+                Log.d("DEBUG", "PDP View ratingValue = " + ratingValue);
                 String reviewText = ((EditText) findViewById(R.id.review_text)).getText().toString();
                 Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.productId.toString(),
@@ -141,7 +144,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.reviewText.toString(),
                         reviewText);
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.rating.toString(),
-                        "3");
+                        ratingValue);
 
                 Log.d("DEBUG", "paramsMap=" + paramsMap);
                 String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);

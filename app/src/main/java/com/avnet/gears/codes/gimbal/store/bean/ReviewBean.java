@@ -10,7 +10,7 @@ public class ReviewBean extends BaseServerDataBean {
     private String Offset;
     private String HasErrors;
     private ReviewResult[] Results;
-    private Object Includes;
+    private RatingBean Includes;
     private String[] errors;
 
     public String getTotalResults() {
@@ -45,11 +45,11 @@ public class ReviewBean extends BaseServerDataBean {
         Results = results;
     }
 
-    public Object getIncludes() {
+    public RatingBean getIncludes() {
         return Includes;
     }
 
-    public void setIncludes(Object includes) {
+    public void setIncludes(RatingBean includes) {
         Includes = includes;
     }
 

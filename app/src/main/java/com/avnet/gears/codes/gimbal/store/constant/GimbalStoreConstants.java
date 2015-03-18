@@ -30,6 +30,10 @@ public class GimbalStoreConstants {
     public static String SYNC_CONTACTS_SPINNER_TITLE = "Syncing Contacts..";
     public static String SYNC_CONTACTS_SPINNER_INFO_TEXT = "Please wait!! This may take a while!!!";
 
+    public static String MESSAGE_NO_REVIEWS = "No reviews for this product yet! Be the first to review!";
+    public static String MESSAGE_PRODUCT_GOT_REVIEWS = "This product got {0} user reviews";
+    public static String LABEL_OVERALL_RATING = "Overall rating :";
+
     public static int CONTACTS_UPLOAD_CHUNK_LIMIT = 25;
 
     public static String TAG_SHOW_FEED_ITEM = "FeedItemDialogFragment";
