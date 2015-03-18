@@ -1,0 +1,9 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="gimbal_notif_enabled_checkbox"
+        android:title="@string/pref_title_gimbal_notifications"
+        android:summary="@string/pref_description_gimbal_notifications"
+        android:defaultValue="true" />
+
+</PreferenceScreen>

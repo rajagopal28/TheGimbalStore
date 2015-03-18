@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.AuthTokenReceiverProcessor;
@@ -38,9 +39,19 @@ import com.avnet.gears.codes.gimbal.store.utils.GCMAccountUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
 
+import com.gimbal.android.Beacon;
+import com.gimbal.android.BeaconEventListener;
+import com.gimbal.android.BeaconManager;
+import com.gimbal.android.BeaconSighting;
+import com.gimbal.android.Gimbal;
+import com.gimbal.android.PlaceEventListener;
+import com.gimbal.android.PlaceManager;
+import com.gimbal.android.Visit;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -64,11 +75,19 @@ public class HomeActivity extends Activity
     private ProgressDialog progressDialog;
     private AccountManager accountManager;
 
+    //Gimbal
+    private PlaceEventListener placeEventListener;
+    private BeaconEventListener beaconSightingListener;
+    private BeaconManager beaconManager;
+
+    private static final int SETTINGS_RESULT = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        gimbalInitialize();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -109,6 +128,65 @@ public class HomeActivity extends Activity
             Log.d("DEBUG", "cookieString = " + cookieString);
         }
         processCategoryListData();
+    }
+
+    private void gimbalInitialize() {
+        Toast t = Toast.makeText(getApplicationContext(), "Gimbal initialise", Toast.LENGTH_SHORT);
+        t.show();
+        Gimbal.setApiKey(this.getApplication(), "70e4f8df-8332-46fd-99de-efa092ee57f9");
+        final TextView placeView = (TextView)findViewById(R.id.placeView);
+        final TextView sightingView = (TextView)findViewById(R.id.sightingView);
+        final TextView sightingRssiView = (TextView) findViewById(R.id.sightingRssiView);
+        final TextView beaconDetailsView = (TextView) findViewById(R.id.beaconDetailsView);
+
+        placeEventListener = new PlaceEventListener() {
+            @Override
+            public void onVisitStart(Visit visit) {
+
+                placeView.setText("Place : Enter: " + visit.getPlace().getName() + ", at: " + new Date(visit.getArrivalTimeInMillis()));
+                // This will be invoked when a place is entered. Example below shows a simple log upon enter
+                Log.i("Info:", "Enter: " + visit.getPlace().getName() + ", at: " + new Date(visit.getArrivalTimeInMillis()));
+
+                boolean setting = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("example_checkbox", true);
+                Toast t = Toast.makeText(getApplicationContext(), "Onvisitstart : " + String.valueOf(setting), Toast.LENGTH_SHORT);
+                t.show();
+            }
+
+            @Override
+            public void onVisitEnd(Visit visit) {
+
+                placeView.setText("Place : Exit: " + visit.getPlace().getName() + ", at: " + new Date(visit.getDepartureTimeInMillis()));
+                // This will be invoked when a place is exited. Example below shows a simple log upon exit
+                Log.i("Info:", "Exit: " + visit.getPlace().getName() + ", at: " + new Date(visit.getDepartureTimeInMillis()));
+
+                boolean setting = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("example_checkbox", true);
+                Toast t = Toast.makeText(getApplicationContext(), "Onvisitend : " + String.valueOf(setting), Toast.LENGTH_SHORT);
+                t.show();
+            }
+        };
+
+        PlaceManager.getInstance().addListener(placeEventListener);
+
+        beaconSightingListener = new BeaconEventListener() {
+            @Override
+            public void onBeaconSighting(BeaconSighting sighting) {
+
+                sightingView.setText("BeaconSighting");
+                sightingRssiView.setText("RSSI : " + sighting.getRSSI() + "\nTime in Millis : " + new Date(sighting.getTimeInMillis()));
+
+                Beacon beacon = sighting.getBeacon();
+                beaconDetailsView.setText("Beacon Name : " + beacon.getName() +
+                        "\nIdentifier : " + beacon.getIdentifier() +
+                        "\nBattery Level : " + beacon.getBatteryLevel() +
+                        "\nBeacon Temperature : " + beacon.getTemperature());
+                Log.i("INFO", sighting.toString());
+            }
+        };
+        beaconManager = new BeaconManager();
+        beaconManager.addListener(beaconSightingListener);
+
+        PlaceManager.getInstance().startMonitoring();
+        beaconManager.startListening();
     }
 
     @Override
@@ -230,13 +308,13 @@ public class HomeActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
         //noinspection SimplifiableIfStatement
-        if (id == android.R.id.home) {
-
-        } else if (!AndroidUtil.processSettingsAction(this, id)) {
-            // do some custom action processing
+        if (id == R.id.action_settings) {
+            Log.d("Options Selected", "Settings clicked");
+            Intent i = new Intent(getApplicationContext(), UserSettingsActivity.class);
+            startActivityForResult(i, SETTINGS_RESULT);
         }
-
         return super.onOptionsItemSelected(item);
     }
 

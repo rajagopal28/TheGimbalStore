@@ -1,0 +1,13 @@
+<resources>
+    <string name="title_activity_user_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_gimbal_notifications">Enable Gimbal Notifications</string>
+    <string name="pref_description_gimbal_notifications">Enable Gimbal Notifications</string>
+
+
+</resources>
