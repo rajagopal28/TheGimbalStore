@@ -39,6 +39,7 @@ public class StoreAuthenticatorActivity extends AccountAuthenticatorActivity {
         Intent authenticationIntent = new Intent();
         final AuthDataProcessor authDataProcessor = new AuthDataProcessor(this, authenticationIntent, accountManager);
 
+
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

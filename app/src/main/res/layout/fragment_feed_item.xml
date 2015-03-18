@@ -16,7 +16,7 @@
     <TextView
         android:id="@+id/feed_item_text"
         android:layout_width="284dp"
-        android:layout_height="41dp"
+        android:layout_height="117dp"
         android:layout_gravity="left|top"
         android:paddingLeft="10dp"
         android:paddingTop="10dp"

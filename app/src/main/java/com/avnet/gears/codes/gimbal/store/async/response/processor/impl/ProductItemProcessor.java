@@ -103,7 +103,7 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                                 if (reviews.getTotalResults() != null) {
                                     reviewTitleView.setText("This product got " + reviews.getTotalResults() + " user reviews");
                                 } else {
-                                    reviewTitleView.setText("No reviews for this product yet! Be first to review!");
+                                    reviewTitleView.setText("No reviews for this product yet! Be the first to review!");
                                 }
 
                             }

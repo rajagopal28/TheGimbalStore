@@ -23,6 +23,7 @@ public class NotificationsListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications_list);
+        AndroidUtil.instantiateGimbal(this);
         ListView notificationListView = (ListView) findViewById(R.id.user_notification_list_view);
         ListView promotionsListView = (ListView) findViewById(R.id.promotions_list_view);
         ProgressDialog progressDialog = AndroidUtil.showProgressDialog(this,
@@ -39,9 +40,7 @@ public class NotificationsListActivity extends Activity {
         paramsMap.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
                 GimbalStoreConstants.StoreParameterValues.top.toString());
         paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
-                GimbalStoreConstants.StoreParameterValues.notificationItem.toString());
-        //TODO finalize
-
+                GimbalStoreConstants.StoreParameterValues.fetchNotifications.toString());
         HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                 Arrays.asList(urlString),
                 Arrays.asList(paramsMap),

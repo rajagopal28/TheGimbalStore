@@ -66,11 +66,11 @@ public class NotificationListDataProcessor implements AsyncResponseProcessor {
                 final List<NotificationDataBean> promotionNotifications = new ArrayList<NotificationDataBean>();
                 if (notificationItemsArray != null && notificationItemsArray.length > 0) {
                     for (NotificationDataBean notificationItem : notificationItemBeans) {
-                        if (notificationItem.getNotificationType() != null) {
-                            GimbalStoreConstants.NOTIFICATION_TYPE notificationType = GimbalStoreConstants.NOTIFICATION_TYPE.valueOf(notificationItem.getNotificationType());
+                        if (notificationItem.getType() != null) {
+                            GimbalStoreConstants.NOTIFICATION_TYPE notificationType = GimbalStoreConstants.NOTIFICATION_TYPE.valueOf(notificationItem.getType());
                             switch (notificationType) {
-                                case FRIEND_RECOMMENDATION:
-                                case FRIEND_REVIEW:
+                                case RECOMMENDED:
+                                case REVIEWED:
                                     friendNotificationList.add(notificationItem);
                                     break;
                                 case PRODUCT_PROMOTION:

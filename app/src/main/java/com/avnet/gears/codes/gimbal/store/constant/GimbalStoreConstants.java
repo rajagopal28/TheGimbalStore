@@ -55,23 +55,26 @@ public class GimbalStoreConstants {
 
 
     public static enum RECOMMENDATION_TYPE {
-        TYPE_CATEGORY,
-        TYPE_PRODUCT,
+        ASK_REC_PROD,
+        ASK_REC_CAT,
         TYPE_REVIEW_CATEGORY,
-        TYPE_REVIEW_PRODUCT
+        ASK_REVIEW,
+        RECOMMENDED_BY,
+        NOTIFY_REVIEW
     }
 
     public static enum NOTIFICATION_TYPE {
-        ASK_FRIEND,
-        ASK_FRIEND_REVIEW,
-        FRIEND_REVIEW,
-        FRIEND_RECOMMENDATION,
+        ASKED_TO_REC_PROD,
+        ASKED_TO_REC_CAT,
+        ASKED_TO_REVIEW,
+        REVIEWED,
+        RECOMMENDED,
         PRODUCT_PROMOTION
     }
 
     public static enum FEED_ITEM_TYPE {
-        FRIEND_RECOMMENDATION("Recommended By Friends"),
-        FRIEND_REVIEW("Reviewed By Friends"),
+        FRIEND_RECOMMENDED("Recommended By Friends"),
+        FRIEND_REVIEWED("Reviewed By Friends"),
         SUGGESTED_PRODUCTS("Products You may like");
 
         private String itemTypeLabel;
@@ -117,6 +120,7 @@ public class GimbalStoreConstants {
         productId,
         reviewText,
         rating,
+        rectype,
         uniqueId
     }
 
@@ -125,14 +129,17 @@ public class GimbalStoreConstants {
         top,
         category,
         product,
-        feedItem,
-        notificationItem,
+        fetchFeeds,
+        fetchNotifications,
         signup,
         authentication,
         signin,
         postReview,
         createNetwork,
-        fetchContacts
+        fetchContacts,
+        askRecommendation,
+        askToReview,
+        postRecommendation
     }
 
     public static enum HTTP_METHODS {

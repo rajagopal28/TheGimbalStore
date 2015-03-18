@@ -32,8 +32,8 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
     ViewPager mViewPager;
 
     private GimbalStoreConstants.FEED_ITEM_TYPE[] feedItemTypes = new GimbalStoreConstants.FEED_ITEM_TYPE[]{
-            GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_RECOMMENDATION,
-            GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_REVIEW,
+            GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_RECOMMENDED,
+            GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_REVIEWED,
             GimbalStoreConstants.FEED_ITEM_TYPE.SUGGESTED_PRODUCTS
     };
 
@@ -57,7 +57,7 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
                     GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
             Map<String, String> feedItemParams = ServerURLUtil.getBasicConfigParamsMap(getResources());
             feedItemParams.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
-                    GimbalStoreConstants.StoreParameterValues.feedItem.toString());
+                    GimbalStoreConstants.StoreParameterValues.fetchFeeds.toString());
             feedItemParams.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
                     GimbalStoreConstants.StoreParameterValues.top.toString());
             feedItemParams.put(GimbalStoreConstants.StoreParameterKeys.uniqueId.toString(),
@@ -112,7 +112,7 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
         paramsMap.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
                 GimbalStoreConstants.StoreParameterValues.top.toString());
         paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
-                GimbalStoreConstants.StoreParameterValues.feedItem.toString());
+                GimbalStoreConstants.StoreParameterValues.fetchFeeds.toString());
 
         FeedItemListDataProcessor feedItemListDataProcessor = new FeedItemListDataProcessor(this, mViewPager,
                 feedItemTypes, progressDialog);

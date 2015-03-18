@@ -55,7 +55,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
 
         RatingBar ratingBar = (RatingBar) findViewById(R.id.product_rating_bar);
 
-        Button buyButton = (Button) findViewById(R.id.buy_now_button);
+        Button askReviewButton = (Button) findViewById(R.id.buy_now_button);
         Button askButton = (Button) findViewById(R.id.ask_friend_button);
         Button recommendButton = (Button) findViewById(R.id.recommend_button);
 
@@ -67,6 +67,26 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
         intent.putExtras(data);
         final String ratingValue = "" + ratingBar.getRating();
         final Activity mActivity = this;
+        askReviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressDialog.show();
+                Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+
+                paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
+                        GimbalStoreConstants.StoreParameterValues.fetchContacts.toString());
+                Log.d("DEBUG", "paramsMap=" + paramsMap);
+                String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
+                FriendsListDataProcessor friendsListDataProcessor = new FriendsListDataProcessor(mActivity, progressDialog,
+                        GimbalStoreConstants.NOTIFICATION_TYPE.ASKED_TO_REVIEW,
+                        mActivity.getFragmentManager());
+                HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
+                        Arrays.asList(ServerURLUtil.getStoreServletServerURL(getResources())),
+                        Arrays.asList(paramsMap), cookieString,
+                        friendsListDataProcessor);
+                asyncTask.execute(new String[]{});
+            }
+        });
         recommendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +98,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
                 Log.d("DEBUG", "paramsMap=" + paramsMap);
                 String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
                 FriendsListDataProcessor friendsListDataProcessor = new FriendsListDataProcessor(mActivity, progressDialog,
-                        GimbalStoreConstants.NOTIFICATION_TYPE.FRIEND_RECOMMENDATION,
+                        GimbalStoreConstants.NOTIFICATION_TYPE.RECOMMENDED,
                         mActivity.getFragmentManager());
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                         Arrays.asList(ServerURLUtil.getStoreServletServerURL(getResources())),
@@ -98,7 +118,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
                 Log.d("DEBUG", "paramsMap=" + paramsMap);
                 String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
                 FriendsListDataProcessor friendsListDataProcessor = new FriendsListDataProcessor(mActivity, progressDialog,
-                        GimbalStoreConstants.NOTIFICATION_TYPE.ASK_FRIEND,
+                        GimbalStoreConstants.NOTIFICATION_TYPE.ASKED_TO_REC_PROD,
                         mActivity.getFragmentManager());
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                         Arrays.asList(ServerURLUtil.getStoreServletServerURL(getResources())),
@@ -121,7 +141,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.reviewText.toString(),
                         reviewText);
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.rating.toString(),
-                        ratingValue);
+                        "3");
 
                 Log.d("DEBUG", "paramsMap=" + paramsMap);
                 String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
@@ -174,13 +194,56 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
     @Override
     public void onFinishedSelectDialog(List<String> friendIdList, GimbalStoreConstants.NOTIFICATION_TYPE postProcessingType) {
         Log.d("DEBUG", "SelectedFriends = " + friendIdList);
-        String selectedProductId = getIntent().getStringExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString());
-        if (postProcessingType == GimbalStoreConstants.NOTIFICATION_TYPE.ASK_FRIEND) {
-
-            // post this list to ask friend flow
-        } else if (postProcessingType == GimbalStoreConstants.NOTIFICATION_TYPE.FRIEND_RECOMMENDATION) {
-            // post this list to recommend product flow
+        String friends = "";
+        for (String friendId : friendIdList) {
+            if (!friends.isEmpty()) {
+                friends += GimbalStoreConstants.DELIMITER_COMMA;
+            }
+            friends += friendId;
         }
+        Bundle intentBundle = getIntent().getExtras();
+        String productId = null;
+        if (intentBundle != null) {
+            productId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(), "");
+        }
+        ProgressDialog progressDialog = AndroidUtil.showProgressDialog(this,
+                GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
+                GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
+        Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+
+
+        paramsMap.put(GimbalStoreConstants.StoreParameterKeys.friends.toString(),
+                friends);
+        paramsMap.put(GimbalStoreConstants.StoreParameterKeys.productId.toString(),
+                productId);
+
+        switch (postProcessingType) {
+            case ASKED_TO_REC_PROD:
+                paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
+                        GimbalStoreConstants.StoreParameterValues.askRecommendation.toString());
+                paramsMap.put(GimbalStoreConstants.StoreParameterKeys.rectype.toString(),
+                        GimbalStoreConstants.StoreParameterValues.product.toString());
+                break;
+            case ASKED_TO_REVIEW:
+                paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
+                        GimbalStoreConstants.StoreParameterValues.askToReview.toString());
+                break;
+            case RECOMMENDED:
+                paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
+                        GimbalStoreConstants.StoreParameterValues.postRecommendation.toString());
+                break;
+            default:
+                Log.d("DEBUG", "not handling type.." + postProcessingType);
+        }
+        Log.d("DEBUG", "paramsMap=" + paramsMap);
+        String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
+        PostReviewsProcessor postReviewsProcessor = new PostReviewsProcessor(this, progressDialog,
+                productId, getIntent());
+        HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
+                Arrays.asList(ServerURLUtil.getStoreServletServerURL(getResources())),
+                Arrays.asList(paramsMap), cookieString,
+                postReviewsProcessor);
+        asyncTask.execute(new String[]{});
     }
 
     @Override
@@ -218,6 +281,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
         finish();
 
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

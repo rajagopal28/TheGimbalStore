@@ -90,14 +90,16 @@ public class StoreGcmServiceIntent extends IntentService {
         String msg = extra.getString(GimbalStoreConstants.notificationDataKey.message.toString());
 
         String notificationTypeString = extra.getString(GimbalStoreConstants.notificationDataKey.notificationType.toString());
-        GimbalStoreConstants.NOTIFICATION_TYPE notificationType = GimbalStoreConstants.NOTIFICATION_TYPE.valueOf(notificationTypeString);
-
-
+        GimbalStoreConstants.NOTIFICATION_TYPE notificationType = GimbalStoreConstants.NOTIFICATION_TYPE.PRODUCT_PROMOTION;
+        if (notificationTypeString != null) {
+            notificationType = GimbalStoreConstants.NOTIFICATION_TYPE.valueOf(notificationTypeString);
+        }
         Intent targetIntent;
         Bundle bundle = new Bundle();
         switch (notificationType) {
-            case ASK_FRIEND:
-            case ASK_FRIEND_REVIEW:
+            case ASKED_TO_REC_PROD:
+            case ASKED_TO_REC_CAT:
+            case ASKED_TO_REVIEW:
                 String recommendationId = extra.getString(GimbalStoreConstants.notificationDataKey.recommendationId.toString());
                 RecommendationDataProcessor recommendationDataProcessor = new RecommendationDataProcessor(getApplicationContext(), msg);
                 Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
@@ -109,8 +111,8 @@ public class StoreGcmServiceIntent extends IntentService {
                         Arrays.asList(paramsMap), null,
                         recommendationDataProcessor);
                 return;// Notification is sent in the processor class
-            case FRIEND_RECOMMENDATION:
-            case FRIEND_REVIEW:
+            case RECOMMENDED:
+            case REVIEWED:
                 targetIntent = new Intent(this, FeedListActivity.class);
                 String feedItemId = extra.getString(GimbalStoreConstants.notificationDataKey.feedItemId.toString());
                 String productId = extra.getString(GimbalStoreConstants.notificationDataKey.productId.toString());

@@ -41,7 +41,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/buy_now_label"
+            android:text="@string/ask_friend_review_label"
             android:id="@+id/buy_now_button"
             android:layout_below="@+id/product_price"
             android:layout_toEndOf="@+id/product_display_image" />

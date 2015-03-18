@@ -81,7 +81,7 @@ public class TypeConversionUtil {
     public static List<String> getNotificationTitles(List<NotificationDataBean> notificationDataBeans) {
         List<String> notificationTitles = new ArrayList<String>();
         for (NotificationDataBean notificationDataBean : notificationDataBeans) {
-            notificationTitles.add(notificationDataBean.getNotificationText());
+            notificationTitles.add(notificationDataBean.getText());
         }
         return notificationTitles;
     }

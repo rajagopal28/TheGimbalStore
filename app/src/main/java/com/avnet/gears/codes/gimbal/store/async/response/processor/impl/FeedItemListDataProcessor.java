@@ -62,8 +62,8 @@ public class FeedItemListDataProcessor implements AsyncResponseProcessor {
                     FeedItemBean[] feedItemsArray = responseBean.getCatalogEntryView();
                     final List<FeedItemBean> feedItemBeans = Arrays.asList(responseBean.getCatalogEntryView());
                     final Map<GimbalStoreConstants.FEED_ITEM_TYPE, List<FeedItemBean>> feedListMap = new HashMap<GimbalStoreConstants.FEED_ITEM_TYPE, List<FeedItemBean>>();
-                    feedListMap.put(GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_REVIEW, new ArrayList<FeedItemBean>());
-                    feedListMap.put(GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_RECOMMENDATION, new ArrayList<FeedItemBean>());
+                    feedListMap.put(GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_REVIEWED, new ArrayList<FeedItemBean>());
+                    feedListMap.put(GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_RECOMMENDED, new ArrayList<FeedItemBean>());
                     feedListMap.put(GimbalStoreConstants.FEED_ITEM_TYPE.SUGGESTED_PRODUCTS, new ArrayList<FeedItemBean>());
                     if (feedItemsArray != null && feedItemsArray.length > 0) {
                         for (FeedItemBean feedItem : feedItemBeans) {

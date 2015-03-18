@@ -108,20 +108,22 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     public void refreshDrawerListView() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                        getActionBar().getThemedContext(),
-                        android.R.layout.simple_list_item_activated_1,
-                        android.R.id.text1,
-                        mCategoryTitles
-                ));
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mDrawerListView.setAdapter(new ArrayAdapter<String>(
+                            getActionBar().getThemedContext(),
+                            android.R.layout.simple_list_item_activated_1,
+                            android.R.id.text1,
+                            mCategoryTitles
+                    ));
 
-                mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-                mDrawerListView.refreshDrawableState();
-            }
-        });
+                    mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+                    mDrawerListView.refreshDrawableState();
+                }
+            });
+        }
     }
 
     public boolean isDrawerOpen() {

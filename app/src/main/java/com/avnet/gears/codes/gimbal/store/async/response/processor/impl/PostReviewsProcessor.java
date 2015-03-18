@@ -51,9 +51,14 @@ public class PostReviewsProcessor implements AsyncResponseProcessor {
                 Log.d("DEBUG", "responseString = " + responseString);
                 PostReviewResponseBean responseBean = gson.fromJson(reader, PostReviewResponseBean.class);
                 Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
-                if (responseBean.getReviewResponse().getErrors().length == 0) {
+                if (responseBean.getReviewResponse() != null &&
+                        responseBean.getReviewResponse().getErrors() != null &&
+                        responseBean.getReviewResponse().getErrors().length > 0) {
                     Log.d("DEBUG", "Error submitting Review");
                     return false;
+                }
+                if (intent != null) {
+                    Log.d("DEBUG", "In review post processor prodId = " + intent.getStringExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString()));
                 }
                 Log.d("DEBUG", "Review submitted successfully!!");
             }

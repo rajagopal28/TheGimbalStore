@@ -18,12 +18,20 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.avnet.gears.codes.gimbal.store.R;
+import com.avnet.gears.codes.gimbal.store.activity.FeedListActivity;
+import com.avnet.gears.codes.gimbal.store.activity.NotificationsListActivity;
+import com.avnet.gears.codes.gimbal.store.activity.UserSettingsActivity;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ContactsSyncProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ContactBean;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationActionBean;
 import com.avnet.gears.codes.gimbal.store.bean.PhoneNumberBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
+import com.avnet.gears.codes.gimbal.store.listener.StoreBeaconEventListener;
+import com.avnet.gears.codes.gimbal.store.listener.StorePlaceListener;
+import com.gimbal.android.BeaconManager;
+import com.gimbal.android.Gimbal;
+import com.gimbal.android.PlaceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,10 +220,24 @@ public class AndroidUtil {
                 break;
             case R.id.action_settings:
                 Log.d("DEBUG", "In action setting --");
+                Intent intent = new Intent(parentActivity, UserSettingsActivity.class);
+                parentActivity.startActivity(intent);
                 returnFlag = true;
                 break;
             case R.id.action_about:
                 Log.d("DEBUG", "In action setting About");
+                returnFlag = true;
+                break;
+            case R.id.action_feed_list:
+                Log.d("DEBUG", "In action setting About");
+                intent = new Intent(parentActivity, FeedListActivity.class);
+                parentActivity.startActivity(intent);
+                returnFlag = true;
+                break;
+            case R.id.action_notifications:
+                Log.d("DEBUG", "In action setting About");
+                intent = new Intent(parentActivity, NotificationsListActivity.class);
+                parentActivity.startActivity(intent);
                 returnFlag = true;
                 break;
             case android.R.id.home:
@@ -267,5 +289,20 @@ public class AndroidUtil {
         params.height = height + (mListView.getDividerHeight() * (mListAdapter.getCount() - 1));
         mListView.setLayoutParams(params);
         mListView.requestLayout();
+    }
+
+    public static void instantiateGimbal(Activity activity) {
+        Gimbal.setApiKey(activity.getApplication(), activity.getResources().getString(R.string.GIMBAL_APPLICATION_ID));
+        Log.d("GIMBAL", "Registering application.." + activity.getResources().getString(R.string.GIMBAL_APPLICATION_ID));
+        StorePlaceListener placeEventListener = new StorePlaceListener(activity);
+        PlaceManager.getInstance().addListener(placeEventListener);
+        StoreBeaconEventListener beaconSightingListener = new StoreBeaconEventListener();
+        BeaconManager beaconManager = new BeaconManager();
+        beaconManager.addListener(beaconSightingListener);
+
+        PlaceManager.getInstance().startMonitoring();
+        beaconManager.startListening();
+
+        Log.d("GIMBAL", "registering receiver");
     }
 }

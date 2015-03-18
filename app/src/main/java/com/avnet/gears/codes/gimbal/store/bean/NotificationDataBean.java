@@ -4,51 +4,51 @@ package com.avnet.gears.codes.gimbal.store.bean;
  * Created by 914889 on 3/15/15.
  */
 public class NotificationDataBean extends BaseServerDataBean {
-    private String notificationId;
-    private String notificationText;
-    private String notificationType;
-    private String notificationStatus;
+    private String Id;
+    private String Text;
+    private String Status;
+    private String Type;
 
-    public String getNotificationId() {
-        return notificationId;
+    public String getId() {
+        return Id;
     }
 
-    public void setNotificationId(String notificationId) {
-        this.notificationId = notificationId;
+    public void setId(String id) {
+        Id = id;
     }
 
-    public String getNotificationText() {
-        return notificationText;
+    public String getText() {
+        return Text;
     }
 
-    public void setNotificationText(String notificationText) {
-        this.notificationText = notificationText;
+    public void setText(String text) {
+        Text = text;
     }
 
-    public String getNotificationType() {
-        return notificationType;
+    public String getStatus() {
+        return Status;
     }
 
-    public void setNotificationType(String notificationType) {
-        this.notificationType = notificationType;
+    public void setStatus(String status) {
+        Status = status;
     }
 
-    public String getNotificationStatus() {
-        return notificationStatus;
+    public String getType() {
+        return Type;
     }
 
-    public void setNotificationStatus(String notificationStatus) {
-        this.notificationStatus = notificationStatus;
+    public void setType(String type) {
+        Type = type;
     }
 
     @Override
     public String toString() {
         return super.toString() +
                 "NotificationDataBean{" +
-                "notificationId='" + notificationId + '\'' +
-                ", notificationText='" + notificationText + '\'' +
-                ", notificationType='" + notificationType + '\'' +
-                ", notificationStatus='" + notificationStatus + '\'' +
+                "Id='" + Id + '\'' +
+                ", Text='" + Text + '\'' +
+                ", Status='" + Status + '\'' +
+                ", Type='" + Type + '\'' +
                 '}';
     }
 }

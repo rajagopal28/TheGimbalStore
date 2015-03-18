@@ -12,6 +12,7 @@ import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponse
 import com.avnet.gears.codes.gimbal.store.bean.AuthDataBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
@@ -49,6 +50,9 @@ public class AuthDataProcessor implements AsyncResponseProcessor {
 
                 JsonReader reader = new JsonReader(new StringReader(responseString));
                 reader.setLenient(true);
+                AndroidUtil.savePreferenceValue(parentActivity.getApplicationContext(),
+                        GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY,
+                        httpResponseBean.getCookieValue());
                 AuthDataBean responseBean = gson.fromJson(responseString, AuthDataBean.class);
                 Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
                 Bundle data = dataIntent.getExtras();
@@ -92,7 +96,7 @@ public class AuthDataProcessor implements AsyncResponseProcessor {
 
                 parentActivity.setAccountAuthenticatorResult(dataIntent.getExtras());
                 parentActivity.setResult(Activity.RESULT_OK, dataIntent);
-
+                parentActivity.finish();
             }
             return true;
         }
