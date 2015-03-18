@@ -45,8 +45,13 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
 
         Bundle bundle = getIntent().getExtras();
 
-        String feedItemId = bundle.getString(INTENT_EXTRA_ATTR_KEY.SELECTED_FEED_ID.toString());
-        String productId = bundle.getString(INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString());
+        String feedItemId = null, productId = null;
+        if (bundle != null) {
+            feedItemId = bundle.getString(INTENT_EXTRA_ATTR_KEY.SELECTED_FEED_ID.toString());
+            productId = bundle.getString(INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString());
+        }
+
+
         String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(),
                 GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
         Log.d("DEBUG NOTIFY", "getting data from the notification feedItemId ="
@@ -62,7 +67,6 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
                     GimbalStoreConstants.StoreParameterValues.top.toString());
             feedItemParams.put(GimbalStoreConstants.StoreParameterKeys.uniqueId.toString(),
                     feedItemId);
-            // TODO finalize
 
             String serverURL = ServerURLUtil.getStoreServletServerURL(getResources());
             Log.d("DEBUG", feedItemParams.toString());
@@ -103,7 +107,6 @@ public class FeedListActivity extends Activity implements ActionBar.TabListener 
                             .setText(feedItemTypes[i].getItemTypeLabel())
                             .setTabListener(this));
         }
-        Log.d("DEBUG", "generating spinner");
         ProgressDialog progressDialog = AndroidUtil.showProgressDialog(this,
                 GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
                 GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);

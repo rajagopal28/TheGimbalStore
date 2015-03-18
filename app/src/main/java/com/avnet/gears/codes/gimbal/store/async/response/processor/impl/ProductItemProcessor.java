@@ -100,7 +100,7 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                         ReviewBean reviews = productBean.getReviews();
                         if (reviews != null) {
                             if (reviewsListView != null) {
-                                if (reviews.getTotalResults() != null) {
+                                if (reviews.getTotalResults() != null && "0".equals(reviews.getTotalResults())) {
                                     reviewTitleView.setText("This product got " + reviews.getTotalResults() + " user reviews");
                                 } else {
                                     reviewTitleView.setText("No reviews for this product yet! Be the first to review!");

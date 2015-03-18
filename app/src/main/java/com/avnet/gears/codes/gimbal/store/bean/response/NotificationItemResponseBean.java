@@ -8,21 +8,21 @@ import java.util.Arrays;
  * Created by 914889 on 3/15/15.
  */
 public class NotificationItemResponseBean extends BaseServerResponseBean {
-    private NotificationDataBean[] CatalogEntryView;
+    private NotificationDataBean[] Notifications;
 
-    public NotificationDataBean[] getCatalogEntryView() {
-        return CatalogEntryView;
+    public NotificationDataBean[] getNotifications() {
+        return Notifications;
     }
 
-    public void setCatalogEntryView(NotificationDataBean[] catalogEntryView) {
-        CatalogEntryView = catalogEntryView;
+    public void setNotifications(NotificationDataBean[] notifications) {
+        Notifications = notifications;
     }
 
     @Override
     public String toString() {
         return super.toString() +
                 "NotificationItemResponseBean{" +
-                "CatalogEntryView=" + Arrays.toString(CatalogEntryView) +
+                "Notifications=" + Arrays.toString(Notifications) +
                 '}';
     }
 }

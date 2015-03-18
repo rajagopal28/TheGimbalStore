@@ -154,7 +154,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
                 asyncTask.execute(new String[]{});
             }
         });
-        // TODO link buttons
+
 
         ListView reviewsListView = (ListView) findViewById(R.id.product_reviews_list_view);
         ImageView productImageView = (ImageView) findViewById(R.id.product_display_image);

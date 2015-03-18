@@ -13,6 +13,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.avnet.gears.codes.gimbal.store.R;
+import com.avnet.gears.codes.gimbal.store.activity.ProductDetailsActivity;
 import com.avnet.gears.codes.gimbal.store.activity.ProductsListActivity;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ImageDataProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
@@ -63,10 +64,19 @@ public class CategoryViewAdapter extends ArrayAdapter<String> {
         List<String> imageUrls = new ArrayList<String>();
         List<ImageView> imageViewsList = new ArrayList<ImageView>();
         Log.d("DEBUG", "total items in scat = " + topBrowsedProducts.length);
-        for (ProductBean productBean : topBrowsedProducts) {
+        for (final ProductBean productBean : topBrowsedProducts) {
             Log.d("DEBUG", "product item = " + productBean);
             if (productBean.getThumbnail() != null) {
                 ImageView imageView = new ImageView(context);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ProductDetailsActivity.class);
+                        intent.putExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
+                                productBean.getUniqueId());
+                        context.startActivity(intent);
+                    }
+                });
                 String absoluteImageUrl = ServerURLUtil.getAbsoluteUrlFor(context.getResources(), productBean.getThumbnail());
                 imageUrls.add(absoluteImageUrl);
                 imageViewsList.add(imageView);

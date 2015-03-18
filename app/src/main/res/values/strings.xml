@@ -16,12 +16,12 @@
     <string name="action_about_label">About</string>
     <string name="action_settings">Settings</string>
     <string name="action_notifications">Notifications</string>
-    <string name="action_friend_feeds">Friend Activties</string>
+    <string name="action_friend_feeds">Friend Activities</string>
     <string name="show_more">Show More</string>
 
     <string name="recommend_friend_label">Recommend</string>
-    <string name="ask_friend_review_label">Ask Friend to Review</string>
-    <string name="ask_friend_label">Ask</string>
+    <string name="ask_friend_review_label">Request Review</string>
+    <string name="ask_friend_label">Ask Friend</string>
     <string name="post_review_label">Post Review</string>
 
 
@@ -57,9 +57,5 @@
 
     <string name="user_notification_list_label">Notification from your friends</string>
     <string name="promotions_list_label">Promotions you may like!!</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_test_dummy">TestDummyActivity</string>
 
 </resources>

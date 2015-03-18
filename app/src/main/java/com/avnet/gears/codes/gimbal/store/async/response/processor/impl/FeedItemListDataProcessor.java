@@ -54,21 +54,22 @@ public class FeedItemListDataProcessor implements AsyncResponseProcessor {
                         responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.ACCEPTED) {
                     // creating the gson parser with html escaping disabled
                     Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+                    Log.d("DEBUG", "responseString = " + responseString);
 
                     JsonReader reader = new JsonReader(new StringReader(responseString));
                     reader.setLenient(true);
                     FeedItemResponseBean responseBean = gson.fromJson(reader, FeedItemResponseBean.class);
                     Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
-                    FeedItemBean[] feedItemsArray = responseBean.getCatalogEntryView();
-                    final List<FeedItemBean> feedItemBeans = Arrays.asList(responseBean.getCatalogEntryView());
+                    FeedItemBean[] feedItemsArray = responseBean.getFeeds();
+                    final List<FeedItemBean> feedItemBeans = Arrays.asList(responseBean.getFeeds());
                     final Map<GimbalStoreConstants.FEED_ITEM_TYPE, List<FeedItemBean>> feedListMap = new HashMap<GimbalStoreConstants.FEED_ITEM_TYPE, List<FeedItemBean>>();
                     feedListMap.put(GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_REVIEWED, new ArrayList<FeedItemBean>());
                     feedListMap.put(GimbalStoreConstants.FEED_ITEM_TYPE.FRIEND_RECOMMENDED, new ArrayList<FeedItemBean>());
                     feedListMap.put(GimbalStoreConstants.FEED_ITEM_TYPE.SUGGESTED_PRODUCTS, new ArrayList<FeedItemBean>());
                     if (feedItemsArray != null && feedItemsArray.length > 0) {
                         for (FeedItemBean feedItem : feedItemBeans) {
-                            if (feedItem.getFeedItemType() != null) {
-                                GimbalStoreConstants.FEED_ITEM_TYPE feedItemType = GimbalStoreConstants.FEED_ITEM_TYPE.valueOf(feedItem.getFeedItemType());
+                            if (feedItem.getType() != null) {
+                                GimbalStoreConstants.FEED_ITEM_TYPE feedItemType = GimbalStoreConstants.FEED_ITEM_TYPE.valueOf(feedItem.getType());
                                 feedListMap.get(feedItemType).add(feedItem);
                             }
                         }
@@ -83,10 +84,10 @@ public class FeedItemListDataProcessor implements AsyncResponseProcessor {
                             viewPager.setAdapter(adapter);
                         }
                     });
-
+                    progressDialog.dismiss();
                     return true;
                 }
-                progressDialog.dismiss();
+
             }
         } catch (Exception ex) {
             Log.e("ERROR", ex.getMessage(), ex);

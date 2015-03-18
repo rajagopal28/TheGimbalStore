@@ -74,10 +74,6 @@ public class HomeActivity extends Activity
         setContentView(R.layout.activity_home);
 
         gimbalInitialize();
-        /*IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
-        IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
-        IntentFilter filter3 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED); */
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
@@ -108,7 +104,9 @@ public class HomeActivity extends Activity
         if (userAccounts != null && userAccounts.length > 0) {
             String cookieString = AndroidUtil.getPreferenceString(this, GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
             if (cookieString == null) {
+                //TODO Login
                 Log.d("DEBUG", "got one user account");
+                Intent intent = getIntent();
                 AuthTokenReceiverProcessor authTokenReceiverProcessor = new AuthTokenReceiverProcessor(this, accountManager, userAccounts[0]);
                 GenericAsyncTask asyncTask = new GenericAsyncTask(authTokenReceiverProcessor);
                 asyncTask.execute();
@@ -123,8 +121,8 @@ public class HomeActivity extends Activity
         Toast t = Toast.makeText(getApplicationContext(), "Gimbal initialise", Toast.LENGTH_SHORT);
         t.show();
 
-        final TextView placeView = (TextView)findViewById(R.id.placeView);
-        final TextView sightingView = (TextView)findViewById(R.id.sightingView);
+        final TextView placeView = (TextView) findViewById(R.id.placeView);
+        final TextView sightingView = (TextView) findViewById(R.id.sightingView);
         final TextView sightingRssiView = (TextView) findViewById(R.id.sightingRssiView);
         final TextView beaconDetailsView = (TextView) findViewById(R.id.beaconDetailsView);
 

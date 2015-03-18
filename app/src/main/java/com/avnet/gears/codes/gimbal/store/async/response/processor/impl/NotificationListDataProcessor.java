@@ -55,13 +55,14 @@ public class NotificationListDataProcessor implements AsyncResponseProcessor {
                     responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.ACCEPTED) {
                 // creating the gson parser with html escaping disabled
                 Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+                Log.d("DEBUG", "responseString =" + responseString);
 
                 JsonReader reader = new JsonReader(new StringReader(responseString));
                 reader.setLenient(true);
                 NotificationItemResponseBean responseBean = gson.fromJson(reader, NotificationItemResponseBean.class);
                 Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
-                NotificationDataBean[] notificationItemsArray = responseBean.getCatalogEntryView();
-                final List<NotificationDataBean> notificationItemBeans = Arrays.asList(responseBean.getCatalogEntryView());
+                NotificationDataBean[] notificationItemsArray = responseBean.getNotifications();
+                final List<NotificationDataBean> notificationItemBeans = Arrays.asList(notificationItemsArray);
                 final List<NotificationDataBean> friendNotificationList = new ArrayList<NotificationDataBean>();
                 final List<NotificationDataBean> promotionNotifications = new ArrayList<NotificationDataBean>();
                 if (notificationItemsArray != null && notificationItemsArray.length > 0) {
@@ -83,33 +84,45 @@ public class NotificationListDataProcessor implements AsyncResponseProcessor {
                         }
                     }
                 }
+                Log.d("DEBUG", "friendNotificationList = " + friendNotificationList);
+                Log.d("DEBUG", "promotionNotifications = " + promotionNotifications);
                 parentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         List<String> friendNotificationsTitles = new ArrayList<String>(TypeConversionUtil.getNotificationTitles(friendNotificationList));
-                        ArrayAdapter<String> friendNotificationAdapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1, friendNotificationsTitles);
-                        friendNotificationsListView.setAdapter(friendNotificationAdapter);
-                        friendNotificationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Log.d("DEBUG", "Notification item clicked = " + position + " value = " + friendNotificationList.get(position));
-                            }
-                        });
-                        friendNotificationsListView.refreshDrawableState();
+                        if (!friendNotificationsTitles.isEmpty()) {
+                            ArrayAdapter<String> friendNotificationAdapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1, friendNotificationsTitles);
+                            friendNotificationsListView.setAdapter(friendNotificationAdapter);
+                            friendNotificationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    Log.d("DEBUG", "Notification item clicked = " + position + " value = " + friendNotificationList.get(position));
+                                }
+                            });
+                            friendNotificationsListView.refreshDrawableState();
+                        }
+
 
                         List<String> promotionTitles = new ArrayList<String>(TypeConversionUtil.getNotificationTitles(promotionNotifications));
-                        ArrayAdapter<String> promotionsAdapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1, promotionTitles);
-                        promotionsListView.setAdapter(promotionsAdapter);
-                        promotionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Log.d("DEBUG", "Promotions item clicked = " + position + " value = " + promotionNotifications.get(position));
-                            }
-                        });
-                        promotionsListView.refreshDrawableState();
+                        if (!promotionNotifications.isEmpty()) {
+                            ArrayAdapter<String> promotionsAdapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1, promotionTitles);
+                            promotionsListView.setAdapter(promotionsAdapter);
+                            promotionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    Log.d("DEBUG", "Promotions item clicked = " + position + " value = " + promotionNotifications.get(position));
+                                }
+                            });
+                            promotionsListView.refreshDrawableState();
+                        }
+                        if (!friendNotificationsTitles.isEmpty())
+                            AndroidUtil.setDynamicHeight(friendNotificationsListView);
 
-                        AndroidUtil.setDynamicHeight(friendNotificationsListView);
-                        AndroidUtil.setDynamicHeight(promotionsListView);
+                        if (!promotionTitles.isEmpty())
+                            AndroidUtil.setDynamicHeight(promotionsListView);
+
+                        if (progressDialog != null)
+                            progressDialog.dismiss();
                     }
                 });
             }

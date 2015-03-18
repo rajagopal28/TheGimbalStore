@@ -4,8 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.avnet.gears.codes.gimbal.store.fragment.dialog.FeedItemDialogFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <ImageView
         android:id="@+id/product_display_image"
         android:layout_width="100dp"
@@ -20,5 +18,5 @@
         android:layout_gravity="left|top"
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
-        android:text="@string/hello_blank_fragment" />
+        android:text="@string/hello_world" />
 </FrameLayout>

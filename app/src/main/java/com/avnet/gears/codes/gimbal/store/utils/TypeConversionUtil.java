@@ -1,7 +1,5 @@
 package com.avnet.gears.codes.gimbal.store.utils;
 
-import android.util.Log;
-
 import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.bean.FeedItemBean;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationDataBean;
@@ -72,8 +70,7 @@ public class TypeConversionUtil {
     public static List<String> getFeedDescriptionTitles(List<FeedItemBean> feedItems) {
         List<String> feedDescTitles = new ArrayList<String>();
         for (FeedItemBean feedItemBean : feedItems) {
-            feedDescTitles.add(feedItemBean.getFeedItemDescription());
-            Log.d("DEBUG", " setting title : " + feedItemBean.getFeedItemDescription());
+            feedDescTitles.add(feedItemBean.getText());
         }
         return feedDescTitles;
     }
@@ -81,7 +78,7 @@ public class TypeConversionUtil {
     public static List<String> getNotificationTitles(List<NotificationDataBean> notificationDataBeans) {
         List<String> notificationTitles = new ArrayList<String>();
         for (NotificationDataBean notificationDataBean : notificationDataBeans) {
-            notificationTitles.add(notificationDataBean.getText());
+            notificationTitles.add("" + notificationDataBean.getText());
         }
         return notificationTitles;
     }
