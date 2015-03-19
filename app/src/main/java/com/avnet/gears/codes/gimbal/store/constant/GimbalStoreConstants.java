@@ -127,7 +127,7 @@ public class GimbalStoreConstants {
         reviewText,
         rating,
         rectype,
-        beaconIds,
+        beaconId,
         uniqueId
     }
 

@@ -5,7 +5,7 @@ import com.avnet.gears.codes.gimbal.store.bean.FeedItemBean;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationDataBean;
 import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
 import com.avnet.gears.codes.gimbal.store.bean.PromotedProductBean;
-import com.avnet.gears.codes.gimbal.store.bean.ReviewResult;
+import com.avnet.gears.codes.gimbal.store.bean.ReviewBean;
 import com.avnet.gears.codes.gimbal.store.bean.SubCategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 
@@ -84,10 +84,12 @@ public class TypeConversionUtil {
         return notificationTitles;
     }
 
-    public static List<String> getReviewTextAsStrings(List<ReviewResult> reviewsList) {
+    public static List<String> getReviewTextAsStrings(List<ReviewBean> reviewsList) {
         List<String> reviewTexts = new ArrayList<String>();
-        for (ReviewResult review : reviewsList) {
-            reviewTexts.add(review.getReviewText());
+        for (ReviewBean review : reviewsList) {
+            reviewTexts.add(review.getFriend()
+                    + GimbalStoreConstants.DELIMITER_COLAN
+                    + review.getReview());
         }
         return reviewTexts;
     }

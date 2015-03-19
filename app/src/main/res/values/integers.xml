@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="GIMBAL_BEACON_SIGHTING_INTERVAL">10</integer>
+    <integer name="GIMBAL_BEACON_SIGHTING_DISTANCE">1</integer>
 </resources>

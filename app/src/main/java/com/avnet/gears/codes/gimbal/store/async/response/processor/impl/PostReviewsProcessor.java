@@ -59,6 +59,8 @@ public class PostReviewsProcessor implements AsyncResponseProcessor {
                 }
                 if (intent != null) {
                     Log.d("DEBUG", "In review post processor prodId = " + intent.getStringExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString()));
+                    callingActivity.startActivity(intent);
+                    callingActivity.finish();
                 }
                 Log.d("DEBUG", "Review submitted successfully!!");
             }

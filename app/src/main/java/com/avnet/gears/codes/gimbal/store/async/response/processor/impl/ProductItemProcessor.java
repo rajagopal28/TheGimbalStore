@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
-import com.avnet.gears.codes.gimbal.store.bean.ReviewBean;
+import com.avnet.gears.codes.gimbal.store.bean.ReviewDataBean;
 import com.avnet.gears.codes.gimbal.store.bean.response.ProductsResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.ImageResponseAsyncTask;
@@ -74,6 +74,7 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                 responseString = responseString.trim()
                         .replace(GimbalStoreConstants.START_COMMENT_STRING, "")
                         .replace(GimbalStoreConstants.END_COMMENT_STRING, "");
+                Log.d("DEBUG","responseString = " + responseString);
 
                 // get the list of sub categories and populate it to the adapter
                 Gson gson = new GsonBuilder().disableHtmlEscaping().create();
@@ -96,28 +97,25 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                             priceView.setText(productBean.getPrice());
                         }
 
-                        ReviewBean reviews = productBean.getReviews();
+                        ReviewDataBean reviews = productBean.getReviews();
                         if (reviews != null) {
                             if (reviewsListView != null) {
 
-                                if (reviews.getTotalResults() != null && "0".equals(reviews.getTotalResults())) {
+                                if (reviews != null && reviews.getReviews() != null) {
                                     reviewTitleView.setText(MessageFormat.format(GimbalStoreConstants.MESSAGE_PRODUCT_GOT_REVIEWS,
-                                            new Object[]{reviews.getTotalResults()}));
+                                            new Object[]{reviews.getReviews().length}));
                                 } else {
                                     reviewTitleView.setText(GimbalStoreConstants.MESSAGE_NO_REVIEWS);
                                 }
 
                             }
-                            if (reviews.getResults() != null) {
+                            if (reviews.getAverageRating() != null) {
                                 if (ratingView != null) {
-                                    Log.d("DEBUG", "Rating overall = " + reviews.getIncludes());
-                                    if (reviews.getIncludes() != null &&
-                                            reviews.getIncludes().getReviewStatistics() != null &&
-                                            reviews.getIncludes().getReviewStatistics().getAverageOverallRating() != null) {
-                                        ratingView.setText(GimbalStoreConstants.LABEL_OVERALL_RATING + reviews.getIncludes().getReviewStatistics().getAverageOverallRating());
-                                    }
+                                    // Log.d("DEBUG", "Rating overall = " + reviews.getIncludes());
+                                   ratingView.setText(GimbalStoreConstants.LABEL_OVERALL_RATING + reviews.getAverageRating());
+
                                 }
-                                List<String> reviewString = TypeConversionUtil.getReviewTextAsStrings(Arrays.asList(reviews.getResults()));
+                                List<String> reviewString = TypeConversionUtil.getReviewTextAsStrings(Arrays.asList(reviews.getReviews()));
                                 ArrayAdapter<String> reviewsAdapter = new ArrayAdapter<String>(parentActivity,
                                         android.R.layout.simple_list_item_1,
                                         reviewString);

@@ -8,7 +8,6 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.R;
-import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 
 import org.altbeacon.beacon.Beacon;
@@ -29,7 +28,7 @@ import java.util.Collection;
 public class StoreGimbalDeviceService extends Service implements BeaconConsumer {
     private BeaconManager beaconManager;
     private int beaconEncounterSeconds = 10;
-    private int BEACON_SIGHTING_INTERVAL_SECONDS;
+    private boolean enteredRegion = false;
 
     public StoreGimbalDeviceService() {
         // super(StoreGimbalDeviceIntentService.class.getName());
@@ -39,7 +38,6 @@ public class StoreGimbalDeviceService extends Service implements BeaconConsumer 
     @Override
     public IBinder onBind(Intent intent) {
         beaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
-        BEACON_SIGHTING_INTERVAL_SECONDS = getResources().getInteger(R.integer.GIMBAL_BEACON_SIGHTING_INTERVAL);
         if (AndroidUtil.verifyBluetooth(this.getApplicationContext(), beaconManager)) {
             Log.d("GIMBAL", "StoreGimbalDeviceService Bluetooth no issues..");
             beaconManager.bind(this);
@@ -64,36 +62,74 @@ public class StoreGimbalDeviceService extends Service implements BeaconConsumer 
     @Override
     public void onBeaconServiceConnect() {
         if (beaconManager != null) {
-            beaconManager.setRangeNotifier(new RangeNotifier() {
-                @Override
-                public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                    if (beaconEncounterSeconds % BEACON_SIGHTING_INTERVAL_SECONDS == 0 &&
-                            beacons.size() > 0) {
-                        String deviceIdList = "";
-                        for (Beacon beacon : beacons) {
-                            Log.d("GIMBAL", "StoreGimbalDeviceService beacon " + beacon.toString() + " is about " + beacon.getDistance() + " meters away.");
-                            if (!deviceIdList.isEmpty()) {
-                                deviceIdList += ",";
-                            }
-                            String deviceId = beacon.getId1()
-                                    + GimbalStoreConstants.DELIMITER_HYPHEN
-                                    + beacon.getId2()
-                                    + GimbalStoreConstants.DELIMITER_HYPHEN
-                                    + beacon.getId3();
-                            deviceIdList += deviceId;
-                        }
-                    }
-                }
-            });
-
+            final double DEVICE_CIRCLE_DISTANCE_LIMIT = getResources().getInteger(R.integer.GIMBAL_BEACON_SIGHTING_DISTANCE);
             try {
+                beaconManager.setRangeNotifier(new RangeNotifier() {
+                    @Override
+                    public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                        try {
+                            if (beacons.size() > 0) {
+                                // Log.d("DEBUG", "beaconEncounterSecond = " + beaconEncounterSeconds);
+                                String deviceIdList = "";
+                                for (Beacon beacon : beacons) {
+                                    Log.d("GIMBAL", "Entered region flag : " + enteredRegion + " beacon " + beacon.toString() + " is about " + beacon.getDistance() + " meters away.");
+
+                                    if ((beacon.getDistance() <= DEVICE_CIRCLE_DISTANCE_LIMIT) && !enteredRegion) {
+                                        Log.d("GIMBAL", "*********Entered region since the beacon is within 1 meter range : " + beacon.getDistance());
+                                        enteredRegion = true;
+                                        /*GimbalPromotionsDataProcessor gpDataProcessor = new GimbalPromotionsDataProcessor(this,
+                                                null, null,
+                                                null, null,
+                                                null);
+                                        if (!deviceIdList.isEmpty()) {
+                                            deviceIdList += ",";
+                                        }
+                                        String deviceId = beacon.getId1()
+                                                + GimbalStoreConstants.DELIMITER_HYPHEN
+                                                + beacon.getId2()
+                                                + GimbalStoreConstants.DELIMITER_HYPHEN
+                                                + beacon.getId3();
+                                        deviceIdList += deviceId;
+                                        Log.d("DEBUG", "Server URL = " + ServerURLUtil.getStoreServletServerURL(getResources()));
+                                        Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
+
+
+                                        paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
+                                                GimbalStoreConstants.StoreParameterValues.marketing.toString());
+                                        paramsMap.put(GimbalStoreConstants.StoreParameterKeys.beaconId.toString(),
+                                                deviceIdList);
+
+                                        String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(),
+                                                GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
+                                        Log.d("DEBUG", paramsMap.toString());
+                                        HttpConnectionAsyncTask handler = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
+                                                Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
+                                                Arrays.asList(paramsMap), cookieString,
+                                                gpDataProcessor);
+                                        handler.execute(new String[]{});*/
+                                    }
+
+                                    if (enteredRegion && (beacon.getDistance() > DEVICE_CIRCLE_DISTANCE_LIMIT)) {
+                                        Log.d("GIMBAL", "*********Exited region because the distance is greater than 1 : " + + beacon.getDistance());
+                                        enteredRegion = false;
+                                    }
+                                }
+
+                            }
+                            //beaconEncounterSeconds++;
+                        } catch (Exception e) {
+                            Log.e("ERROR", e.getMessage(), e);
+                        }
+
+                    }
+                });
                 String uuid = getResources().getString(R.string.GIMBAL_DEVICE_UUID);
                 beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", Identifier.parse(uuid), null, null));
             } catch (RemoteException e) {
-                Log.e("GIMBAL", e.getMessage(), e);
+                Log.e("ERROR", e.getMessage(), e);
             }
         } else {
-            Log.d("GIMBAL", "StoreGimbalDeviceService Beacon manager null");
+            Log.d("GIMBAL", "Beacon manager null");
         }
         // onResume
         //if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(false);

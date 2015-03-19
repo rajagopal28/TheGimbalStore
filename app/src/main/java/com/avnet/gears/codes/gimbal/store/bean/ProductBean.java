@@ -9,10 +9,9 @@ public class ProductBean extends BaseServerDataBean {
 
     private String partNumber;
     private String price;
-    private String rating;
 
 
-    private ReviewBean reviews;
+    private ReviewDataBean reviews;
     private String[] attribute;
 
     public String getPartNumber() {
@@ -23,11 +22,19 @@ public class ProductBean extends BaseServerDataBean {
         this.partNumber = partNumber;
     }
 
-    public ReviewBean getReviews() {
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public ReviewDataBean getReviews() {
         return reviews;
     }
 
-    public void setReviews(ReviewBean reviews) {
+    public void setReviews(ReviewDataBean reviews) {
         this.reviews = reviews;
     }
 
@@ -37,26 +44,6 @@ public class ProductBean extends BaseServerDataBean {
 
     public void setAttribute(String[] attribute) {
         this.attribute = attribute;
-    }
-
-    public String getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public void setUniqueId(String[] uniqueId) {
-        this.uniqueId = uniqueId[0];
     }
 
     @Override

@@ -1,76 +1,44 @@
 package com.avnet.gears.codes.gimbal.store.bean;
 
-import java.util.Arrays;
-
 /**
  * Created by 914889 on 3/16/15.
  */
 public class ReviewBean extends BaseServerDataBean {
-    private String TotalResults;
-    private String Offset;
-    private String HasErrors;
-    private ReviewResult[] Results;
-    private RatingBean Includes;
-    private String[] errors;
+    private String Review;
+    private String Rating;
+    private String Friend;
 
-    public String getTotalResults() {
-        return TotalResults;
+    public String getReview() {
+        return Review;
     }
 
-    public void setTotalResults(String totalResults) {
-        TotalResults = totalResults;
+    public void setReview(String review) {
+        Review = review;
     }
 
-    public String getOffset() {
-        return Offset;
+    public String getRating() {
+        return Rating;
     }
 
-    public void setOffset(String offset) {
-        Offset = offset;
+    public void setRating(String rating) {
+        Rating = rating;
     }
 
-    public String getHasErrors() {
-        return HasErrors;
+    public String getFriend() {
+        return Friend;
     }
 
-    public void setHasErrors(String hasErrors) {
-        HasErrors = hasErrors;
-    }
-
-    public ReviewResult[] getResults() {
-        return Results;
-    }
-
-    public void setResults(ReviewResult[] results) {
-        Results = results;
-    }
-
-    public RatingBean getIncludes() {
-        return Includes;
-    }
-
-    public void setIncludes(RatingBean includes) {
-        Includes = includes;
-    }
-
-    public String[] getErrors() {
-        return errors;
-    }
-
-    public void setErrors(String[] errors) {
-        this.errors = errors;
+    public void setFriend(String friend) {
+        Friend = friend;
     }
 
     @Override
     public String toString() {
-        return super.toString() +
+        return super.toString()+
                 "ReviewBean{" +
-                "TotalResults='" + TotalResults + '\'' +
-                ", Offset='" + Offset + '\'' +
-                ", HasErrors='" + HasErrors + '\'' +
-                ", Results=" + Arrays.toString(Results) +
-                ", Includes='" + Includes + '\'' +
-                ", errors=" + Arrays.toString(errors) +
+                "Review='" + Review + '\'' +
+                ", Rating='" + Rating + '\'' +
+                ", Friend='" + Friend + '\'' +
                 '}';
     }
 }

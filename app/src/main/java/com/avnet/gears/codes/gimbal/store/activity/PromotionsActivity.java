@@ -44,7 +44,7 @@ public class PromotionsActivity extends Activity {
 
             paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
                     GimbalStoreConstants.StoreParameterValues.marketing.toString());
-            paramsMap.put(GimbalStoreConstants.StoreParameterKeys.beaconIds.toString(),
+            paramsMap.put(GimbalStoreConstants.StoreParameterKeys.beaconId.toString(),
                     selectedBeaconsList);
 
             String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(),
