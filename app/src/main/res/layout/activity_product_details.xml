@@ -112,6 +112,17 @@
                     android:id="@+id/review_text"
                     android:layout_weight="1" />
 
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_rating_bar"
+                    android:layout_below="@+id/review_text"
+                    android:numStars="5"
+                    android:stepSize="1"
+                    android:layout_gravity="left"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:isIndicator="false" />
+
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -119,18 +130,6 @@
                     android:id="@+id/post_review_button"
                     android:layout_below="@+id/review_text"
                     android:layout_gravity="right" />
-
-                <RatingBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/product_rating_bar"
-                    android:layout_below="@+id/ask_friend_button"
-                    android:numStars="5"
-                    android:stepSize="1"
-                    android:layout_alignEnd="@+id/buy_now_button"
-                    android:layout_toEndOf="@+id/product_display_image"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:isIndicator="false" />
 
             </LinearLayout>
         </ScrollView>

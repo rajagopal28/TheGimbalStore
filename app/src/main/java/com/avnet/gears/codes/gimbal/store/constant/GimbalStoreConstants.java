@@ -50,6 +50,7 @@ public class GimbalStoreConstants {
 
     public static String APP_ACCOUNT_TYPE_STRING = "com.avnet.gimbal.store.mobile.user.account.type";
     public static String DEFAULT_STORE_NOTIFICATION_TITLE = "You have a Store Notification!!!";
+    public static String PROMOTIONS_STORE_NOTIFICATION_DESC = "We have exclusive promotions for you in our nearer store!!";
 
     public static String COOKIES_RESPONSE_HEADER = "Set-Cookie";
     public static String COOKIES_REQUEST_HEADER = "Cookie";
@@ -104,7 +105,8 @@ public class GimbalStoreConstants {
         FEED_ITEM_TEXT,
         SELECTED_REVIEW_ID,
         SELECTED_FRIEND_LIST_RESPONSE,
-        SELECTED_NETWORK_RESPONSE_TYPE;
+        SELECTED_NETWORK_RESPONSE_TYPE,
+        SELECTED_BEACONS_ID;
     }
 
     // network data param keys
@@ -125,6 +127,7 @@ public class GimbalStoreConstants {
         reviewText,
         rating,
         rectype,
+        beaconIds,
         uniqueId
     }
 
@@ -143,7 +146,8 @@ public class GimbalStoreConstants {
         fetchContacts,
         askRecommendation,
         askToReview,
-        postRecommendation
+        postRecommendation,
+        marketing
     }
 
     public static enum HTTP_METHODS {

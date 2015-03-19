@@ -55,8 +55,13 @@
     <string name="title_activity_product_details">ProductDetailsActivity</string>
     <string name="title_activity_store_authenticator">StoreAuthenticatorActivity</string>
     <string name="title_activity_notifications_list">NotificationsListActivity</string>
+    <string name="title_activity_promotions">Exciting Offers For you!!</string>
 
     <string name="user_notification_list_label">Notification from your friends</string>
     <string name="promotions_list_label">Promotions you may like!!</string>
+
+    <string name="best_sellers_list_label">Best Sellers</string>
+    <string name="recently_viewed_list_label">Recently Viewed!!</string>
+    <string name="top_browsed_ist_view">Top Selling!!</string>
 
 </resources>

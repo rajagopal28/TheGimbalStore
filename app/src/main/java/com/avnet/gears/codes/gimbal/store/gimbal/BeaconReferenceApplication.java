@@ -18,7 +18,7 @@ import org.altbeacon.beacon.startup.RegionBootstrap;
  * Created by dyoung on 12/13/13.
  */
 public class BeaconReferenceApplication extends Application implements BootstrapNotifier {
-    private static final String TAG = "AndroidProximityReferenceApplication";
+    private static final String TAG = "AndroidProximity";
     private RegionBootstrap regionBootstrap;
     private BackgroundPowerSaver backgroundPowerSaver;
     private boolean haveDetectedBeaconsSinceBoot = false;
@@ -75,7 +75,7 @@ public class BeaconReferenceApplication extends Application implements Bootstrap
         } else {
             // If the Monitoring Activity is visible, we log info about the beacons we have
             // seen on its display
-            Log.d("AltBeacon", "I see a beacon again" );
+            Log.d("AltBeacon", "I see a beacon again");
         }
 
 
@@ -89,7 +89,7 @@ public class BeaconReferenceApplication extends Application implements Bootstrap
 
     @Override
     public void didDetermineStateForRegion(int state, Region region) {
-        Log.d("AltBeacon", "I have just switched from seeing/not seeing beacons: " + state);
+        Log.d("AltBeacon", "I have just switched from seeing/not seeing beacons: " + state + " region :" + region);
     }
 
     /*private void sendNotification() {

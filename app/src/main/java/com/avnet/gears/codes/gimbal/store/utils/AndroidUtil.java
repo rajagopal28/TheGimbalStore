@@ -1,11 +1,13 @@
 package com.avnet.gears.codes.gimbal.store.utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -27,6 +29,8 @@ import com.avnet.gears.codes.gimbal.store.bean.NotificationActionBean;
 import com.avnet.gears.codes.gimbal.store.bean.PhoneNumberBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
+
+import org.altbeacon.beacon.BeaconManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -292,18 +296,39 @@ public class AndroidUtil {
         mListView.requestLayout();
     }
 
-    /*public static void instantiateGimbal(Activity activity) {
-        Gimbal.setApiKey(activity.getApplication(), activity.getResources().getString(R.string.GIMBAL_APPLICATION_ID));
-        Log.d("GIMBAL", "Registering application.." + activity.getResources().getString(R.string.GIMBAL_APPLICATION_ID));
-        StorePlaceListener placeEventListener = new StorePlaceListener(activity);
-        PlaceManager.getInstance().addListener(placeEventListener);
-        StoreBeaconEventListener beaconSightingListener = new StoreBeaconEventListener();
-        BeaconManager beaconManager = new BeaconManager();
-        beaconManager.addListener(beaconSightingListener);
+    public static boolean verifyBluetooth(Context context, BeaconManager beaconManager) {
+        boolean result = true;
 
-        PlaceManager.getInstance().startMonitoring();
-        beaconManager.startListening();
+        try {
+            if (!beaconManager.checkAvailability()) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Bluetooth not enabled");
+                builder.setMessage("Please enable bluetooth in settings and restart this application.");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        System.exit(0);
+                    }
+                });
+                builder.show();
+            }
+        } catch (RuntimeException e) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Bluetooth LE not available");
+            builder.setMessage("Sorry, this device does not support Bluetooth LE.");
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-        Log.d("GIMBAL", "registering receiver");
-    }*/
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+
+                    System.exit(0);
+                }
+            });
+            builder.show();
+
+        }
+        return result;
+    }
 }

@@ -4,6 +4,7 @@ import com.avnet.gears.codes.gimbal.store.bean.CategoryBean;
 import com.avnet.gears.codes.gimbal.store.bean.FeedItemBean;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationDataBean;
 import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
+import com.avnet.gears.codes.gimbal.store.bean.PromotedProductBean;
 import com.avnet.gears.codes.gimbal.store.bean.ReviewResult;
 import com.avnet.gears.codes.gimbal.store.bean.SubCategoryBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
@@ -91,4 +92,12 @@ public class TypeConversionUtil {
         return reviewTexts;
     }
 
+    // getPromotedProductsTitles
+    public static List<String> getPromotedProductsTitles(List<PromotedProductBean> promotionsList) {
+        List<String> promotionTitles = new ArrayList<String>();
+        for (PromotedProductBean promotedProduct : promotionsList) {
+            promotionTitles.add(promotedProduct.getName());
+        }
+        return promotionTitles;
+    }
 }

@@ -19,7 +19,7 @@ public class StoreBootBroadcastReceiver extends BroadcastReceiver {
         // start the bluetooth broadcast receiver service
         Intent startServiceIntent = new Intent(context, StoreGimbalDeviceService.class);
         context.startService(startServiceIntent);
-        Log.d("GIMBAL", "Started Device state service -- service created");
+        Log.d("GIMBAL", "Started Device state service");
 
     }
 }
