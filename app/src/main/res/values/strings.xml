@@ -61,6 +61,7 @@
     <string name="promotions_list_label">Promotions you may like!!</string>
 
     <string name="best_sellers_list_label">Best Sellers</string>
+    <string name="recommendations_list_label">Near store promotions</string>
     <string name="recently_viewed_list_label">Recently Viewed!!</string>
     <string name="top_browsed_ist_view">Top Selling!!</string>
 

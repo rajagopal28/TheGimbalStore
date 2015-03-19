@@ -28,6 +28,7 @@ public class PromotionsActivity extends Activity {
         ListView topBrowsedListView = (ListView) findViewById(R.id.top_browsed_list_view);
         ListView bestSellersListView = (ListView) findViewById(R.id.best_sellers_list_view);
         ListView recentlyViewedListView = (ListView) findViewById(R.id.recently_viewed_list_view);
+        ListView recommendationsListView = (ListView) findViewById(R.id.recommendations_list_view);
 
         String selectedBeaconsList = getIntent().getStringExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_BEACONS_ID.toString());
         Log.d("DEBUG", "selectedBeaconsList = " + selectedBeaconsList);
@@ -37,7 +38,7 @@ public class PromotionsActivity extends Activity {
                     GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
             GimbalPromotionsDataProcessor gimbalPromotionsDataProcessor = new GimbalPromotionsDataProcessor(this,
                     topBrowsedListView, bestSellersListView,
-                    recentlyViewedListView, progressDialog);
+                    recentlyViewedListView, recommendationsListView, progressDialog);
             Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
 
 

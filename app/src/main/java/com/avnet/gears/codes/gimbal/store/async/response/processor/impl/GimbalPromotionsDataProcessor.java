@@ -33,16 +33,18 @@ public class GimbalPromotionsDataProcessor implements AsyncResponseProcessor {
     private Activity callingActivity;
     private ListView topBrowsedListView;
     private ListView bestSellersListView;
+    private ListView promotionsListView;
     private ListView recentlyViewedListView;
     private ProgressDialog progressDialog;
 
     public GimbalPromotionsDataProcessor(Activity callingContext, ListView topBrowsed,
                                          ListView bestSellers, ListView recentlyViewed,
-                                         ProgressDialog progressDialog) {
+                                         ListView promotionsView, ProgressDialog progressDialog) {
         this.callingActivity = callingContext;
         this.recentlyViewedListView = recentlyViewed;
         this.topBrowsedListView = topBrowsed;
         this.bestSellersListView = bestSellers;
+        this.promotionsListView = promotionsView;
         this.progressDialog = progressDialog;
     }
 
@@ -89,6 +91,7 @@ public class GimbalPromotionsDataProcessor implements AsyncResponseProcessor {
                                             TypeConversionUtil.getPromotedProductsTitles(listPromotion));
                                     topBrowsedListView.setAdapter(topBrowsedAdapter);
                                     topBrowsedListView.refreshDrawableState();
+                                    AndroidUtil.setDynamicHeight(topBrowsedListView);
                                 }
                                 if (bestSellers != null && bestSellers.length != 0) {
                                     List<PromotedProductBean> listPromotion = Arrays.asList(bestSellers);
@@ -97,6 +100,7 @@ public class GimbalPromotionsDataProcessor implements AsyncResponseProcessor {
                                             TypeConversionUtil.getPromotedProductsTitles(listPromotion));
                                     bestSellersListView.setAdapter(bestSellersAdapters);
                                     bestSellersListView.refreshDrawableState();
+                                    AndroidUtil.setDynamicHeight(bestSellersListView);
                                 }
                                 if (recentlyViewed != null && recentlyViewed.length != 0) {
                                     List<PromotedProductBean> listPromotion = Arrays.asList(recentlyViewed);
@@ -105,14 +109,16 @@ public class GimbalPromotionsDataProcessor implements AsyncResponseProcessor {
                                             TypeConversionUtil.getPromotedProductsTitles(listPromotion));
                                     recentlyViewedListView.setAdapter(bestSellersAdapters);
                                     recentlyViewedListView.refreshDrawableState();
+                                    AndroidUtil.setDynamicHeight(recentlyViewedListView);
                                 }
                                 if (recommendations != null && recommendations.length != 0) {
                                     List<PromotedProductBean> listPromotion = Arrays.asList(recommendations);
                                     PromotedProductsAdapter bestSellersAdapters = new PromotedProductsAdapter(callingActivity,
-                                            recentlyViewedListView, listPromotion,
+                                            promotionsListView, listPromotion,
                                             TypeConversionUtil.getPromotedProductsTitles(listPromotion));
-                                    recentlyViewedListView.setAdapter(bestSellersAdapters);
-                                    recentlyViewedListView.refreshDrawableState();
+                                    promotionsListView.setAdapter(bestSellersAdapters);
+                                    promotionsListView.refreshDrawableState();
+                                    AndroidUtil.setDynamicHeight(promotionsListView);
                                 }
                             }
                         });

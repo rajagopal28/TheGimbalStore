@@ -217,7 +217,8 @@ public class HomeActivity extends Activity
                                     deviceIdList += deviceId;
                                 }
                                 GimbalPromotionsDataProcessor gpDataProcessor = new GimbalPromotionsDataProcessor(mActivity,
-                                        null, null, null,
+                                        null, null,
+                                        null, null,
                                         null);
                                 // Log.d("DEBUG", "Server URL = " + ServerURLUtil.getStoreServletServerURL(getResources()));
                                 Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());

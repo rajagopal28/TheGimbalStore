@@ -26,12 +26,26 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/best_sellers_list_view"></ListView>
 
+
+        <TextView
+            android:id="@+id/recommendations_list_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/best_sellers_list_view"
+            android:text="@string/recommendations_list_label" />
+
+        <ListView
+            android:id="@+id/recommendations_list_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/recommendations_list_label"></ListView>
+
         <TextView
             android:id="@+id/recently_viewed_list_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/best_sellers_list_view"
-            android:text="@string/promotions_list_label" />
+            android:layout_below="@+id/recommendations_list_view"
+            android:text="@string/recently_viewed_list_label" />
 
         <ListView
             android:id="@+id/recently_viewed_list_view"
