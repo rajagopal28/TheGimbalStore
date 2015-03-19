@@ -412,7 +412,6 @@ public class HomeActivity extends Activity
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 if (beacons.size() > 0) {
-                    TextView textView = (TextView) findViewById(R.id.sightingView);
                     Beacon firstBeacon = beacons.iterator().next();
                     Log.d("Beacon", "The first beacon " + firstBeacon.toString() + " is about " + firstBeacon.getDistance() + " meters away.");
                 }
@@ -420,7 +419,7 @@ public class HomeActivity extends Activity
         });
 
         try {
-            String uuid = "90031211-3600-0000-0000-000000000000";
+            String uuid = getResources().getString(R.string.GIMBAL_DEVICE_UUID);
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", Identifier.parse(uuid), null, null));
         } catch (RemoteException e) {   }
     }

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
 
+import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.activity.HomeActivity;
 
 import org.altbeacon.beacon.BeaconManager;
@@ -33,8 +34,9 @@ public class BeaconReferenceApplication extends Application implements Bootstrap
         // layout expression for other beacon types, do a web search for "setBeaconLayout"
         // including the quotes.
         //
-         beaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        String layout = getResources().getString(R.string.GIMBAL_DEVICE_LAYOUT);
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout(layout));
 
 
         Log.d(TAG, "setting up background monitoring for beacons and power saving");

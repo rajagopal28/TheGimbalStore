@@ -46,7 +46,8 @@
     <string name="GCM_SENDER_ID">667623029279</string>
 
     <!-- Adding configuration values that are used as a part of gimbal device service -->
-    <string name="GIMBAL_APPLICATION_ID">f638944c-9455-4112-a84d-036f60d321fb</string>
+    <string name="GIMBAL_DEVICE_UUID">90031211-3600-0000-0000-000000000000</string>
+    <string name="GIMBAL_DEVICE_LAYOUT">m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24</string>
     <string name="title_activity_feed_list">FeedListActivity</string>
 
     <string name="hello_world">Hello world!</string>
