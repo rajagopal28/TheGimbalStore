@@ -27,15 +27,16 @@ import com.avnet.gears.codes.gimbal.store.bean.NotificationActionBean;
 import com.avnet.gears.codes.gimbal.store.bean.PhoneNumberBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
-import com.avnet.gears.codes.gimbal.store.listener.StoreBeaconEventListener;
-import com.avnet.gears.codes.gimbal.store.listener.StorePlaceListener;
-import com.gimbal.android.BeaconManager;
-import com.gimbal.android.Gimbal;
-import com.gimbal.android.PlaceManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+/*import com.avnet.gears.codes.gimbal.store.listener.StoreBeaconEventListener;
+import com.avnet.gears.codes.gimbal.store.listener.StorePlaceListener;
+import com.gimbal.android.BeaconManager;
+import com.gimbal.android.Gimbal;
+import com.gimbal.android.PlaceManager;*/
 
 /**
  * Created by 914889 on 2/27/15.
@@ -291,7 +292,7 @@ public class AndroidUtil {
         mListView.requestLayout();
     }
 
-    public static void instantiateGimbal(Activity activity) {
+    /*public static void instantiateGimbal(Activity activity) {
         Gimbal.setApiKey(activity.getApplication(), activity.getResources().getString(R.string.GIMBAL_APPLICATION_ID));
         Log.d("GIMBAL", "Registering application.." + activity.getResources().getString(R.string.GIMBAL_APPLICATION_ID));
         StorePlaceListener placeEventListener = new StorePlaceListener(activity);
@@ -304,5 +305,5 @@ public class AndroidUtil {
         beaconManager.startListening();
 
         Log.d("GIMBAL", "registering receiver");
-    }
+    }*/
 }

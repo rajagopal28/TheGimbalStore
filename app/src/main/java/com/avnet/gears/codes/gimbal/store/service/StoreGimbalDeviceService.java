@@ -27,7 +27,7 @@ public class StoreGimbalDeviceService extends Service {
 
     @Override
     public void onCreate() {
-        deviceBroadcastReceiver = new StoreGimbalDeviceBroadcastReceiver(getApplication());
+        //deviceBroadcastReceiver = new StoreGimbalDeviceBroadcastReceiver(getApplication());
         registerReceiver(deviceBroadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         super.onCreate();
     }

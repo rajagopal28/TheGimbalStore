@@ -4,12 +4,15 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -20,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.AuthTokenReceiverProcessor;
@@ -39,15 +41,23 @@ import com.avnet.gears.codes.gimbal.store.utils.GCMAccountUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.Identifier;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 
 public class HomeActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, BeaconConsumer {
 
     // list of categories to be shown on drawer fragment
     protected List<CategoryBean> mCategoryList;
@@ -68,6 +78,8 @@ public class HomeActivity extends Activity
 
     private static final int SETTINGS_RESULT = 1;
 
+    private BeaconManager beaconManager = BeaconManager.getInstanceForApplication(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +88,7 @@ public class HomeActivity extends Activity
         gimbalInitialize();
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
 
         accountManager = AccountManager.get(getApplicationContext());
 
@@ -118,14 +131,46 @@ public class HomeActivity extends Activity
     }
 
     private void gimbalInitialize() {
-        Toast t = Toast.makeText(getApplicationContext(), "Gimbal initialise", Toast.LENGTH_SHORT);
-        t.show();
+        verifyBluetooth();
+        beaconManager.bind(this);
 
-        final TextView placeView = (TextView) findViewById(R.id.placeView);
-        final TextView sightingView = (TextView) findViewById(R.id.sightingView);
-        final TextView sightingRssiView = (TextView) findViewById(R.id.sightingRssiView);
-        final TextView beaconDetailsView = (TextView) findViewById(R.id.beaconDetailsView);
+    }
 
+
+    private void verifyBluetooth() {
+
+        try {
+            if (!BeaconManager.getInstanceForApplication(this).checkAvailability()) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Bluetooth not enabled");
+                builder.setMessage("Please enable bluetooth in settings and restart this application.");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        finish();
+                        System.exit(0);
+                    }
+                });
+                builder.show();
+            }
+        }
+        catch (RuntimeException e) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Bluetooth LE not available");
+            builder.setMessage("Sorry, this device does not support Bluetooth LE.");
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    finish();
+                    System.exit(0);
+                }
+            });
+            builder.show();
+
+        }
 
     }
 
@@ -188,6 +233,9 @@ public class HomeActivity extends Activity
     @Override
     public void onResume() {
         super.onResume();
+
+        if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(false);
+
         Log.d("DEBUG", " HomeActivity.onResume()");
     }
 
@@ -200,6 +248,9 @@ public class HomeActivity extends Activity
     @Override
     protected void onPause() {
         super.onPause();
+
+        if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(true);
+
         if (this.progressDialog != null)
             progressDialog.dismiss();
     }
@@ -265,6 +316,9 @@ public class HomeActivity extends Activity
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         pref.edit().remove(GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
         pref.edit().commit();
+
+        beaconManager.unbind(this);
+
         super.onDestroy();
     }
 
@@ -349,5 +403,25 @@ public class HomeActivity extends Activity
 
             Log.d("DEBUG", "Holder selectedCategoryId=" + selectedCategoryBean);
         }
+    }
+
+
+    @Override
+    public void onBeaconServiceConnect() {
+        beaconManager.setRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                if (beacons.size() > 0) {
+                    TextView textView = (TextView) findViewById(R.id.sightingView);
+                    Beacon firstBeacon = beacons.iterator().next();
+                    Log.d("Beacon", "The first beacon " + firstBeacon.toString() + " is about " + firstBeacon.getDistance() + " meters away.");
+                }
+            }
+        });
+
+        try {
+            String uuid = "90031211-3600-0000-0000-000000000000";
+            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", Identifier.parse(uuid), null, null));
+        } catch (RemoteException e) {   }
     }
 }

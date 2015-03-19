@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.avnet.gears.codes.gimbal.store"
-        minSdkVersion 21
+        minSdkVersion 18
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -31,8 +31,6 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:support-v13:21.0.3'
     compile 'com.google.android.gms:play-services:6.5.87'
-    compile files('libs/gimbal-dev-logging.jar')
-    compile files('libs/gimbal.jar')
-    compile files('libs/spring-android-core-1.0.1.RELEASE.jar')
-    compile files('libs/spring-android-rest-template-1.0.1.RELEASE.jar')
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'org.altbeacon:android-beacon-library:2.1.4'
 }

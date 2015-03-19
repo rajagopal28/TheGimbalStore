@@ -8,15 +8,15 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.avnet.gears.codes.gimbal.store.activity.NotificationsListActivity;
-import com.gimbal.android.BeaconEventListener;
+/*import com.gimbal.android.BeaconEventListener;
 import com.gimbal.android.BeaconManager;
-import com.gimbal.android.PlaceEventListener;
+import com.gimbal.android.PlaceEventListener;*/
 
 public class StoreGimbalDeviceBroadcastReceiver extends BroadcastReceiver {
     private Application application;
 
     //Gimbal
-    private PlaceEventListener placeEventListener;
+   /* private PlaceEventListener placeEventListener;
     private BeaconEventListener beaconSightingListener;
     private BeaconManager beaconManager;
 
@@ -27,7 +27,7 @@ public class StoreGimbalDeviceBroadcastReceiver extends BroadcastReceiver {
         this.application = base;
         Log.d("GIMBAL", "Instantiated StoreGimbalDeviceBroadcastReceiver");
     }
-
+*/
     @Override
     public void onReceive(final Context context, Intent intent) {
         String action = intent.getAction();
