@@ -11,6 +11,7 @@ import com.avnet.gears.codes.gimbal.store.activity.ProductDetailsActivity;
 import com.avnet.gears.codes.gimbal.store.activity.ProductsListActivity;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.NotificationActionBean;
+import com.avnet.gears.codes.gimbal.store.bean.RecommendationBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.bean.response.RecommendationResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
@@ -56,36 +57,41 @@ public class RecommendationDataProcessor implements AsyncResponseProcessor {
                 JsonReader reader = new JsonReader(new StringReader(responseString));
                 reader.setLenient(true);
                 final RecommendationResponseBean recommendationResponseBean = gson.fromJson(responseString, RecommendationResponseBean.class);
-                Log.d("DEBUG", "Displaying Recommendation Details.." + recommendationResponseBean.toString());
-                String identifierString = recommendationResponseBean.getIdentifierValue();
-                GimbalStoreConstants.RECOMMENDATION_TYPE recommendationType = GimbalStoreConstants.RECOMMENDATION_TYPE.valueOf(recommendationResponseBean.getRecommendationType());
+                RecommendationBean[] recommendations = recommendationResponseBean.getRecommendations();
+                if (recommendations != null &&
+                        recommendations.length > 0) {
+                    RecommendationBean recommendationBean = recommendations[0];
+                    Log.d("DEBUG", "Displaying Recommendation Details.." + recommendationResponseBean.toString());
+                    String identifierString = recommendationBean.getIdentifierValue();
+                    GimbalStoreConstants.RECOMMENDATION_TYPE recommendationType = GimbalStoreConstants.RECOMMENDATION_TYPE.valueOf(recommendationBean.getRecommendationType());
 
-                Intent targetIntent;
-                Bundle bundle = new Bundle();
-                switch (recommendationType) {
-                    case ASK_REC_PROD:
-                    case ASK_REVIEW:
-                        targetIntent = new Intent(context, ProductsListActivity.class);
-                        bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
-                                identifierString);
-                        targetIntent.putExtras(bundle);
-                        break;
-                    case ASK_REC_CAT:
-                        targetIntent = new Intent(context, ProductDetailsActivity.class);
-                        bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
-                                identifierString);
-                        targetIntent.putExtras(bundle);
-                        break;
-                    default:
-                        // do nothing
-                        targetIntent = new Intent(context, HomeActivity.class);
+                    Intent targetIntent;
+                    Bundle bundle = new Bundle();
+                    switch (recommendationType) {
+                        case ASK_REC_PROD:
+                        case ASK_REVIEW:
+                            targetIntent = new Intent(context, ProductsListActivity.class);
+                            bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
+                                    identifierString);
+                            targetIntent.putExtras(bundle);
+                            break;
+                        case ASK_REC_CAT:
+                            targetIntent = new Intent(context, ProductDetailsActivity.class);
+                            bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
+                                    identifierString);
+                            targetIntent.putExtras(bundle);
+                            break;
+                        default:
+                            // do nothing
+                            targetIntent = new Intent(context, HomeActivity.class);
+                    }
+
+                    List<NotificationActionBean> notificationActionBeans = new ArrayList<NotificationActionBean>();
+                    AndroidUtil.notify(this.context, targetIntent,
+                            notificationMsg, GimbalStoreConstants.DEFAULT_STORE_NOTIFICATION_TITLE,
+                            R.drawable.ic_store, true,
+                            notificationActionBeans);
                 }
-
-                List<NotificationActionBean> notificationActionBeans = new ArrayList<NotificationActionBean>();
-                AndroidUtil.notify(this.context, targetIntent,
-                        notificationMsg, GimbalStoreConstants.DEFAULT_STORE_NOTIFICATION_TITLE,
-                        R.drawable.ic_store, true,
-                        notificationActionBeans);
 
             }
         }

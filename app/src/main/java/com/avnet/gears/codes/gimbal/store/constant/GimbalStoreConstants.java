@@ -153,7 +153,8 @@ public class GimbalStoreConstants {
         askRecommendation,
         askToReview,
         postRecommendation,
-        marketing
+        marketing,
+        getRecommendation
     }
 
     public static enum HTTP_METHODS {
