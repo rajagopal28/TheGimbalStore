@@ -64,14 +64,13 @@ public class RecommendationDataProcessor implements AsyncResponseProcessor {
                 Bundle bundle = new Bundle();
                 switch (recommendationType) {
                     case ASK_REC_PROD:
-                    case TYPE_REVIEW_CATEGORY:
+                    case ASK_REVIEW:
                         targetIntent = new Intent(context, ProductsListActivity.class);
                         bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
                                 identifierString);
                         targetIntent.putExtras(bundle);
                         break;
                     case ASK_REC_CAT:
-                    case ASK_REVIEW:
                         targetIntent = new Intent(context, ProductDetailsActivity.class);
                         bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
                                 identifierString);

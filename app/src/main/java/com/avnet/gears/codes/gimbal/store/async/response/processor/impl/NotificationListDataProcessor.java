@@ -31,14 +31,12 @@ public class NotificationListDataProcessor implements AsyncResponseProcessor {
 
     private Activity parentActivity;
     private ListView friendNotificationsListView;
-    private ListView promotionsListView;
     private ProgressDialog progressDialog;
 
     public NotificationListDataProcessor(Activity callingActivity, ListView friendNotificationsList,
-                                         ListView promotionsListView, ProgressDialog dialog) {
+                                         ProgressDialog dialog) {
         this.parentActivity = callingActivity;
         this.friendNotificationsListView = friendNotificationsList;
-        this.promotionsListView = promotionsListView;
         this.progressDialog = dialog;
     }
 
@@ -64,7 +62,6 @@ public class NotificationListDataProcessor implements AsyncResponseProcessor {
                 NotificationDataBean[] notificationItemsArray = responseBean.getNotifications();
                 final List<NotificationDataBean> notificationItemBeans = Arrays.asList(notificationItemsArray);
                 final List<NotificationDataBean> friendNotificationList = new ArrayList<NotificationDataBean>();
-                final List<NotificationDataBean> promotionNotifications = new ArrayList<NotificationDataBean>();
                 if (notificationItemsArray != null && notificationItemsArray.length > 0) {
                     for (NotificationDataBean notificationItem : notificationItemBeans) {
                         if (notificationItem.getType() != null) {
@@ -74,9 +71,6 @@ public class NotificationListDataProcessor implements AsyncResponseProcessor {
                                 case REVIEWED:
                                     friendNotificationList.add(notificationItem);
                                     break;
-                                case PRODUCT_PROMOTION:
-                                    promotionNotifications.add(notificationItem);
-                                    break;
                                 default:
                                     // ignore the item
 
@@ -85,7 +79,6 @@ public class NotificationListDataProcessor implements AsyncResponseProcessor {
                     }
                 }
                 Log.d("DEBUG", "friendNotificationList = " + friendNotificationList);
-                Log.d("DEBUG", "promotionNotifications = " + promotionNotifications);
                 parentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -102,25 +95,8 @@ public class NotificationListDataProcessor implements AsyncResponseProcessor {
                             });
                             friendNotificationsListView.refreshDrawableState();
                         }
-
-
-                        List<String> promotionTitles = new ArrayList<String>(TypeConversionUtil.getNotificationTitles(promotionNotifications));
-                        if (!promotionNotifications.isEmpty()) {
-                            ArrayAdapter<String> promotionsAdapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1, promotionTitles);
-                            promotionsListView.setAdapter(promotionsAdapter);
-                            promotionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Log.d("DEBUG", "Promotions item clicked = " + position + " value = " + promotionNotifications.get(position));
-                                }
-                            });
-                            promotionsListView.refreshDrawableState();
-                        }
                         if (!friendNotificationsTitles.isEmpty())
                             AndroidUtil.setDynamicHeight(friendNotificationsListView);
-
-                        if (!promotionTitles.isEmpty())
-                            AndroidUtil.setDynamicHeight(promotionsListView);
 
                         if (progressDialog != null)
                             progressDialog.dismiss();

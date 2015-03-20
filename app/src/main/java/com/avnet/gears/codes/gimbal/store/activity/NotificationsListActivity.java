@@ -26,13 +26,11 @@ public class NotificationsListActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         ListView notificationListView = (ListView) findViewById(R.id.user_notification_list_view);
-        ListView promotionsListView = (ListView) findViewById(R.id.promotions_list_view);
         ProgressDialog progressDialog = AndroidUtil.showProgressDialog(this,
                 GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
                 GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
         NotificationListDataProcessor notificationListDataProcessor = new NotificationListDataProcessor(this,
-                notificationListView, promotionsListView,
-                progressDialog);
+                notificationListView, progressDialog);
 
         String urlString = ServerURLUtil.getStoreServletServerURL(getResources());
         String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(),

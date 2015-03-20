@@ -110,6 +110,7 @@ public class StoreGcmServiceIntent extends IntentService {
                         Arrays.asList(targetURL),
                         Arrays.asList(paramsMap), null,
                         recommendationDataProcessor);
+                asyncTask.execute(new String[]{});
                 return;// Notification is sent in the processor class
             case RECOMMENDED:
             case REVIEWED:
