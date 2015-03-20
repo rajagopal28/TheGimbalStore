@@ -12,6 +12,7 @@ import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.bean.response.ProductsResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.listener.ProductItemClickListener;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,11 +30,14 @@ public class ProductsListProcessor implements AsyncResponseProcessor {
     private Activity parentActivity;
     private ListView productsListView;
     private ProgressDialog progressDialog;
+    private String selectedCategoryId;
 
-    public ProductsListProcessor(Activity parentActivity, ListView productsListView, ProgressDialog progressDialog) {
+    public ProductsListProcessor(Activity parentActivity, ListView productsListView,
+                                 ProgressDialog progressDialog, String categoryId) {
         this.parentActivity = parentActivity;
         this.productsListView = productsListView;
         this.progressDialog = progressDialog;
+        this.selectedCategoryId = categoryId;
     }
 
     @Override
@@ -59,7 +63,8 @@ public class ProductsListProcessor implements AsyncResponseProcessor {
                     // Set up the List View.
                     final ProductsViewAdapter productsViewAdapter = new ProductsViewAdapter(parentActivity, productsListView,
                             Arrays.asList(responseBean.getCatalogEntryView()),
-                            TypeConversionUtil.getProductsTitleList(productsList));
+                            TypeConversionUtil.getProductsTitleList(productsList),
+                            selectedCategoryId);
                     final ProductItemClickListener productItemClickListener = new ProductItemClickListener(parentActivity, productsList);
                     parentActivity.runOnUiThread(new Runnable() {
                         @Override
@@ -67,6 +72,7 @@ public class ProductsListProcessor implements AsyncResponseProcessor {
                             productsListView.setAdapter(productsViewAdapter);
                             productsListView.setOnItemClickListener(productItemClickListener);
                             productsListView.refreshDrawableState();
+                            AndroidUtil.setDynamicHeight(productsListView);
                         }
                     });
                     // hide progress bar

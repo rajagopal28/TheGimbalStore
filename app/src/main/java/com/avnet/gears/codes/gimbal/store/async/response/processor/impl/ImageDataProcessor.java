@@ -2,7 +2,6 @@ package com.avnet.gears.codes.gimbal.store.async.response.processor.impl;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -36,7 +35,7 @@ public class ImageDataProcessor implements AsyncResponseProcessor {
         int index = 0;
         for(ResponseItemBean responseItemBean : responseItemBeanList) {
             GimbalStoreConstants.HTTP_RESPONSE_CODES responseCode = responseItemBean.getResponseCode();
-            Log.d("PROCESS DEBUG", "Image response = " + responseCode);
+            // Log.d("PROCESS DEBUG", "Image response = " + responseCode);
             GimbalStoreConstants.HTTP_HEADER_VALUES responseType = responseItemBean.getContentType();
 
             if (responseCode == GimbalStoreConstants.HTTP_RESPONSE_CODES.OK ||
@@ -47,7 +46,7 @@ public class ImageDataProcessor implements AsyncResponseProcessor {
                         || responseType == GimbalStoreConstants.HTTP_HEADER_VALUES.CONTENT_TYPE_IMAGE_PNG
                     ) {
                     final int tIndex = index;
-                    Log.d("DEBUG", "retrieved image of type " + responseType);
+                    // Log.d("DEBUG", "retrieved image of type " + responseType);
                     final Bitmap bitmap = responseItemBean.getImageBmp();
                     parentActivity.runOnUiThread(new Runnable() {
                         @Override

@@ -32,7 +32,11 @@ public class GimbalStoreConstants {
 
     public static String MESSAGE_NO_REVIEWS = "No reviews for this product yet! Be the first to review!";
     public static String MESSAGE_PRODUCT_GOT_REVIEWS = "This product got {0} user reviews";
+
+    public static String LABEL_FRIEND_RECOMMENDED = "Your Friends {0} have recommended this product for you!!";
+    public static String LABEL_NO_FRIEND_RECOMMENDED = "No Friend has recommended yet!!";
     public static String LABEL_OVERALL_RATING = "Overall rating :";
+    public static String LABEL_NO_RATING = "No ratings Yer!!";
 
     public static int CONTACTS_UPLOAD_CHUNK_LIMIT = 25;
 
@@ -124,6 +128,7 @@ public class GimbalStoreConstants {
         recommendationId,
         friends,
         productId,
+        categoryId,
         reviewText,
         rating,
         rectype,

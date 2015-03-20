@@ -8,23 +8,24 @@
         app:showAsAction="never"
         android:title="@string/action_sync_contacts_label" />
     <item
-        android:id="@+id/action_about"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/action_about_label" />
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/action_settings" />
-    <item
         android:id="@+id/action_notifications"
         android:orderInCategory="100"
         app:showAsAction="never"
-        android:title="@string/action_settings" />
+        android:title="@string/action_notifications" />
     <item
         android:id="@+id/action_feed_list"
         android:orderInCategory="100"
         app:showAsAction="never"
         android:title="@string/action_friend_feeds" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/action_settings" />
+
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/action_about_label" />
 </menu>

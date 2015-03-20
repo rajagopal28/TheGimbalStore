@@ -301,6 +301,7 @@ public class AndroidUtil {
 
         try {
             if (!beaconManager.checkAvailability()) {
+                result = false;
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Bluetooth not enabled");
                 builder.setMessage("Please enable bluetooth in settings and restart this application.");
@@ -308,12 +309,13 @@ public class AndroidUtil {
                 builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        System.exit(0);
+                        // System.exit(0);
                     }
                 });
                 builder.show();
             }
         } catch (RuntimeException e) {
+            result = false;
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Bluetooth LE not available");
             builder.setMessage("Sorry, this device does not support Bluetooth LE.");
@@ -322,8 +324,7 @@ public class AndroidUtil {
 
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-
-                    System.exit(0);
+                    // System.exit(0);
                 }
             });
             builder.show();

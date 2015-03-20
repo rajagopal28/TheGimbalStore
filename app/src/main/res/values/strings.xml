@@ -20,7 +20,7 @@
     <string name="show_more">Show More</string>
 
     <string name="recommend_friend_label">Recommend</string>
-    <string name="ask_friend_review_label">Request Review</string>
+    <string name="ask_friend_review_label">Request\nReview</string>
     <string name="ask_friend_label">Ask Friend</string>
     <string name="post_review_label">Post Review</string>
 
@@ -44,6 +44,7 @@
     <string name="DEFAULT_CATALOG_ID">10001</string>
     <string name="ACTIVE_STORE_LANG_ID">-1</string>
     <string name="GCM_SENDER_ID">667623029279</string>
+    <string name="CURRENCY_UNIT">Rs.</string>
 
     <!-- Adding configuration values that are used as a part of gimbal device service -->
     <string name="GIMBAL_DEVICE_UUID">90031211-3600-0000-0000-000000000000</string>

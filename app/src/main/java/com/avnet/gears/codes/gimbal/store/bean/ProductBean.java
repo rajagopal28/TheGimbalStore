@@ -9,6 +9,8 @@ public class ProductBean extends BaseServerDataBean {
 
     private String partNumber;
     private String price;
+    private String subCategoryId;
+    private String[] RecommendedBy;
 
 
     private ReviewDataBean reviews;
@@ -46,13 +48,31 @@ public class ProductBean extends BaseServerDataBean {
         this.attribute = attribute;
     }
 
+    public String getSubCategoryId() {
+        return subCategoryId;
+    }
+
+    public void setSubCategoryId(String subCategoryId) {
+        this.subCategoryId = subCategoryId;
+    }
+
+    public String[] getRecommendedBy() {
+        return RecommendedBy;
+    }
+
+    public void setRecommendedBy(String[] recommendedBy) {
+        RecommendedBy = recommendedBy;
+    }
+
     @Override
     public String toString() {
         return super.toString() +
                 "ProductBean{" +
                 "partNumber='" + partNumber + '\'' +
+                "subCategoryId='" + subCategoryId + '\'' +
                 ", reviews='" + reviews + '\'' +
                 ", attribute=" + Arrays.toString(attribute) +
+                ", RecommendedBy = " + Arrays.toString(RecommendedBy) +
                 '}';
     }
 }

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
 
+import com.avnet.gears.codes.gimbal.store.activity.ProductDetailsActivity;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.bean.response.PostReviewResponseBean;
@@ -22,13 +23,11 @@ import java.util.List;
 public class PostReviewsProcessor implements AsyncResponseProcessor {
     private Activity callingActivity;
     private ProgressDialog progressDialog;
-    private String productId;
     private Intent intent;
 
-    public PostReviewsProcessor(Activity callingActivity, ProgressDialog progressDialog, String uniqueId, Intent returnIntent) {
+    public PostReviewsProcessor(Activity callingActivity, ProgressDialog progressDialog, Intent returnIntent) {
         this.callingActivity = callingActivity;
         this.progressDialog = progressDialog;
-        this.productId = uniqueId;
         this.intent = returnIntent;
     }
 
@@ -58,8 +57,11 @@ public class PostReviewsProcessor implements AsyncResponseProcessor {
                     return false;
                 }
                 if (intent != null) {
-                    Log.d("DEBUG", "In review post processor prodId = " + intent.getStringExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString()));
-                    callingActivity.startActivity(intent);
+                    String prodId = intent.getStringExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString());
+                    Log.d("DEBUG", "In review post processor prodId = " + prodId);
+                    Intent targetIntent = new Intent(this.callingActivity, ProductDetailsActivity.class);
+                    targetIntent.putExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(), prodId);
+                    callingActivity.startActivity(targetIntent);
                     callingActivity.finish();
                 }
                 Log.d("DEBUG", "Review submitted successfully!!");

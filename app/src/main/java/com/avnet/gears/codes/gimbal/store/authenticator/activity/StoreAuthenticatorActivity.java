@@ -5,7 +5,6 @@ import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,7 +44,6 @@ public class StoreAuthenticatorActivity extends AccountAuthenticatorActivity {
                 accountManager, dialog);
 
 
-
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,11 +67,12 @@ public class StoreAuthenticatorActivity extends AccountAuthenticatorActivity {
 
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.gcmDeviceId.toString(), registeredGCMDeviceId);
                 Log.d("DEBUG", "paramsMap = " + paramsMap);
-                String cookieString = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY, null);
 
+                // reset cookie if any
+                AndroidUtil.savePreferenceValue(getApplicationContext(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY, null);
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                         Arrays.asList(new String[]{ServerURLUtil.getStoreServletServerURL(getResources())}),
-                        Arrays.asList(paramsMap), cookieString,
+                        Arrays.asList(paramsMap), null,
                         authDataProcessor);
                 asyncTask.execute(new String[]{});
 

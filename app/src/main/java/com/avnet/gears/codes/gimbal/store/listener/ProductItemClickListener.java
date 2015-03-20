@@ -30,10 +30,12 @@ public class ProductItemClickListener implements AdapterView.OnItemClickListener
 
         ProductBean selectedProduct = productBeanList.get(position);
         // redirect to product details activity
-        if(selectedProduct.getUniqueId() != null) {
+        if (selectedProduct.getUniqueId() != null) {
             Intent intent = new Intent(parentActivity, ProductDetailsActivity.class);
             intent.putExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
                     selectedProduct.getUniqueId());
+            intent.putExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
+                    selectedProduct.getSubCategoryId());
             parentActivity.startActivity(intent);
         }
 

@@ -90,6 +90,7 @@ public class GimbalPromotionsDataProcessor implements AsyncResponseProcessor {
                                             topBrowsedListView, listPromotion,
                                             TypeConversionUtil.getPromotedProductsTitles(listPromotion));
                                     topBrowsedListView.setAdapter(topBrowsedAdapter);
+                                    topBrowsedListView.setOnItemClickListener(topBrowsedAdapter);
                                     topBrowsedListView.refreshDrawableState();
                                     AndroidUtil.setDynamicHeight(topBrowsedListView);
                                 }
@@ -100,23 +101,26 @@ public class GimbalPromotionsDataProcessor implements AsyncResponseProcessor {
                                             TypeConversionUtil.getPromotedProductsTitles(listPromotion));
                                     bestSellersListView.setAdapter(bestSellersAdapters);
                                     bestSellersListView.refreshDrawableState();
+                                    bestSellersListView.setOnItemClickListener(bestSellersAdapters);
                                     AndroidUtil.setDynamicHeight(bestSellersListView);
                                 }
                                 if (recentlyViewed != null && recentlyViewed.length != 0) {
                                     List<PromotedProductBean> listPromotion = Arrays.asList(recentlyViewed);
-                                    PromotedProductsAdapter bestSellersAdapters = new PromotedProductsAdapter(callingActivity,
+                                    PromotedProductsAdapter recentlyViewedAdapters = new PromotedProductsAdapter(callingActivity,
                                             recentlyViewedListView, listPromotion,
                                             TypeConversionUtil.getPromotedProductsTitles(listPromotion));
-                                    recentlyViewedListView.setAdapter(bestSellersAdapters);
+                                    recentlyViewedListView.setAdapter(recentlyViewedAdapters);
+                                    recentlyViewedListView.setOnItemClickListener(recentlyViewedAdapters);
                                     recentlyViewedListView.refreshDrawableState();
                                     AndroidUtil.setDynamicHeight(recentlyViewedListView);
                                 }
                                 if (recommendations != null && recommendations.length != 0) {
                                     List<PromotedProductBean> listPromotion = Arrays.asList(recommendations);
-                                    PromotedProductsAdapter bestSellersAdapters = new PromotedProductsAdapter(callingActivity,
+                                    PromotedProductsAdapter promotionsAdapters = new PromotedProductsAdapter(callingActivity,
                                             promotionsListView, listPromotion,
                                             TypeConversionUtil.getPromotedProductsTitles(listPromotion));
-                                    promotionsListView.setAdapter(bestSellersAdapters);
+                                    promotionsListView.setAdapter(promotionsAdapters);
+                                    promotionsListView.setOnItemClickListener(promotionsAdapters);
                                     promotionsListView.refreshDrawableState();
                                     AndroidUtil.setDynamicHeight(promotionsListView);
                                 }

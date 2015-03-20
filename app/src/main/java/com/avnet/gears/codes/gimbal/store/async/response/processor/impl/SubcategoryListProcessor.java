@@ -12,6 +12,7 @@ import com.avnet.gears.codes.gimbal.store.bean.SubCategoryBean;
 import com.avnet.gears.codes.gimbal.store.bean.response.SubCategoryResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants.HTTP_RESPONSE_CODES;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -65,6 +66,7 @@ public class SubcategoryListProcessor implements AsyncResponseProcessor {
                     public void run() {
                         subCategoryListView.setAdapter(categoryViewAdapter);
                         subCategoryListView.refreshDrawableState();
+                        AndroidUtil.setDynamicHeight(subCategoryListView);
                     }
                 });
                 progressDialog.dismiss();

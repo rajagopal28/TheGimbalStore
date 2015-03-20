@@ -11,7 +11,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -20,65 +22,19 @@
             android:text="@string/hello_world"
             android:id="@+id/product_title" />
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
         <ImageView
             android:id="@+id/product_display_image"
             android:layout_width="200dp"
             android:layout_height="300dp"
             android:src="@drawable/ic_store"
-            android:layout_below="@+id/product_title" />
+            android:layout_below="@+id/product_title"
+            android:layout_alignParentLeft="true" />
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/product_price"
-            android:layout_alignTop="@+id/product_display_image"
-            android:layout_toEndOf="@+id/product_display_image" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ask_friend_review_label"
-            android:id="@+id/buy_now_button"
-            android:layout_below="@+id/product_price"
-            android:layout_toEndOf="@+id/product_display_image" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/recommend_friend_label"
-            android:id="@+id/recommend_button"
-            android:layout_below="@+id/buy_now_button"
-            android:layout_alignStart="@+id/buy_now_button" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ask_friend_label"
-            android:id="@+id/ask_friend_button"
-            android:layout_below="@+id/recommend_button"
-            android:layout_toEndOf="@+id/product_display_image" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/product_avg_rating"
-            android:layout_below="@+id/ask_friend_button"
-            android:layout_toEndOf="@+id/product_display_image" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/product_review_details"
-            android:layout_below="@+id/product_display_image"
-            android:layout_alignParentStart="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -86,7 +42,80 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
             android:id="@+id/product_description"
-            android:layout_above="@+id/product_review_details"
+            android:layout_alignTop="@+id/product_display_image"
+            android:layout_toEndOf="@+id/product_display_image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/recommended_friends_view"
+            android:layout_marginTop="64dp"
+            android:layout_below="@+id/product_description"
+            android:layout_toEndOf="@+id/product_display_image" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/product_price"
+            android:layout_above="@+id/recommend_button"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/product_display_image"
+            android:layout_toStartOf="@+id/recommend_button" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/product_avg_rating"
+            android:layout_below="@+id/product_display_image"
+            android:layout_alignParentEnd="true" />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ask_friend_label"
+            android:id="@+id/ask_friend_button"
+            android:layout_below="@+id/product_avg_rating"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:minHeight="1dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recommend_friend_label"
+            android:id="@+id/recommend_button"
+            android:layout_alignTop="@+id/ask_friend_button"
+            android:layout_toEndOf="@+id/ask_friend_button"
+            android:minHeight="1dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ask_friend_review_label"
+            android:id="@+id/ask_review_button"
+            android:layout_alignTop="@+id/recommend_button"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/product_review_details"
+            android:layout_below="@+id/ask_review_button"
             android:layout_alignParentStart="true" />
 
         <ScrollView

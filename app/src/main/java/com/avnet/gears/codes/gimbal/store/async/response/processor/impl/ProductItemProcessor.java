@@ -2,12 +2,14 @@ package com.avnet.gears.codes.gimbal.store.async.response.processor.impl;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ProductBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
@@ -41,13 +43,13 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
     private TextView priceView;
     private TextView ratingView;
     private TextView reviewTitleView;
-
+    private TextView recommendedFriendsView;
 
     public ProductItemProcessor(Activity parentActivity, ProgressDialog progressDialog,
                                 ImageView productImageView, ListView productReviewsListView,
-                                TextView productTitleView,
-                                TextView productDescriptionView, TextView productPriceView,
-                                TextView productRatingView, TextView productReviewTitleView) {
+                                TextView productTitleView, TextView productDescriptionView,
+                                TextView productPriceView, TextView productRatingView,
+                                TextView productReviewTitleView, TextView recommendedFriendsView) {
         this.parentActivity = parentActivity;
         this.progressDialog = progressDialog;
 
@@ -59,6 +61,7 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
         this.priceView = productPriceView;
         this.ratingView = productRatingView;
         this.reviewTitleView = productReviewTitleView;
+        this.recommendedFriendsView = recommendedFriendsView;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                 responseString = responseString.trim()
                         .replace(GimbalStoreConstants.START_COMMENT_STRING, "")
                         .replace(GimbalStoreConstants.END_COMMENT_STRING, "");
-                Log.d("DEBUG","responseString = " + responseString);
+                Log.d("DEBUG", "responseString = " + responseString);
 
                 // get the list of sub categories and populate it to the adapter
                 Gson gson = new GsonBuilder().disableHtmlEscaping().create();
@@ -94,14 +97,23 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                             descriptionView.setText(productBean.getShortdescription());
                         }
                         if (priceView != null) {
-                            priceView.setText(productBean.getPrice());
+                            String currencyUnit = parentActivity.getResources().getString(R.string.CURRENCY_UNIT);
+                            priceView.setText(currencyUnit + productBean.getPrice());
                         }
 
                         ReviewDataBean reviews = productBean.getReviews();
                         if (reviews != null) {
+                            Log.d("DEBUG", "reviews =" + reviews.getReviews());
+                            List<String> reviewString = TypeConversionUtil.getReviewTextAsStrings(Arrays.asList(reviews.getReviews()));
+                            ArrayAdapter<String> reviewsAdapter = new ArrayAdapter<String>(parentActivity,
+                                    android.R.layout.simple_list_item_1,
+                                    reviewString);
+                            reviewsListView.setAdapter(reviewsAdapter);
+                            reviewsListView.refreshDrawableState();
+                            AndroidUtil.setDynamicHeight(reviewsListView);
                             if (reviewsListView != null) {
 
-                                if (reviews != null && reviews.getReviews() != null) {
+                                if (reviews.getReviews() != null && reviews.getReviews().length > 0) {
                                     reviewTitleView.setText(MessageFormat.format(GimbalStoreConstants.MESSAGE_PRODUCT_GOT_REVIEWS,
                                             new Object[]{reviews.getReviews().length}));
                                 } else {
@@ -109,22 +121,25 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                                 }
 
                             }
-                            if (reviews.getAverageRating() != null) {
-                                if (ratingView != null) {
-                                    // Log.d("DEBUG", "Rating overall = " + reviews.getIncludes());
-                                   ratingView.setText(GimbalStoreConstants.LABEL_OVERALL_RATING + reviews.getAverageRating());
+                            String[] recommendedBy = productBean.getRecommendedBy();
+                            if (recommendedBy != null && recommendedBy.length != 0) {
+                                recommendedFriendsView.setText(MessageFormat.format(
+                                        GimbalStoreConstants.LABEL_FRIEND_RECOMMENDED,
+                                        new Object[]{TextUtils.join(GimbalStoreConstants.DELIMITER_COMMA, recommendedBy)}
+                                ));
 
-                                }
-                                List<String> reviewString = TypeConversionUtil.getReviewTextAsStrings(Arrays.asList(reviews.getReviews()));
-                                ArrayAdapter<String> reviewsAdapter = new ArrayAdapter<String>(parentActivity,
-                                        android.R.layout.simple_list_item_1,
-                                        reviewString);
-                                reviewsListView.setAdapter(reviewsAdapter);
-                                reviewsListView.refreshDrawableState();
-                                AndroidUtil.setDynamicHeight(reviewsListView);
+                            } else {
+                                recommendedFriendsView.setText(GimbalStoreConstants.LABEL_NO_FRIEND_RECOMMENDED);
                             }
-
-
+                            if (ratingView != null) {
+                                if (reviews.getAverageRating() != null && "0".equals(reviews.getReviews())) {
+                                    // Log.d("DEBUG", "Rating overall = " + reviews.getIncludes());
+                                    ratingView.setText(GimbalStoreConstants.LABEL_OVERALL_RATING + reviews.getAverageRating());
+                                } else {
+                                    // LABEL_NO_RATING
+                                    ratingView.setText(GimbalStoreConstants.LABEL_NO_RATING);
+                                }
+                            }
                         }
                     }
                 });

@@ -51,9 +51,9 @@ public class PromotedProductsAdapter extends ArrayAdapter<String> implements Ada
 
         TextView promotionTitle = (TextView) rowView.findViewById(R.id.promotion_title);
         promotionTitle.setText(selectedProductBean.getName());
-        TextView productPrice = (TextView) rowView.findViewById(R.id.product_price);
+        TextView productPrice = (TextView) rowView.findViewById(R.id.product_description);
         productPrice.setText(selectedProductBean.getPrice());
-        TextView productRating = (TextView) rowView.findViewById(R.id.product_description);
+        TextView productRating = (TextView) rowView.findViewById(R.id.recommended_friends_view);
         productRating.setText(selectedProductBean.getShortdescription());
         if (selectedProductBean.getThumbnail() != null) {
 

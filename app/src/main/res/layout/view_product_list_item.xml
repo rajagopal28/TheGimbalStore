@@ -39,7 +39,7 @@
                     android:paddingLeft="10dp" />
 
                 <TextView
-                    android:id="@+id/product_price"
+                    android:id="@+id/product_description"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"

@@ -88,6 +88,9 @@ public class TypeConversionUtil {
         List<String> reviewTexts = new ArrayList<String>();
         for (ReviewBean review : reviewsList) {
             reviewTexts.add(review.getFriend()
+                    + "(Rated :"
+                    + review.getRating()
+                    + ")"
                     + GimbalStoreConstants.DELIMITER_COLAN
                     + review.getReview());
         }

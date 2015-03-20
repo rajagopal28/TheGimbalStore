@@ -35,17 +35,21 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String prodId = "";
+        String subCatId = "";
         final Bundle intentBundle = getIntent().getExtras();
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_product_details);
         if (intentBundle != null) {
             prodId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(), "");
+            subCatId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(), "");
         }
         final String selectedProductId = prodId;
+        final String selectedSubCatId = subCatId;
         TextView productTitleView = (TextView) findViewById(R.id.product_title);
         TextView productDescriptionView = (TextView) findViewById(R.id.product_description);
         TextView productPriceView = (TextView) findViewById(R.id.product_price);
+        TextView recommendedFriendsView = (TextView) findViewById(R.id.recommended_friends_view);
         TextView productRatingView = (TextView) findViewById(R.id.product_avg_rating);
         TextView productReviewTitleView = (TextView) findViewById(R.id.product_review_details);
 
@@ -55,7 +59,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
         progressDialog.dismiss();
 
 
-        Button askReviewButton = (Button) findViewById(R.id.buy_now_button);
+        Button askReviewButton = (Button) findViewById(R.id.ask_review_button);
         Button askButton = (Button) findViewById(R.id.ask_friend_button);
         Button recommendButton = (Button) findViewById(R.id.recommend_button);
 
@@ -64,6 +68,8 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
         Bundle data = new Bundle();
         data.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
                 selectedProductId);
+        data.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
+                selectedSubCatId);
         intent.putExtras(data);
 
         final Activity mActivity = this;
@@ -139,6 +145,8 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
                 Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.productId.toString(),
                         selectedProductId);
+                paramsMap.put(GimbalStoreConstants.StoreParameterKeys.categoryId.toString(),
+                        selectedSubCatId);
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.type.toString(),
                         GimbalStoreConstants.StoreParameterValues.postReview.toString());
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.reviewText.toString(),
@@ -148,8 +156,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
 
                 Log.d("DEBUG", "paramsMap=" + paramsMap);
                 String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
-                PostReviewsProcessor postReviewsProcessor = new PostReviewsProcessor(mActivity, progressDialog,
-                        selectedProductId, intent);
+                PostReviewsProcessor postReviewsProcessor = new PostReviewsProcessor(mActivity, progressDialog, intent);
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                         Arrays.asList(ServerURLUtil.getStoreServletServerURL(getResources())),
                         Arrays.asList(paramsMap), cookieString,
@@ -172,7 +179,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
                     productImageView, reviewsListView,
                     productTitleView, productDescriptionView,
                     productPriceView, productRatingView,
-                    productReviewTitleView);
+                    productReviewTitleView, recommendedFriendsView);
             Map<String, String> paramsMap = ServerURLUtil.getBasicConfigParamsMap(getResources());
             paramsMap.put(GimbalStoreConstants.StoreParameterKeys.identifier.toString(),
                     GimbalStoreConstants.StoreParameterValues.top.toString());
@@ -206,8 +213,10 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
         }
         Bundle intentBundle = getIntent().getExtras();
         String productId = null;
+        String subCatId = null;
         if (intentBundle != null) {
             productId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(), "");
+            subCatId = intentBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(), "");
         }
         ProgressDialog progressDialog = AndroidUtil.showProgressDialog(this,
                 GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
@@ -217,6 +226,8 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
 
         paramsMap.put(GimbalStoreConstants.StoreParameterKeys.friends.toString(),
                 friends);
+        paramsMap.put(GimbalStoreConstants.StoreParameterKeys.categoryId.toString(),
+                subCatId);
         paramsMap.put(GimbalStoreConstants.StoreParameterKeys.productId.toString(),
                 productId);
 
@@ -240,8 +251,7 @@ public class ProductDetailsActivity extends Activity implements FriendsListDialo
         }
         Log.d("DEBUG", "paramsMap=" + paramsMap);
         String cookieString = AndroidUtil.getPreferenceString(getApplicationContext(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
-        PostReviewsProcessor postReviewsProcessor = new PostReviewsProcessor(this, progressDialog,
-                productId, getIntent());
+        PostReviewsProcessor postReviewsProcessor = new PostReviewsProcessor(this, progressDialog, getIntent());
         HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                 Arrays.asList(ServerURLUtil.getStoreServletServerURL(getResources())),
                 Arrays.asList(paramsMap), cookieString,

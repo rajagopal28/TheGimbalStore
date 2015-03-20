@@ -2,7 +2,6 @@ package com.avnet.gears.codes.gimbal.store.adapter;
 
 import android.app.Activity;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,14 +27,17 @@ public class ProductsViewAdapter extends ArrayAdapter<String> {
 
     private ListView productsListView;
     private Activity context;
+    private String categoryId;
     private List<ProductBean> productBeanList;
 
     public ProductsViewAdapter(Activity callingActivity, ListView listView,
-                               List<ProductBean> productBeans, List<String> productTitles) {
+                               List<ProductBean> productBeans, List<String> productTitles,
+                               String categoryId) {
         super(callingActivity, R.layout.view_product_list_item, productTitles);
         this.context = callingActivity;
         this.productsListView = listView;
         this.productBeanList = productBeans;
+        this.categoryId = categoryId;
     }
 
 
@@ -43,12 +45,13 @@ public class ProductsViewAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         ProductBean selectedProductBean = productBeanList.get(position);
+        selectedProductBean.setSubCategoryId(categoryId);
         View rowView = inflater.inflate(R.layout.view_product_list_item, null, true);
         ImageView thumbnail = (ImageView) rowView.findViewById(R.id.product_thumbnail);
 
         TextView productTitle = (TextView) rowView.findViewById(R.id.product_title);
         productTitle.setText(selectedProductBean.getName());
-        TextView productPrice = (TextView) rowView.findViewById(R.id.product_price);
+        TextView productPrice = (TextView) rowView.findViewById(R.id.product_description);
         productPrice.setText(selectedProductBean.getPartNumber());
         TextView productRating = (TextView) rowView.findViewById(R.id.product_rating);
         productRating.setText(selectedProductBean.getShortdescription());
@@ -59,7 +62,7 @@ public class ProductsViewAdapter extends ArrayAdapter<String> {
             String cookieString = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).
                     getString(GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY, null);
 
-            Log.d("DEBUG", "Loading image of product : " + selectedProductBean.getName());
+            // Log.d("DEBUG", "Loading image of product : " + selectedProductBean.getName());
             ImageDataProcessor imgProcessor = new ImageDataProcessor(context, null,
                     Arrays.asList(new ImageView[]{thumbnail}));
             ImageResponseAsyncTask asyncTask = new ImageResponseAsyncTask(Arrays.asList(new String[]{imageToLoad}),

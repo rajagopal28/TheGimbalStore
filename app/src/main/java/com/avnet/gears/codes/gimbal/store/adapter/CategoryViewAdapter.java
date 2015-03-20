@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TableRow;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.avnet.gears.codes.gimbal.store.R;
@@ -46,9 +46,9 @@ public class CategoryViewAdapter extends ArrayAdapter<String> {
         final SubCategoryBean selectedSubCategoryBean = scBeansList.get(position);
         View rowView = inflater.inflate(R.layout.view_subcategory_list_item, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.sub_category_name);
-        txtTitle.setText(selectedSubCategoryBean.getName());
-        TextView seeAllLink = (TextView) rowView.findViewById(R.id.see_all_text);
-        seeAllLink.setOnClickListener(new View.OnClickListener() {
+        String seeAll = GimbalStoreConstants.DELIMITER_SPACE + context.getResources().getString(R.string.link_see_all);
+        txtTitle.setText(selectedSubCategoryBean.getName() + seeAll);
+        txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("DEBUG", "Clicking see all>>" + selectedSubCategoryBean.getUniqueId() + " >> " + selectedSubCategoryBean.getName());
@@ -59,21 +59,24 @@ public class CategoryViewAdapter extends ArrayAdapter<String> {
                 context.startActivity(intent);
             }
         });
-        TableRow itemsRow = (TableRow) rowView.findViewById(R.id.items_table_row);
+        LinearLayout itemsRowView = (LinearLayout) rowView.findViewById(R.id.items_table_scroll_view);
         ProductBean[] topBrowsedProducts = selectedSubCategoryBean.getTopBrowsed();
         List<String> imageUrls = new ArrayList<String>();
         List<ImageView> imageViewsList = new ArrayList<ImageView>();
         Log.d("DEBUG", "total items in scat = " + topBrowsedProducts.length);
         for (final ProductBean productBean : topBrowsedProducts) {
-            Log.d("DEBUG", "product item = " + productBean);
+            // Log.d("DEBUG", "product item = " + productBean);
             if (productBean.getThumbnail() != null) {
                 ImageView imageView = new ImageView(context);
+                imageView.setPadding(10, 10, 10, 10);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, ProductDetailsActivity.class);
                         intent.putExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
                                 productBean.getUniqueId());
+                        intent.putExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
+                                selectedSubCategoryBean.getUniqueId());
                         context.startActivity(intent);
                     }
                 });
@@ -82,15 +85,15 @@ public class CategoryViewAdapter extends ArrayAdapter<String> {
                 imageViewsList.add(imageView);
             }
         }
-        Log.d("DEBUG", "sending image urls" + imageUrls);
-        ImageDataProcessor imageDataProcessor = new ImageDataProcessor(context, itemsRow, imageViewsList);
+        // Log.d("DEBUG", "sending image urls" + imageUrls);
+        ImageDataProcessor imageDataProcessor = new ImageDataProcessor(context, itemsRowView, imageViewsList);
         String cookieString = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).
                 getString(GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY, null);
 
         ImageResponseAsyncTask imageResponseAsyncTask = new ImageResponseAsyncTask(imageUrls,
                 imageDataProcessor, cookieString);
         imageResponseAsyncTask.execute(new String[]{});
-        Log.d("DEBUG", "processed images of sub cat" + selectedSubCategoryBean.getName());
+        // Log.d("DEBUG", "processed images of sub cat" + selectedSubCategoryBean.getName());
         return rowView;
     }
 

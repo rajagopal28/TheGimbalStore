@@ -91,6 +91,7 @@ public class NotificationListDataProcessor implements AsyncResponseProcessor {
                     public void run() {
                         List<String> friendNotificationsTitles = new ArrayList<String>(TypeConversionUtil.getNotificationTitles(friendNotificationList));
                         if (!friendNotificationsTitles.isEmpty()) {
+
                             ArrayAdapter<String> friendNotificationAdapter = new ArrayAdapter<String>(parentActivity, android.R.layout.simple_list_item_1, friendNotificationsTitles);
                             friendNotificationsListView.setAdapter(friendNotificationAdapter);
                             friendNotificationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

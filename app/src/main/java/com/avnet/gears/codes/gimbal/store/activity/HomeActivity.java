@@ -74,8 +74,6 @@ public class HomeActivity extends Activity
     private ProgressDialog progressDialog;
     private AccountManager accountManager;
     private BeaconManager beaconManager;
-    private static int beaconEncounterSeconds = 10;
-    private static int BEACON_SIGHTING_INTERVAL_SECONDS;
     private Activity mActivity;
 
     private boolean enteredRegion = false;
@@ -87,7 +85,7 @@ public class HomeActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         mActivity = this;
-        BEACON_SIGHTING_INTERVAL_SECONDS = getResources().getInteger(R.integer.GIMBAL_BEACON_SIGHTING_DISTANCE);
+
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -97,7 +95,7 @@ public class HomeActivity extends Activity
 
         beaconManager = BeaconManager.getInstanceForApplication(getApplicationContext());
 
-        if (AndroidUtil.verifyBluetooth(getApplicationContext(), beaconManager)) {
+        if (AndroidUtil.verifyBluetooth(mActivity, beaconManager)) {
             Log.d("GIMBAL", "ok with bluetooth");
             beaconManager.bind(this);
         }
@@ -276,7 +274,9 @@ public class HomeActivity extends Activity
     public void onResume() {
         super.onResume();
 
-        // if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(false);
+        if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(false);
+
+        // processCategoryListData();
 
         Log.d("DEBUG", " HomeActivity.onResume()");
     }
@@ -284,6 +284,10 @@ public class HomeActivity extends Activity
     @Override
     public void onStop() {
         super.onStop();
+        // TODO Logout
+        /* AndroidUtil.savePreferenceValue(getApplicationContext(),
+                GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY.toString(), null);
+        */
         Log.d("DEBUG", " HomeActivity.onStop()");
     }
 
@@ -291,7 +295,7 @@ public class HomeActivity extends Activity
     protected void onPause() {
         super.onPause();
 
-        // if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(true);
+        if (beaconManager.isBound(this)) beaconManager.setBackgroundMode(true);
 
         if (this.progressDialog != null)
             progressDialog.dismiss();
