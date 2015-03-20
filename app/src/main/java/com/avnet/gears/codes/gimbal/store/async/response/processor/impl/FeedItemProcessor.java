@@ -55,7 +55,7 @@ public class FeedItemProcessor implements AsyncResponseProcessor {
                     final FeedItemResponseBean feedItemResponseBean = gson.fromJson(responseString, FeedItemResponseBean.class);
                     Log.d("DEBUG", "Displaying Feed Details.." + feedItemResponseBean.toString());
                     FeedItemDialogFragment dialogFragment = FeedItemDialogFragment.newInstance(feedItemResponseBean.getFeeds()[0].getText(),
-                            productId);
+                            productId, null);
                     dialogFragment.show(fragmentManager, GimbalStoreConstants.TAG_SHOW_FEED_ITEM);
                 }
             }

@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.bean.FeedItemBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
+import com.avnet.gears.codes.gimbal.store.fragment.dialog.FeedItemDialogFragment;
 import com.avnet.gears.codes.gimbal.store.utils.TypeConversionUtil;
 
 import java.util.List;
@@ -53,11 +54,19 @@ public class FeedTabPlaceholderFragment extends Fragment {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 android.R.layout.simple_list_item_1,
                 TypeConversionUtil.getFeedDescriptionTitles(this.feedItemBeans));
+
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("DEBUG", "Clicking the feed item at position = " + position);
+                FeedItemBean selectedItem = feedItemBeans.get(position);
+                if (selectedItem != null) {
+                    FeedItemDialogFragment dialogFragment = FeedItemDialogFragment.newInstance(selectedItem.getText(),
+                            null, selectedItem.getThumbnail());
+                    dialogFragment.show(getFragmentManager(), GimbalStoreConstants.TAG_SHOW_FEED_ITEM);
+                    selectedItem.getThumbnail();
+                }
             }
         });
         listView.refreshDrawableState();

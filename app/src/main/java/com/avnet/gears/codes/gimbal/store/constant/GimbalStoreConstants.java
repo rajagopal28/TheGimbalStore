@@ -36,7 +36,7 @@ public class GimbalStoreConstants {
     public static String LABEL_FRIEND_RECOMMENDED = "Your Friends {0} have recommended this product for you!!";
     public static String LABEL_NO_FRIEND_RECOMMENDED = "No Friend has recommended yet!!";
     public static String LABEL_OVERALL_RATING = "Overall rating :";
-    public static String LABEL_NO_RATING = "No ratings Yer!!";
+    public static String LABEL_NO_RATING = "No ratings Yet!!";
 
     public static int CONTACTS_UPLOAD_CHUNK_LIMIT = 25;
 
@@ -110,6 +110,7 @@ public class GimbalStoreConstants {
         SELECTED_REVIEW_ID,
         SELECTED_FRIEND_LIST_RESPONSE,
         SELECTED_NETWORK_RESPONSE_TYPE,
+        SELECTED_ITEM_THUMBNAIL,
         SELECTED_BEACONS_ID;
     }
 

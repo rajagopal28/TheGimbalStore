@@ -9,7 +9,7 @@ import java.util.Arrays;
  */
 public class PromotionsResponseBean extends BaseServerResponseBean {
     private String[] beaconId;
-    private PromotedProductBean[] TopBrowsed;
+    private PromotedProductBean[] Wishlist;
     private PromotedProductBean[] BestSellers;
     private PromotedProductBean[] RecentlyViewed;
     private PromotedProductBean[] Recommendations;
@@ -22,12 +22,12 @@ public class PromotionsResponseBean extends BaseServerResponseBean {
         this.beaconId = beaconId;
     }
 
-    public PromotedProductBean[] getTopBrowsed() {
-        return TopBrowsed;
+    public PromotedProductBean[] getWishlist() {
+        return Wishlist;
     }
 
-    public void setTopBrowsed(PromotedProductBean[] topBrowsed) {
-        TopBrowsed = topBrowsed;
+    public void setWishlist(PromotedProductBean[] wishlist) {
+        Wishlist = wishlist;
     }
 
     public PromotedProductBean[] getBestSellers() {
@@ -59,7 +59,7 @@ public class PromotionsResponseBean extends BaseServerResponseBean {
         return super.toString() +
                 "PromotionsResponseBean{" +
                 "beaconId=" + Arrays.toString(beaconId) +
-                ", TopBrowsed=" + Arrays.toString(TopBrowsed) +
+                ", Wishlist=" + Arrays.toString(Wishlist) +
                 ", BestSellers=" + Arrays.toString(BestSellers) +
                 ", RecentlyViewed=" + Arrays.toString(RecentlyViewed) +
                 ", Recommendations=" + Arrays.toString(Recommendations) +

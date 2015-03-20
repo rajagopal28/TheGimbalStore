@@ -103,7 +103,7 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
 
                         ReviewDataBean reviews = productBean.getReviews();
                         if (reviews != null) {
-                            Log.d("DEBUG", "reviews =" + reviews.getReviews());
+                            Log.d("DEBUG", "reviews =" + reviews);
                             List<String> reviewString = TypeConversionUtil.getReviewTextAsStrings(Arrays.asList(reviews.getReviews()));
                             ArrayAdapter<String> reviewsAdapter = new ArrayAdapter<String>(parentActivity,
                                     android.R.layout.simple_list_item_1,
@@ -123,6 +123,7 @@ public class ProductItemProcessor implements AsyncResponseProcessor {
                             }
                             String[] recommendedBy = productBean.getRecommendedBy();
                             if (recommendedBy != null && recommendedBy.length != 0) {
+                                Log.d("DEBUG", "recommendedBy = " + Arrays.toString(recommendedBy));
                                 recommendedFriendsView.setText(MessageFormat.format(
                                         GimbalStoreConstants.LABEL_FRIEND_RECOMMENDED,
                                         new Object[]{TextUtils.join(GimbalStoreConstants.DELIMITER_COMMA, recommendedBy)}

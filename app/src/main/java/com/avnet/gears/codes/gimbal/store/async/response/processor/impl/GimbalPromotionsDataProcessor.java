@@ -69,7 +69,7 @@ public class GimbalPromotionsDataProcessor implements AsyncResponseProcessor {
 
                 Log.d("HTTP DEBUG", " Response Bean = " + responseBean);
 
-                final PromotedProductBean[] topBrowsed = responseBean.getTopBrowsed();
+                final PromotedProductBean[] topBrowsed = responseBean.getWishlist();
                 final PromotedProductBean[] bestSellers = responseBean.getBestSellers();
                 final PromotedProductBean[] recentlyViewed = responseBean.getRecentlyViewed();
                 final PromotedProductBean[] recommendations = responseBean.getRecommendations();

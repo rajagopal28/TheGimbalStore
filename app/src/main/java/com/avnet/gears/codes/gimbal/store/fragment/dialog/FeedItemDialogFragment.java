@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.activity.ProductDetailsActivity;
+import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ImageDataProcessor;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.ProductItemProcessor;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
+import com.avnet.gears.codes.gimbal.store.handler.ImageResponseAsyncTask;
 import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 
@@ -24,12 +26,14 @@ import java.util.Map;
 
 public class FeedItemDialogFragment extends DialogFragment {
 
-    public static FeedItemDialogFragment newInstance(String feedItemText, String productId) {
+    public static FeedItemDialogFragment newInstance(String feedItemText, String productId, String thumbnailPath) {
         Bundle args = new Bundle();
         args.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.FEED_ITEM_TEXT.toString(),
                 feedItemText);
         args.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
                 productId);
+        args.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_ITEM_THUMBNAIL.toString(),
+                thumbnailPath);
         FeedItemDialogFragment fragment = new FeedItemDialogFragment();
         fragment.setArguments(args);
 
@@ -43,6 +47,7 @@ public class FeedItemDialogFragment extends DialogFragment {
                 .inflate(R.layout.fragment_feed_item, null);
         String feedItemText = getArguments().getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.FEED_ITEM_TEXT.toString());
         final String productId = getArguments().getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString());
+        final String selectedThumbnail = getArguments().getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_ITEM_THUMBNAIL.toString());
         TextView tv = (TextView) v.findViewById(R.id.feed_item_text);
         tv.setText(feedItemText);
         ImageView imageView = (ImageView) v.findViewById(R.id.product_display_image);
@@ -67,6 +72,14 @@ public class FeedItemDialogFragment extends DialogFragment {
                     Arrays.asList(paramsMap), cookieString,
                     productItemProcessor);
             asyncTask.execute(new String[]{});
+        } else if (selectedThumbnail != null && !selectedThumbnail.isEmpty()) {
+            String cookieString = AndroidUtil.getPreferenceString(getActivity(), GimbalStoreConstants.PREF_SESSION_COOKIE_PARAM_KEY);
+            ImageDataProcessor imageDataProcessor = new ImageDataProcessor(getActivity(), null, Arrays.asList(imageView));
+            ImageResponseAsyncTask imageResponseAsyncTask = new ImageResponseAsyncTask(
+                    Arrays.asList(ServerURLUtil.getAbsoluteUrlFor(getResources(), selectedThumbnail)),
+                    imageDataProcessor,
+                    cookieString);
+            imageResponseAsyncTask.execute(new String[]{});
         }
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
@@ -84,10 +97,12 @@ public class FeedItemDialogFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 // do open product activity
                                 dialog.dismiss();
-                                Intent productIntent = new Intent(getActivity().getApplicationContext(), ProductDetailsActivity.class);
-                                productIntent.putExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
-                                        productId);
-                                getActivity().startActivity(productIntent);
+                                if (productId != null && !productId.isEmpty()) {
+                                    Intent productIntent = new Intent(getActivity().getApplicationContext(), ProductDetailsActivity.class);
+                                    productIntent.putExtra(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
+                                            productId);
+                                    getActivity().startActivity(productIntent);
+                                }
                             }
                         })
                 .create();

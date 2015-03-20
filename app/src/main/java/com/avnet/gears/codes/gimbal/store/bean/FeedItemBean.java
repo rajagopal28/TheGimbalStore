@@ -7,6 +7,7 @@ public class FeedItemBean extends BaseServerDataBean {
     private String Id;
     private String Text;
     private String Status;
+    private String Thumbnail;
     private String Type;
 
     public String getId() {
@@ -42,6 +43,16 @@ public class FeedItemBean extends BaseServerDataBean {
     }
 
     @Override
+    public String getThumbnail() {
+        return Thumbnail;
+    }
+
+    @Override
+    public void setThumbnail(String thumbnail) {
+        Thumbnail = thumbnail;
+    }
+
+    @Override
     public String toString() {
         return super.toString() +
                 "FeedItemBean{" +
@@ -49,6 +60,7 @@ public class FeedItemBean extends BaseServerDataBean {
                 ", Text='" + Text + '\'' +
                 ", Status='" + Status + '\'' +
                 ", Type='" + Type + '\'' +
+                ", Thumbnail='" + Thumbnail + '\'' +
                 '}';
     }
 }
