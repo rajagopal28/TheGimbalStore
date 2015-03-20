@@ -1,17 +1,19 @@
 package com.avnet.gears.codes.gimbal.store.bean;
 
+import java.util.Arrays;
+
 /**
  * Created by 914889 on 3/19/15.
  */
 public class PromotedProductBean extends BaseServerDataBean {
-    private String RecommendedBy;
+    private String[] RecommendedBy;
     private String price;
 
-    public String getRecommendedBy() {
+    public String[] getRecommendedBy() {
         return RecommendedBy;
     }
 
-    public void setRecommendedBy(String recommendedBy) {
+    public void setRecommendedBy(String[] recommendedBy) {
         RecommendedBy = recommendedBy;
     }
 
@@ -27,7 +29,7 @@ public class PromotedProductBean extends BaseServerDataBean {
     public String toString() {
         return super.toString() +
                 "PromotedProductBean{" +
-                "RecommendedBy='" + RecommendedBy + '\'' +
+                "RecommendedBy='" + Arrays.toString(RecommendedBy)+ '\'' +
                 ", price='" + price + '\'' +
                 '}';
     }

@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,10 +28,13 @@ public class AuthDataProcessor implements AsyncResponseProcessor {
     private AccountAuthenticatorActivity parentActivity;
     private Intent dataIntent;
     private AccountManager accountManager;
+    private ProgressDialog progressDialog;
 
-    public AuthDataProcessor(AccountAuthenticatorActivity parentActivity, Intent dataIntent, AccountManager accountManager) {
+    public AuthDataProcessor(AccountAuthenticatorActivity parentActivity, Intent dataIntent,
+                             AccountManager accountManager, ProgressDialog dialog) {
         this.parentActivity = parentActivity;
         this.dataIntent = dataIntent;
+        this.progressDialog = dialog;
         this.accountManager = accountManager;
     }
 
@@ -97,6 +101,7 @@ public class AuthDataProcessor implements AsyncResponseProcessor {
                 parentActivity.setAccountAuthenticatorResult(dataIntent.getExtras());
                 parentActivity.setResult(Activity.RESULT_OK, dataIntent);
                 parentActivity.finish();
+                this.progressDialog.dismiss();
             }
             return true;
         }

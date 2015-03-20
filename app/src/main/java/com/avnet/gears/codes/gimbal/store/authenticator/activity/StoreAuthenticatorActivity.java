@@ -2,6 +2,7 @@ package com.avnet.gears.codes.gimbal.store.authenticator.activity;
 
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +17,7 @@ import com.avnet.gears.codes.gimbal.store.R;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.impl.AuthDataProcessor;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.handler.HttpConnectionAsyncTask;
+import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.avnet.gears.codes.gimbal.store.utils.ServerURLUtil;
 
 import java.util.Arrays;
@@ -34,15 +36,20 @@ public class StoreAuthenticatorActivity extends AccountAuthenticatorActivity {
         setContentView(R.layout.activity_store_authenticator);
         Bundle passedBundle = getIntent().getExtras();
         final String registeredGCMDeviceId = passedBundle.getString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.GIVEN_GCM_DEVICE_ID.toString());
-
+        final ProgressDialog dialog = AndroidUtil.showProgressDialog(this, GimbalStoreConstants.DEFAULT_SPINNER_TITLE,
+                GimbalStoreConstants.DEFAULT_SPINNER_INFO_TEXT);
+        dialog.dismiss();
         Button signIn = (Button) findViewById(R.id.sign_in_button);
         Intent authenticationIntent = new Intent();
-        final AuthDataProcessor authDataProcessor = new AuthDataProcessor(this, authenticationIntent, accountManager);
+        final AuthDataProcessor authDataProcessor = new AuthDataProcessor(this, authenticationIntent,
+                accountManager, dialog);
+
 
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.show();
                 EditText textField = (EditText) findViewById(R.id.user_name_text);
                 String username = textField.getText().toString();
                 textField = (EditText) findViewById(R.id.password_text);

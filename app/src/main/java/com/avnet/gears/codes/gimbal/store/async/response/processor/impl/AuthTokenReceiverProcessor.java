@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.avnet.gears.codes.gimbal.store.activity.HomeActivity;
 import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponseProcessor;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
@@ -59,9 +58,9 @@ public class AuthTokenReceiverProcessor implements AsyncResponseProcessor {
                         Arrays.asList(paramsMap), null,
                         loginProcessor);
                 handler.execute(new String[]{});
-                Intent intent = new Intent(callingActivity, HomeActivity.class);
-                callingActivity.startActivity(intent);
+                Intent intent = callingActivity.getIntent();
                 callingActivity.finish();
+                callingActivity.startActivity(intent);
             } catch (Exception e) {
                 Log.e("ERROR", e.getMessage(), e);
             }
