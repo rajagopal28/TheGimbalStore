@@ -23,6 +23,7 @@ public class NotificationsListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications_list);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         ListView notificationListView = (ListView) findViewById(R.id.user_notification_list_view);
         ListView promotionsListView = (ListView) findViewById(R.id.promotions_list_view);
@@ -64,8 +65,9 @@ public class NotificationsListActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (!AndroidUtil.processSettingsAction(this, id)) {
             return true;
         }
 

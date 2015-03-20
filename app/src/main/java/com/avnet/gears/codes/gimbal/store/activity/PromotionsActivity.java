@@ -25,6 +25,7 @@ public class PromotionsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_promotions);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+
         ListView topBrowsedListView = (ListView) findViewById(R.id.top_browsed_list_view);
         ListView bestSellersListView = (ListView) findViewById(R.id.best_sellers_list_view);
         ListView recentlyViewedListView = (ListView) findViewById(R.id.recently_viewed_list_view);

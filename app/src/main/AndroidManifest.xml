@@ -70,10 +70,22 @@
         <activity
             android:name=".activity.NotificationsListActivity"
             android:label="@string/title_activity_notifications_list"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:parentActivityName=".activity.HomeActivity" />
         <activity
             android:name=".activity.UserSettingsActivity"
-            android:label="@string/title_activity_user_settings" />
+            android:label="@string/title_activity_user_settings"
+            android:parentActivityName=".activity.HomeActivity" />
+
+
+        <activity
+            android:name=".activity.PromotionsActivity"
+            android:label="@string/title_activity_promotions"
+            android:parentActivityName=".activity.HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.avnet.gears.codes.gimbal.store.activity.HomeActivity" />
+        </activity>
 
         <service
             android:name=".service.StoreAuthenticationService"
@@ -113,15 +125,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".activity.PromotionsActivity"
-            android:label="@string/title_activity_promotions"
-            android:parentActivityName=".activity.HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.avnet.gears.codes.gimbal.store.activity.HomeActivity" />
-        </activity>
     </application>
 
 </manifest>
