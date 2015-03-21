@@ -88,6 +88,7 @@ public class StoreGcmServiceIntent extends IntentService {
     // a GCM message.
     private void sendNotification(String messageType, Bundle extra) {
         String msg = extra.getString(GimbalStoreConstants.notificationDataKey.message.toString());
+        Log.d("DEBUG", "BUNDLE = " + extra);
 
         String notificationTypeString = extra.getString(GimbalStoreConstants.notificationDataKey.notificationType.toString());
         GimbalStoreConstants.NOTIFICATION_TYPE notificationType = GimbalStoreConstants.NOTIFICATION_TYPE.PRODUCT_PROMOTION;

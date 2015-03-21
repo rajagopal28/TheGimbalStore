@@ -59,7 +59,7 @@
     <string name="title_activity_promotions">Exciting Offers For you!!</string>
 
     <string name="user_notification_list_label">Notification from your friends</string>
-    <string name="promotions_list_label">Promotions you may like!!</string>
+    <string name="promotions_list_label">Wishlist</string>
 
     <string name="best_sellers_list_label">Best Sellers</string>
     <string name="recommendations_list_label">Recommended by friends</string>

@@ -13,7 +13,6 @@ import com.avnet.gears.codes.gimbal.store.async.response.processor.AsyncResponse
 import com.avnet.gears.codes.gimbal.store.bean.NotificationActionBean;
 import com.avnet.gears.codes.gimbal.store.bean.RecommendationBean;
 import com.avnet.gears.codes.gimbal.store.bean.ResponseItemBean;
-import com.avnet.gears.codes.gimbal.store.bean.response.RecommendationResponseBean;
 import com.avnet.gears.codes.gimbal.store.constant.GimbalStoreConstants;
 import com.avnet.gears.codes.gimbal.store.utils.AndroidUtil;
 import com.google.gson.Gson;
@@ -57,14 +56,11 @@ public class RecommendationDataProcessor implements AsyncResponseProcessor {
                 JsonReader reader = new JsonReader(new StringReader(responseString));
                 Log.d("DEBUG", "responseString = " + responseString);
                 reader.setLenient(true);
-                final RecommendationResponseBean recommendationResponseBean = gson.fromJson(responseString, RecommendationResponseBean.class);
-                RecommendationBean[] recommendations = recommendationResponseBean.getRecommendations();
-                if (recommendations != null &&
-                        recommendations.length > 0) {
-                    RecommendationBean recommendationBean = recommendations[0];
-                    Log.d("DEBUG", "Displaying Recommendation Details.." + recommendationResponseBean.toString());
-                    String identifierString = recommendationBean.getIdentifierValue();
-                    GimbalStoreConstants.RECOMMENDATION_TYPE recommendationType = GimbalStoreConstants.RECOMMENDATION_TYPE.valueOf(recommendationBean.getRecommendationType());
+                final RecommendationBean recommendation = gson.fromJson(responseString, RecommendationBean.class);
+                if (recommendation != null) {
+                    Log.d("DEBUG", "Displaying Recommendation Details.." + recommendation.toString());
+                    String identifierString = recommendation.getIdentifierValue();
+                    GimbalStoreConstants.RECOMMENDATION_TYPE recommendationType = GimbalStoreConstants.RECOMMENDATION_TYPE.valueOf(recommendation.getRecommendationType());
 
                     Intent targetIntent;
                     Bundle bundle = new Bundle();
