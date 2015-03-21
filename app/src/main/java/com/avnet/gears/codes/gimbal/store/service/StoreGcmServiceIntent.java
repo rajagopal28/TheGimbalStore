@@ -107,6 +107,7 @@ public class StoreGcmServiceIntent extends IntentService {
                         GimbalStoreConstants.StoreParameterValues.getRecommendation.toString());
                 paramsMap.put(GimbalStoreConstants.StoreParameterKeys.uniqueId.toString(),
                         recommendationId);
+                Log.d("DEBUG", "paramsMap = " + paramsMap);
                 String targetURL = ServerURLUtil.getStoreServletServerURL(getResources());
                 HttpConnectionAsyncTask asyncTask = new HttpConnectionAsyncTask(GimbalStoreConstants.HTTP_METHODS.GET,
                         Arrays.asList(targetURL),

@@ -55,6 +55,7 @@ public class RecommendationDataProcessor implements AsyncResponseProcessor {
                 // get the list of sub categories and populate it to the adapter
                 Gson gson = new GsonBuilder().disableHtmlEscaping().create();
                 JsonReader reader = new JsonReader(new StringReader(responseString));
+                Log.d("DEBUG", "responseString = " + responseString);
                 reader.setLenient(true);
                 final RecommendationResponseBean recommendationResponseBean = gson.fromJson(responseString, RecommendationResponseBean.class);
                 RecommendationBean[] recommendations = recommendationResponseBean.getRecommendations();
@@ -74,23 +75,29 @@ public class RecommendationDataProcessor implements AsyncResponseProcessor {
                             bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
                                     identifierString);
                             targetIntent.putExtras(bundle);
+                            List<NotificationActionBean> notificationActionBeans = new ArrayList<NotificationActionBean>();
+                            AndroidUtil.notify(this.context, targetIntent,
+                                    notificationMsg, GimbalStoreConstants.DEFAULT_STORE_NOTIFICATION_TITLE,
+                                    R.drawable.ic_store, true,
+                                    notificationActionBeans);
                             break;
                         case ASK_REC_CAT:
                             targetIntent = new Intent(context, ProductDetailsActivity.class);
                             bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
                                     identifierString);
                             targetIntent.putExtras(bundle);
+                            notificationActionBeans = new ArrayList<NotificationActionBean>();
+                            AndroidUtil.notify(this.context, targetIntent,
+                                    notificationMsg, GimbalStoreConstants.DEFAULT_STORE_NOTIFICATION_TITLE,
+                                    R.drawable.ic_store, true,
+                                    notificationActionBeans);
                             break;
                         default:
                             // do nothing
                             targetIntent = new Intent(context, HomeActivity.class);
                     }
 
-                    List<NotificationActionBean> notificationActionBeans = new ArrayList<NotificationActionBean>();
-                    AndroidUtil.notify(this.context, targetIntent,
-                            notificationMsg, GimbalStoreConstants.DEFAULT_STORE_NOTIFICATION_TITLE,
-                            R.drawable.ic_store, true,
-                            notificationActionBeans);
+
                 }
 
             }
