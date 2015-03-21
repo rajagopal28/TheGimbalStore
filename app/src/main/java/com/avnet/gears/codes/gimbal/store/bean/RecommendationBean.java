@@ -1,9 +1,11 @@
 package com.avnet.gears.codes.gimbal.store.bean;
 
+import com.avnet.gears.codes.gimbal.store.bean.response.BaseServerResponseBean;
+
 /**
  * Created by 914889 on 3/21/15.
  */
-public class RecommendationBean extends BaseServerDataBean {
+public class RecommendationBean extends BaseServerResponseBean {
 
     private String recommendationId;
     private String recommendationType;
