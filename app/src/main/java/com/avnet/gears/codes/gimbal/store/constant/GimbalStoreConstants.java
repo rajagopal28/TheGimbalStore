@@ -69,7 +69,9 @@ public class GimbalStoreConstants {
         TYPE_REVIEW_CATEGORY,
         ASK_REVIEW,
         RECOMMENDED_BY,
-        NOTIFY_REVIEW
+        NOTIFY_REVIEW,
+        ASKED_TO_REC_PROD,
+        ASKED_TO_REC_CAT
     }
 
     public static enum NOTIFICATION_TYPE {
