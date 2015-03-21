@@ -72,7 +72,7 @@ public class RecommendationDataProcessor implements AsyncResponseProcessor {
                         case ASK_REC_PROD:
                         case ASK_REVIEW:
                             targetIntent = new Intent(context, ProductsListActivity.class);
-                            bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
+                            bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
                                     identifierString);
                             targetIntent.putExtras(bundle);
                             List<NotificationActionBean> notificationActionBeans = new ArrayList<NotificationActionBean>();
@@ -83,7 +83,7 @@ public class RecommendationDataProcessor implements AsyncResponseProcessor {
                             break;
                         case ASK_REC_CAT:
                             targetIntent = new Intent(context, ProductDetailsActivity.class);
-                            bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_PRODUCT_ID.toString(),
+                            bundle.putString(GimbalStoreConstants.INTENT_EXTRA_ATTR_KEY.SELECTED_SUB_CATEGORY_ID.toString(),
                                     identifierString);
                             targetIntent.putExtras(bundle);
                             notificationActionBeans = new ArrayList<NotificationActionBean>();
