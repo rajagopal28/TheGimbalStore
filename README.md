@@ -13,6 +13,7 @@
 ### TechUsed:
 
 - Native android stack.
+    - I’ve used Fragments/Pagers/Horizontal/vertical scrolls and the default async task whenever required.
 - Google push notifications service.
 - Gimbal beacons , connecting to mobile devices through Bluetooth technology. To give a personalised inshore experience based in the user interest and recommendations by those in his network.
 - A IBM websphere commerce exposing an api endpoint by using controllers, for accessing the product related information of the store.(Note: the mentioned e-commerce related application code are not in this code base and was maintained standalone with an front-end agreed data exchange contract)
