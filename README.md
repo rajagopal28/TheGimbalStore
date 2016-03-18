@@ -128,5 +128,5 @@ Whenever the user receives any region within the beacon proximity, the user will
 
 - Android
     - Fragments : http://developer.android.com/guide/components/fragments.html
-
     - PageAdapter : http://developer.android.com/reference/android/support/v4/view/PagerAdapter.html
+    - Thanks markdown here to help me convert this document to github read https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet and Editor : http://jbt.github.io/markdown-editor/
