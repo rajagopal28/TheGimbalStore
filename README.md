@@ -35,9 +35,9 @@ The solution - Redefining Recommendation and reviews:
 - User gets notified whenever a friend reviews the product that he has asked a review for.
 
 The Naive top level architecture of the mobile application(initial phase with third-party review engine):
-![stack Overflow](https://file.ac/AcXq6EHc2go/image0a.png)
+![Architecture](./images/image0a.png)
 The base schema of the custom tables:
-![stack Overflow](https://file.ac/AcXq6EHc2go/image0b.png)
+![Schema](./images/image0b.png)
 
 ## The detailed user experience:
    The mobile application has 9 major screens which are as follows.
@@ -56,33 +56,33 @@ The base schema of the custom tables:
    The app features one-time authentication system by using the account authenticator class provided which enables us to add authentication account of the app through system settings. This activity is launched whenever there is no account exists in the system or whenever the user clicks add account button in the accounts view settings.
    - As the system does not support multiple accounts user will receive error whenever he tries to add more than one account.
    - Whenever the user opens the app, the activity checks whether there is any account added and logs in to the system as that user, to access the commerce controller API.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image1.png)
+![Authentication](./images/image1.png)
 
 ## The Settings dropdown:
 Settings dropdown has links to 4 major options.
    * **Sync contacts**- accesses all the contacts in your mobile and sends the username, phone number pair to the server. The server validates with the phone number whether the user has access or not. The server creates a friends network for the current user with those friends having valid e-commerce account in the site. The contacts list is processed as chunks as the user contacts will be more than 500 in most cases.
     *  **Notification** will take to the notifications activity while the friends activities option will take to the friend recommendations view.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image2.png)
+![SideMenu](./images/image2.png)
 
 ## The Home View:
    The home view essentially consists of a side drawer which is dynamically populated with the top category values. The home view primarily ensures that the user has a valid account added to the mobile system. The App also ensures that the bluetooth settings are turned on in order to recognise the beacons that are available in the physical stores.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image3.png)
+![Home](./images/image3.png)
 
 ## The Sub-Category View:
    On choosing a category from the side drawer the user will be taken to the sub category view which essentially lists all the sub categories along with the 10 top selling products in each of the sub-categories. These to 10 products are sent from the commerce server by making use of the built-in core metrics interface in web sphere commerce.
    There is a vertical scroll for the actual list of sub-categories and a horizontal scroll for each sub-category product list which is achieved with the horizontal scroll view provided by the android platform. Clicking on any of the products will take you to the product view, while clicking on see all >> will take you to the all products view.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image4.png)
+![SubCategoryView](./images/image4.png)
 
 ## The ProductsList View:
 The product list view has 2 core functions.
 
 - It essentially lists all the products under the sub category, which is a server side paged list view with a [show more] button at the end to load next page.
 - Asking Friend(s) : This feature enables you to ask one or more of your friends to recommend you a product from the selected category. The pre-requisite is that the user should have a network created by syncing his contacts, to get the friends list.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image5.png)
+![ProductsList](./images/image5.png)
 
 ## The ProductDetails View:
 The product detailed view has the core features of recommend this product to one or more friends in your networks. Ask friend(s) to review this product and asking a friend whether he recommends this product or not. A User can also review a product for which all those friend’s in his network, who asked for his review, will be notified by the server through push notifications.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image6.png)
+![ProductDetail](./images/image6.png)
 
 
 ## The FeedList View:
@@ -91,17 +91,17 @@ The product detailed view has the core features of recommend this product to one
    - Recommendation from friends - List of all recent recommendation on any product that your friend has recommended you to try out.
    - Reviews by friends - List of all reviews from your friends on the product you
    - Product suggestions based the recommendation and reviews suggested.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image7.png)
+![FeedList](./images/image7.png)
 
 
 ## The (in-store) promotions View:
-![stack Overflow](https://file.ac/AcXq6EHc2go/image9.png)
+![Promotitons](./images/image9.png)
 Whenever the user receives any region within the beacon proximity, the user will be notified with a set of offers that he can avail from the store available neat to him. The above diagram explains how the beacon technology is leveraged from our code. These promotions comprises of three sections.
 
    - Best sellers in the near store
    - Products in this store that are recommended by your friends ( but may not necessarily me recommended to you but to anyone in his friends network).
    - General promotions on product that are available in the store you are nearer too.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image8.png)
+![Promotions](./images/image8.png)
 
 
 ## The (push) notifications and Notifications View:
@@ -110,19 +110,19 @@ Whenever the user receives any region within the beacon proximity, the user will
    - Whenever a friend has recommended you to try a product, irrespective of whether you have asked his opinion or not.
    - Whenever a friend has reviewed the product that you have asked him to give his review on.
    - Whenever you visit the proximity region of the beacon lying in a physical store.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image10.png)
+![Notifications](./images/image10.png)
 
 ## The Biggest struggle - Native android UI VS the Async tasks to handle API over HTTP:
    Being a web developer calling any HTTP/API endpoint is as easy as
    ```javascript
    $.get(URL, successCB, errorCB);
    ```
-   and loading image is like 
+   and loading image is like
    ```javascript
    <img src=“http://some-remote-url.com/image.png”/>.
    ```
    But the way native Android code handles is so tedious to make it get transformed to the view. Android native being a VCCV architecture the controller code is tightly couple with the view layer, making us hard to process the async tasks and transforming the response to the view layer. I have the approach depicted below by making use of the Object Oriented - Inheritance concept. As far as I can, I made sure, I make the code re-usable and following the coding standards. One of the major master pieces of the app is the HttpConnectionAsyncTask that I’ve created. It encompasses the maximum level of my “adhering to OOPs norms at that point of time”.
-![stack Overflow](https://file.ac/AcXq6EHc2go/image11.png)
+![AsyncTasks](./images/image11.png)
 
 ## Links referred:
 - Gimbal library and API docs : https://docs.gimbal.com/gimbalsdk_v2upgrade.html
